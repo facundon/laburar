@@ -1,5 +1,6 @@
 mod commands;
 mod db;
+mod error;
 
 use commands::employee::create_employee_command;
 use db::sqlite::run_migrations;
