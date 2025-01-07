@@ -3,9 +3,12 @@
 	import { ROUTES } from '$routes'
 	import { differenceInYears, format } from 'date-fns'
 	import Button from '$components/Button.svelte'
+	import Modal from '$components/Modal.svelte'
 
 	const { data } = $props()
 	const employee = data.employee
+
+	let showModal = $state(false)
 
 	async function deleteEmployee() {
 		try {
@@ -15,6 +18,19 @@
 		} catch (error) {
 			console.error('Failed to delete employee:', error)
 		}
+	}
+
+	function confirmDelete() {
+		showModal = true
+	}
+
+	function handleClose() {
+		showModal = false
+	}
+
+	function handleConfirm() {
+		deleteEmployee()
+		handleClose()
 	}
 
 	function getDifferenceInYears(startDate: Date): number {
@@ -36,8 +52,15 @@
 		{/if}
 		<div class="actions">
 			<Button href={ROUTES.employee.edit(employee.id)}>Editar</Button>
-			<Button style="margin-left: auto;" outlined variant="error" onclick={deleteEmployee}>Eliminar</Button>
+			<Button style="margin-left: auto;" outlined variant="error" onclick={confirmDelete}>Eliminar</Button>
 		</div>
+		<Modal
+			bind:show={showModal}
+			title="Confirm Deletion"
+			message="Are you sure you want to delete this employee?"
+			onconfirm={handleConfirm}
+			onclose={handleClose}
+		/>
 	{:else}
 		<p>Cargando...</p>
 	{/if}
