@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { ROUTES } from '$routes'
 	import { onMount } from 'svelte'
+	import { Home, Users, Plus } from 'lucide-svelte'
+	import { page } from '$app/state'
+	import { cssVariables } from '$theme'
 
 	let isSidebarOpen = true
 
@@ -17,14 +20,18 @@
 	})
 </script>
 
-<main class="layout">
+<main class="layout" style={cssVariables}>
 	<nav class="side-menu {isSidebarOpen ? 'open' : 'closed'}">
 		<ul>
-			<li><a href="/" aria-label="Inicio"><i class="icon-home"></i><span class="menu-text">Inicio</span></a></li>
-			<li><a href={ROUTES.employee.list} aria-label="Empleados"><i class="icon-users"></i><span class="menu-text">Empleados</span></a></li>
+			<li><a href="/" aria-label="Inicio" class:active={page.url.pathname === '/'}><Home /><span class="menu-text">Inicio</span></a></li>
 			<li>
-				<a href={ROUTES.employee.create} aria-label="Agregar Empleado"
-					><i class="icon-add"></i><span class="menu-text">Agregar Empleado</span></a
+				<a href={ROUTES.employee.list} aria-label="Empleados" class:active={page.url.pathname === ROUTES.employee.list}
+					><Users /><span class="menu-text">Empleados</span></a
+				>
+			</li>
+			<li>
+				<a href={ROUTES.employee.create} aria-label="Agregar Empleado" class:active={page.url.pathname === ROUTES.employee.create}
+					><Plus /><span class="menu-text">Agregar Empleado</span></a
 				>
 			</li>
 		</ul>
@@ -35,7 +42,9 @@
 			<span class="bar"></span>
 			<span class="bar"></span>
 		</button>
-		<slot></slot>
+		<div class="container">
+			<slot></slot>
+		</div>
 	</section>
 </main>
 
@@ -58,6 +67,8 @@
 		font-family: 'Urbanist', sans-serif;
 		margin: 0;
 		padding: 0;
+		background-color: #f8f9fa;
+		color: var(--primary-contrast);
 	}
 
 	.layout {
@@ -67,11 +78,12 @@
 
 	.side-menu {
 		width: 250px;
-		background-color: #343a40;
+		background-color: var(--gray-main);
 		padding: 1rem;
-		color: #fff;
+		color: var(--gray-contrast);
 		transition: width 0.3s ease;
 		overflow: hidden;
+		position: relative;
 	}
 
 	.side-menu.closed {
@@ -81,6 +93,7 @@
 	.side-menu ul {
 		list-style: none;
 		padding: 0;
+		margin-top: 2rem;
 	}
 
 	.side-menu li {
@@ -89,7 +102,7 @@
 
 	.side-menu a {
 		text-decoration: none;
-		color: #fff;
+		color: var(--gray-contrast);
 		display: flex;
 		align-items: center;
 		padding: 0.5rem 1rem;
@@ -98,18 +111,15 @@
 	}
 
 	.side-menu a:hover {
-		background-color: #495057;
+		background-color: var(--gray-light);
 	}
 
 	.side-menu a.active {
-		background-color: #007bff;
+		background-color: var(--secondary-main);
 	}
 
-	.side-menu .icon-home,
-	.side-menu .icon-users,
-	.side-menu .icon-add {
-		font-size: 1.5rem;
-		margin-right: 1rem;
+	.side-menu .menu-text {
+		margin-left: 1rem;
 	}
 
 	.side-menu.closed .menu-text {
@@ -119,8 +129,14 @@
 	.content {
 		flex-grow: 1;
 		padding: 2rem;
-		background-color: #f8f9fa;
+		background-color: var(--primary-light);
 		position: relative;
+	}
+
+	.container {
+		max-width: 1024px;
+		margin: 0 auto;
+		padding: 1rem;
 	}
 
 	.hamburger {
@@ -139,12 +155,12 @@
 		height: 30px;
 	}
 
-	.hamburger .bar {
+	.bar {
 		display: block;
 		width: 25px;
 		height: 2px;
 		margin: 3px 0;
-		background-color: #333;
+		background-color: var(--primary-contrast);
 		transition: all 0.4s ease-in-out;
 	}
 

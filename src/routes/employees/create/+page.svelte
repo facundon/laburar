@@ -87,17 +87,19 @@
 	}
 
 	.button {
-		display: inline-block;
+		display: block;
 		padding: 0.5rem 1rem;
-		background-color: #007bff;
+		background-color: var(--tertiary-main);
 		color: #fff;
 		text-decoration: none;
 		border: none;
 		border-radius: 4px;
 		cursor: pointer;
+		font-weight: 600;
+		margin-left: auto;
 	}
 
 	.button:hover {
-		background-color: #0056b3;
+		background-color: var(--tertiary-dark);
 	}
 </style>

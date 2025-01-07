@@ -13,6 +13,7 @@ const config = {
 			$models: './src/models',
 			$invoke: './src/invoke',
 			$routes: './src/routes/routes.ts',
+			$theme: './src/theme',
 		},
 	},
 }
