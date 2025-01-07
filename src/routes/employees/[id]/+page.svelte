@@ -48,7 +48,10 @@
 			<p>
 				<strong>Fecha de inicio:</strong>
 				{format(employee.startDate, 'dd/MM/yyyy')}
-				<span>(<strong>{getDifferenceInYears(employee.startDate)} años</strong> de antigüedad)</span>
+			</p>
+			<p>
+				<strong>Antigüedad:</strong>
+				{getDifferenceInYears(employee.startDate)} años
 			</p>
 		{/if}
 		<div class="actions">
@@ -78,6 +81,7 @@
 		max-width: 600px;
 		margin: 0 auto;
 		padding: 2rem;
+		padding-top: 1rem;
 		border-radius: 8px;
 		background-color: var(--gray-main);
 		color: #fff;
@@ -85,7 +89,8 @@
 	}
 
 	h1 {
-		margin-bottom: 1rem;
+		margin-bottom: 2rem;
+		text-align: center;
 		color: #fff;
 	}
 
@@ -95,8 +100,7 @@
 	}
 
 	.actions {
-		margin-top: 1rem;
+		margin-top: 3rem;
 		display: flex;
-		gap: 1rem;
 	}
 </style>
