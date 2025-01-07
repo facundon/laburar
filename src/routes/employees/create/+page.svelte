@@ -7,7 +7,7 @@
 	let lastName = ''
 	let address = ''
 	let phone = ''
-	let startDate = ''
+	let startDate: Date | undefined = undefined
 
 	async function createEmployee() {
 		try {
@@ -17,7 +17,7 @@
 				lastName,
 				address,
 				phone,
-				startDate: startDate ? new Date(startDate) : undefined,
+				startDate,
 				createdAt: new Date(),
 			})
 			await invoke('create_employee_command', employee.toCreateDTO())
@@ -26,11 +26,16 @@
 			console.error('Failed to create employee:', error)
 		}
 	}
+
+	function handleDateChange(event: Event) {
+		const startDateInput = event.target as HTMLInputElement
+		startDate = startDateInput.value ? new Date(startDateInput.value) : undefined
+	}
 </script>
 
 <main class="container">
 	<h1>Agregar Personal</h1>
-	<form on:submit|preventDefault={createEmployee}>
+	<form onsubmit={createEmployee}>
 		<div class="form-group">
 			<label for="firstName">Nombre</label>
 			<input id="firstName" bind:value={firstName} required />
@@ -49,7 +54,7 @@
 		</div>
 		<div class="form-group">
 			<label for="startDate">Fecha de inicio</label>
-			<input id="startDate" type="date" bind:value={startDate} />
+			<input id="startDate" type="date" oninput={handleDateChange} />
 		</div>
 		<button type="submit" class="button">Crear</button>
 	</form>

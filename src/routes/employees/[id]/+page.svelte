@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { invoke } from '$invoke'
 	import { ROUTES } from '$routes'
+	import { differenceInYears, format } from 'date-fns'
 
 	const { data } = $props()
 	const employee = data.employee
@@ -14,6 +15,10 @@
 			console.error('Failed to delete employee:', error)
 		}
 	}
+
+	function getDifferenceInYears(startDate: Date): number {
+		return differenceInYears(new Date(), startDate)
+	}
 </script>
 
 <main class="container">
@@ -21,7 +26,13 @@
 		<h1>{employee.firstName} {employee.lastName}</h1>
 		<p><strong>Teléfono:</strong> {employee.phone}</p>
 		<p><strong>Dirección:</strong> {employee.address}</p>
-		<p><strong>Fecha de inicio:</strong> {employee.startDate}</p>
+		{#if employee.startDate}
+			<p>
+				<strong>Fecha de inicio:</strong>
+				{format(employee.startDate, 'dd/MM/yyyy')}
+				<span>(<strong>{getDifferenceInYears(employee.startDate)} años</strong> de antigüedad)</span>
+			</p>
+		{/if}
 		<div class="actions">
 			<button onclick={deleteEmployee}>Eliminar</button>
 			<a href={ROUTES.employee.edit(employee.id)} class="button">Editar</a>
