@@ -88,6 +88,7 @@
 
 	.button:hover:not(.outlined):not(:disabled) {
 		background-color: var(--primary-dark);
+		border-color: var(--primary-dark);
 	}
 
 	.button.primary.outlined:hover:not(:disabled) {

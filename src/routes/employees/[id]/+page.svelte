@@ -64,7 +64,7 @@
 		<Modal
 			bind:show={showModal}
 			title="Confirm Deletion"
-			message="Are you sure you want to delete this employee?"
+			message={`Are you sure you want to delete ${employee.name}?`}
 			onconfirm={handleConfirm}
 			onclose={handleClose}
 		/>
@@ -78,17 +78,20 @@
 		max-width: 600px;
 		margin: 0 auto;
 		padding: 2rem;
-		background-color: #fff;
 		border-radius: 8px;
+		background-color: var(--gray-main);
+		color: #fff;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 
 	h1 {
 		margin-bottom: 1rem;
+		color: #fff;
 	}
 
 	p {
 		margin-bottom: 0.5rem;
+		color: #ccc;
 	}
 
 	.actions {

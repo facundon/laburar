@@ -125,7 +125,6 @@
 	.content {
 		flex-grow: 1;
 		padding: 2rem;
-		background-color: var(--primary-light);
 		position: relative;
 	}
 

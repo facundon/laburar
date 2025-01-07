@@ -29,7 +29,8 @@
 		max-width: 800px;
 		margin: 0 auto;
 		padding: 2rem;
-		background-color: #fff;
+		background-color: var(--gray-main);
+		color: #fff;
 		border-radius: 8px;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
@@ -39,6 +40,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		color: #fff;
 	}
 
 	ul {
@@ -52,7 +54,7 @@
 
 	a {
 		text-decoration: none;
-		color: #007bff;
+		color: var(--secondary-main);
 	}
 
 	a:hover {

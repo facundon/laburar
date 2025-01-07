@@ -4,13 +4,13 @@ export const theme = {
 			main: '#FED766', // Mustard
 			light: '#FFE599', // Lighter shade of mustard
 			dark: '#D4A53A', // Darker shade of mustard
-			contrast: '#000000',
+			contrast: '#333',
 		},
 		secondary: {
-			main: '#655A7C', // Purple
-			light: '#8A7FA3', // Lighter shade of purple
-			dark: '#4A3F5A', // Darker shade of purple
-			contrast: '#FBFBFF',
+			main: '#59C3C3', // Blue
+			light: '#7AD1D1', // Lighter shade of main
+			dark: '#3F8A8A', // Darker shade of main
+			contrast: '#333',
 		},
 		success: {
 			main: '#72A98F', // Green
