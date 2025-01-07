@@ -18,15 +18,11 @@
 	} & (ButtonProps | LinkProps)
 
 	let { children, href, variant: type = 'primary', fullWidth = false, outlined = false, ...rest }: Props = $props()
-
-	function navigateTo(route: string) {
-		goto(route)
-	}
 </script>
 
 <button
 	class="button {type} {outlined ? 'outlined' : ''} {fullWidth ? 'fullwidth' : ''}"
-	onclick={href ? () => navigateTo(href) : onclick}
+	onclick={href ? () => goto(href) : onclick}
 	{...rest}
 >
 	{@render children?.()}
@@ -34,7 +30,8 @@
 
 <style>
 	.button {
-		display: block;
+		align-items: center;
+		display: flex;
 		padding: 0.5rem 1rem;
 		border-radius: 4px;
 		cursor: pointer;

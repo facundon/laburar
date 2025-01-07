@@ -4,6 +4,7 @@
 	import { differenceInYears, format } from 'date-fns'
 	import Button from '$components/Button.svelte'
 	import Modal from '$components/Modal.svelte'
+	import { Delete, Pencil } from 'lucide-svelte'
 
 	const { data } = $props()
 	const employee = data.employee
@@ -51,8 +52,14 @@
 			</p>
 		{/if}
 		<div class="actions">
-			<Button href={ROUTES.employee.edit(employee.id)}>Editar</Button>
-			<Button style="margin-left: auto;" outlined variant="error" onclick={confirmDelete}>Eliminar</Button>
+			<Button href={ROUTES.employee.edit(employee.id)}>
+				<Pencil style="margin-right: 10px;" size={18} />
+				Editar
+			</Button>
+			<Button style="margin-left: auto;" outlined variant="error" onclick={confirmDelete}>
+				<Delete style="margin-right: 10px;" size={18} />
+				Eliminar
+			</Button>
 		</div>
 		<Modal
 			bind:show={showModal}

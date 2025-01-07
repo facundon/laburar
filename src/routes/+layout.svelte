@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { ROUTES } from '$routes'
 	import { onMount } from 'svelte'
-	import { Home, Users, Plus } from 'lucide-svelte'
+	import { Home, Users } from 'lucide-svelte'
 	import { page } from '$app/state'
 	import { cssVariables } from '$theme'
 
@@ -25,13 +25,8 @@
 		<ul>
 			<li><a href="/" aria-label="Inicio" class:active={page.url.pathname === '/'}><Home /><span class="menu-text">Inicio</span></a></li>
 			<li>
-				<a href={ROUTES.employee.list} aria-label="Empleados" class:active={page.url.pathname === ROUTES.employee.list}
-					><Users /><span class="menu-text">Empleados</span></a
-				>
-			</li>
-			<li>
-				<a href={ROUTES.employee.create} aria-label="Agregar Empleado" class:active={page.url.pathname === ROUTES.employee.create}
-					><Plus /><span class="menu-text">Agregar Empleado</span></a
+				<a href={ROUTES.employee.list} aria-label="Personal" class:active={page.url.pathname === ROUTES.employee.list}
+					><Users /><span class="menu-text">Personal</span></a
 				>
 			</li>
 		</ul>
@@ -67,6 +62,7 @@
 		font-family: 'Urbanist', sans-serif;
 		margin: 0;
 		padding: 0;
+		font-size: large;
 		background-color: #f8f9fa;
 		color: var(--primary-contrast);
 	}
@@ -115,7 +111,7 @@
 	}
 
 	.side-menu a.active {
-		background-color: var(--secondary-main);
+		background-color: var(--primary-dark);
 	}
 
 	.side-menu .menu-text {

@@ -3,6 +3,7 @@
 	import { ROUTES } from '$routes'
 	import { format } from 'date-fns'
 	import Button from '$components/Button.svelte'
+	import { Save } from 'lucide-svelte'
 
 	const { data } = $props()
 	let employee = data.employee
@@ -55,8 +56,11 @@
 				/>
 			</div>
 			<div class="actions">
-				<Button variant="secondary" outlined onclick={() => window.history.back()}>Cancelar</Button>
-				<Button style="margin-left: auto;" variant="primary">Guardar</Button>
+				<Button variant="secondary" outlined href={ROUTES.employee.view(employee.id)}>Cancelar</Button>
+				<Button style="margin-left: auto;" variant="primary">
+					<Save style="margin-right: 10px;" size={18} />
+					Guardar
+				</Button>
 			</div>
 		</form>
 	{:else}

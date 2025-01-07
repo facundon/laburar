@@ -1,13 +1,20 @@
 <script lang="ts">
+	import Button from '$components/Button.svelte'
 	import { ROUTES } from '$routes'
+	import { Plus } from 'lucide-svelte'
 
 	const { data } = $props()
 	const employees = data.employees
 </script>
 
 <main class="container">
-	<h1>Empleados</h1>
-	<a href={ROUTES.employee.create} class="button">Agregar Personal</a>
+	<div class="header">
+		<h1>Personal</h1>
+		<Button href={ROUTES.employee.create}>
+			<Plus style="margin-right: 5px;" />
+			Agregar Personal
+		</Button>
+	</div>
 	<ul>
 		{#each employees as employee}
 			<li>
@@ -27,22 +34,11 @@
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 
-	h1 {
+	.header {
 		margin-bottom: 1rem;
-	}
-
-	.button {
-		display: inline-block;
-		padding: 0.5rem 1rem;
-		background-color: #007bff;
-		color: #fff;
-		text-decoration: none;
-		border-radius: 4px;
-		margin-bottom: 1rem;
-	}
-
-	.button:hover {
-		background-color: #0056b3;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 	}
 
 	ul {

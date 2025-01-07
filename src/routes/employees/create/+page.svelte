@@ -3,6 +3,7 @@
 	import { ROUTES } from '$routes'
 	import { Employee } from '$models/employee'
 	import Button from '$components/Button.svelte'
+	import { Plus } from 'lucide-svelte'
 
 	let firstName = ''
 	let lastName = ''
@@ -57,7 +58,13 @@
 			<label for="startDate">Fecha de inicio</label>
 			<input id="startDate" type="date" oninput={handleDateChange} />
 		</div>
-		<Button type="submit" style="margin-left: auto;">Crear</Button>
+		<div class="actions">
+			<Button outlined variant="secondary" href={ROUTES.employee.list}>Cancelar</Button>
+			<Button type="submit" style="margin-left: auto;">
+				<Plus style="margin-right: 5px;" />
+				Crear
+			</Button>
+		</div>
 	</form>
 </main>
 
@@ -69,6 +76,10 @@
 		background-color: #fff;
 		border-radius: 8px;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.actions {
+		display: flex;
 	}
 
 	h1 {
