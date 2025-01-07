@@ -91,7 +91,7 @@
 
 	p {
 		margin-bottom: 0.5rem;
-		color: #ccc;
+		color: #fff;
 	}
 
 	.actions {

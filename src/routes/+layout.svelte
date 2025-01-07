@@ -4,6 +4,7 @@
 	import { Home, Users } from 'lucide-svelte'
 	import { page } from '$app/state'
 	import { cssVariables } from '$theme'
+	import Breadcrumb from '$components/Breadcrumb.svelte'
 
 	let isSidebarOpen = true
 
@@ -38,6 +39,7 @@
 			<span class="bar"></span>
 		</button>
 		<div class="container">
+			<Breadcrumb />
 			<slot></slot>
 		</div>
 	</section>
@@ -65,6 +67,9 @@
 		font-size: large;
 		background-color: #f8f9fa;
 		color: var(--primary-contrast);
+	}
+	:global(input) {
+		font-size: 1rem;
 	}
 
 	.layout {
