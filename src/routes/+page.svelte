@@ -2,7 +2,7 @@
 </script>
 
 <main>
-	<h1>Welcome to Tauri + Svelte</h1>
+	<h1>Bienvenido a Tauri + Svelte</h1>
 </main>
 
 <style>
