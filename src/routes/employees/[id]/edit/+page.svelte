@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { invoke } from '$invoke'
 	import { ROUTES } from '$routes'
-	import { differenceInYears, format } from 'date-fns'
+	import { format } from 'date-fns'
+	import Button from '$components/Button.svelte'
 
 	const { data } = $props()
 	let employee = data.employee
@@ -53,7 +54,10 @@
 					oninput={handleDateChange}
 				/>
 			</div>
-			<button type="submit" class="button">Guardar</button>
+			<div class="actions">
+				<Button variant="secondary" outlined onclick={() => window.history.back()}>Cancelar</Button>
+				<Button style="margin-left: auto;" variant="primary">Guardar</Button>
+			</div>
 		</form>
 	{:else}
 		<p>Cargando...</p>
@@ -78,6 +82,10 @@
 		margin-bottom: 1rem;
 	}
 
+	.actions {
+		display: flex;
+	}
+
 	label {
 		display: block;
 		margin-bottom: 0.5rem;
@@ -89,20 +97,5 @@
 		padding: 0.5rem;
 		border: 1px solid #ccc;
 		border-radius: 4px;
-	}
-
-	.button {
-		display: inline-block;
-		padding: 0.5rem 1rem;
-		background-color: #007bff;
-		color: #fff;
-		text-decoration: none;
-		border: none;
-		border-radius: 4px;
-		cursor: pointer;
-	}
-
-	.button:hover {
-		background-color: #0056b3;
 	}
 </style>

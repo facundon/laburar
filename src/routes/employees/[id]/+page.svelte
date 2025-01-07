@@ -2,6 +2,7 @@
 	import { invoke } from '$invoke'
 	import { ROUTES } from '$routes'
 	import { differenceInYears, format } from 'date-fns'
+	import Button from '$components/Button.svelte'
 
 	const { data } = $props()
 	const employee = data.employee
@@ -34,8 +35,8 @@
 			</p>
 		{/if}
 		<div class="actions">
-			<button onclick={deleteEmployee}>Eliminar</button>
-			<a href={ROUTES.employee.edit(employee.id)} class="button">Editar</a>
+			<Button href={ROUTES.employee.edit(employee.id)}>Editar</Button>
+			<Button style="margin-left: auto;" outlined variant="error" onclick={deleteEmployee}>Eliminar</Button>
 		</div>
 	{:else}
 		<p>Cargando...</p>
@@ -64,31 +65,5 @@
 		margin-top: 1rem;
 		display: flex;
 		gap: 1rem;
-	}
-
-	.button {
-		display: inline-block;
-		padding: 0.5rem 1rem;
-		background-color: #007bff;
-		color: #fff;
-		text-decoration: none;
-		border-radius: 4px;
-	}
-
-	.button:hover {
-		background-color: #0056b3;
-	}
-
-	button {
-		padding: 0.5rem 1rem;
-		background-color: #dc3545;
-		color: #fff;
-		border: none;
-		border-radius: 4px;
-		cursor: pointer;
-	}
-
-	button:hover {
-		background-color: #c82333;
 	}
 </style>

@@ -14,6 +14,7 @@ const config = {
 			$invoke: './src/invoke',
 			$routes: './src/routes/routes.ts',
 			$theme: './src/theme',
+			$components: './src/components',
 		},
 	},
 }

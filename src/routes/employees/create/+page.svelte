@@ -2,6 +2,7 @@
 	import { invoke } from '$invoke'
 	import { ROUTES } from '$routes'
 	import { Employee } from '$models/employee'
+	import Button from '$components/Button.svelte'
 
 	let firstName = ''
 	let lastName = ''
@@ -56,7 +57,7 @@
 			<label for="startDate">Fecha de inicio</label>
 			<input id="startDate" type="date" oninput={handleDateChange} />
 		</div>
-		<button type="submit" class="button">Crear</button>
+		<Button type="submit" style="margin-left: auto;">Crear</Button>
 	</form>
 </main>
 
@@ -89,22 +90,5 @@
 		padding: 0.5rem;
 		border: 1px solid #ccc;
 		border-radius: 4px;
-	}
-
-	.button {
-		display: block;
-		padding: 0.5rem 1rem;
-		background-color: var(--tertiary-main);
-		color: #fff;
-		text-decoration: none;
-		border: none;
-		border-radius: 4px;
-		cursor: pointer;
-		font-weight: 600;
-		margin-left: auto;
-	}
-
-	.button:hover {
-		background-color: var(--tertiary-dark);
 	}
 </style>
