@@ -7,11 +7,11 @@
 
 <main class="container">
 	<h1>Employees</h1>
-	<a href="/employees/new">Add New Employee</a>
+	<a href={ROUTES.employee.create}>Agregar Personal</a>
 	<ul>
 		{#each employees as employee}
 			<li>
-				<a href={ROUTES.employee.view(employee.id)}>{employee.firstName} {employee.lastName}</a>
+				<a href={ROUTES.employee.view(employee.id)}>{employee.name}</a>
 			</li>
 		{/each}
 	</ul>

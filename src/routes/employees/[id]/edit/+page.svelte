@@ -9,7 +9,7 @@
 		event.preventDefault()
 		if (employee) {
 			try {
-				await invoke('update_employee_command', employee.toCreateDTO())
+				await invoke('update_employee_command', employee.toUpdateDTO())
 				window.location.href = ROUTES.employee.view(employee.id)
 			} catch (error) {
 				console.error('Failed to update employee:', error)

@@ -2,8 +2,8 @@ import { invoke as tauriInvoke, type InvokeArgs } from '@tauri-apps/api/core'
 
 type Command =
 	| 'create_employee_command'
-	| 'get_employee_query'
-	| 'list_employees_query'
+	| 'get_employee_command'
+	| 'list_employees_command'
 	| 'delete_employee_command'
 	| 'update_employee_command'
 

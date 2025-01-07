@@ -44,3 +44,42 @@ pub fn create_employee(
         .get_result(conn)
         .map_err(|err| Error::Database(err.to_string()))
 }
+
+pub fn get_employee(conn: &mut SqliteConnection, id: i32) -> Result<Employee, Error> {
+    employee::table.find(id)
+        .first(conn)
+        .map_err(|err| Error::Database(err.to_string()))
+}
+
+pub fn list_employees(conn: &mut SqliteConnection) -> Result<Vec<Employee>, Error> {
+    employee::table.load(conn)
+        .map_err(|err| Error::Database(err.to_string()))
+}
+
+pub fn update_employee(
+  conn: &mut SqliteConnection,
+  id: i32,
+  address: &str,
+  first_name: &str,
+  last_name: &str,
+  phone: Option<&str>,
+  start_date: Option<&NaiveDateTime>) -> Result<Employee, Error> {
+    diesel::update(employee::table.find(id))
+        .set((
+            employee::address.eq(address),
+            employee::first_name.eq(first_name),
+            employee::last_name.eq(last_name),
+            employee::phone.eq(phone),
+            employee::start_date.eq(start_date),
+        ))
+        .returning(Employee::as_returning())
+        .get_result(conn)
+        .map_err(|err| Error::Database(err.to_string()))
+}
+
+pub fn delete_employee(conn: &mut SqliteConnection, id: i32) -> Result<(), Error> {
+    diesel::delete(employee::table.find(id))
+        .execute(conn)
+        .map_err(|err| Error::Database(err.to_string()))?;
+    Ok(())
+}

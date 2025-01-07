@@ -6,6 +6,10 @@ type CreateEmployeeDTO = {
 	start_date?: string
 }
 
+type UpdateEmployeeDTO = CreateEmployeeDTO & {
+	id: number
+}
+
 export type EmployeeDTO = {
 	id: number
 	first_name: string
@@ -25,7 +29,7 @@ export class Employee {
 	phone?: string
 	startDate?: Date
 
-	constructor(params: Omit<Employee, 'name' | 'toCreateDTO'>) {
+	constructor(params: Omit<Employee, 'name' | 'toCreateDTO' | 'toUpdateDTO'>) {
 		this.id = params.id
 		this.firstName = params.firstName
 		this.lastName = params.lastName
@@ -53,6 +57,17 @@ export class Employee {
 
 	public toCreateDTO(): CreateEmployeeDTO {
 		return {
+			first_name: this.firstName,
+			last_name: this.lastName,
+			address: this.address,
+			phone: this.phone,
+			start_date: this.startDate?.toISOString(),
+		}
+	}
+
+	public toUpdateDTO(): UpdateEmployeeDTO {
+		return {
+			id: this.id,
 			first_name: this.firstName,
 			last_name: this.lastName,
 			address: this.address,
