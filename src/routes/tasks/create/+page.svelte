@@ -6,6 +6,7 @@
 	import MainContainer from '$components/MainContainer.svelte'
 	import { Task } from '$models/task'
 	import FormGroup from '$components/FormGroup.svelte'
+	import TextArea from '$components/TextArea.svelte'
 
 	let name = ''
 	let description = ''
@@ -32,7 +33,7 @@
 			<input id="name" bind:value={name} required />
 		</FormGroup>
 		<FormGroup label="Descripción" id="description">
-			<textarea id="description" bind:value={description}></textarea>
+			<TextArea id="description" bind:value={description}></TextArea>
 		</FormGroup>
 		<div class="actions">
 			<Button outlined variant="secondary" href={ROUTES.task.list}>Cancelar</Button>

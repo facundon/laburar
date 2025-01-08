@@ -5,6 +5,7 @@
 	import { Save } from 'lucide-svelte'
 	import FromGroup from '$components/FormGroup.svelte'
 	import MainContainer from '$components/MainContainer.svelte'
+	import TextArea from '$components/TextArea.svelte'
 
 	const { data } = $props()
 	let task = data.task
@@ -28,7 +29,7 @@
 				<input id="name" bind:value={task.name} required />
 			</FromGroup>
 			<FromGroup label="Descripción" id="description">
-				<textarea id="description" bind:value={task.description}></textarea>
+				<TextArea id="description" bind:value={task.description}></TextArea>
 			</FromGroup>
 			<div class="actions">
 				<Button variant="secondary" outlined href={ROUTES.employee.view(task.id)}>Cancelar</Button>
