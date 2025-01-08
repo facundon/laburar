@@ -37,7 +37,8 @@
 
 <MainContainer title={task?.name || 'Unknown Task'}>
 	{#if task}
-		<p><strong>Descripción:</strong> {task.description}</p>
+		<strong>Descripción:</strong>
+		<p class="area">{task.description}</p>
 		<div class="actions">
 			<Button href={ROUTES.task.edit(task.id)} Icon={Pencil}>Editar</Button>
 			<Button style="margin-left: auto;" outlined variant="error" onclick={confirmDelete} Icon={Delete}>Eliminar</Button>
@@ -56,9 +57,10 @@
 </MainContainer>
 
 <style>
-	p {
+	p.area {
 		margin-bottom: 0.5rem;
 		color: #fff;
+		white-space: pre-wrap;
 	}
 
 	.actions {

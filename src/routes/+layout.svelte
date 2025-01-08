@@ -58,7 +58,10 @@
 		background-color: #f8f9fa;
 		color: var(--primary-contrast);
 	}
-	:global(input) {
+	:global(.lucide *) {
+		vector-effect: non-scaling-stroke;
+	}
+	:global(input, textarea) {
 		font-size: 1rem;
 	}
 

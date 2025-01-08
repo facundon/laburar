@@ -1,19 +1,27 @@
 <script lang="ts">
-	import type { FormEventHandler, HTMLTextareaAttributes } from 'svelte/elements'
+	import { onMount } from 'svelte'
+	import type { HTMLTextareaAttributes } from 'svelte/elements'
 
 	let { maxlength = 250, value = $bindable(), ...props }: HTMLTextareaAttributes = $props()
 	let currentWords = $state(0)
 	let currentLines = $state(1)
 
-	const updateWordCount: FormEventHandler<HTMLTextAreaElement> = event => {
-		if (!event.target || !('value' in event.target)) return
-		const text = event.target.value as string
+	const updateWordCount = (text: string) => {
 		currentWords = text.length
 		currentLines = text.split('\n').length
 	}
+
+	onMount(() => {
+		if (value) updateWordCount(String(value))
+	})
 </script>
 
-<textarea {value} oninput={updateWordCount} {...props} style={`height: ${currentLines * 20}px;`}></textarea>
+<textarea
+	bind:value
+	oninput={e => updateWordCount((e.target as HTMLTextAreaElement)?.value)}
+	{...props}
+	style={`height: ${currentLines * 20}px;`}
+></textarea>
 <div class="word-counter" style={currentWords > (maxlength || 0) ? 'color: var(--error-light);' : ''}>
 	{currentWords}/{maxlength}
 </div>
