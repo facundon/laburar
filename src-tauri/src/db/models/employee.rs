@@ -1,8 +1,9 @@
 use chrono::NaiveDateTime;
 use diesel::{RunQueryDsl, SelectableHelper, SqliteConnection, prelude::*};
-use crate::db::schema::employee;
+use crate::db::schema::{employee, task, employee_on_task};
 use serde::{Serialize, Deserialize};
 use crate::error::Error;
+use crate::db::models::task::Task;
 
 #[derive(Queryable, Selectable, Serialize, Deserialize, Debug)]
 #[diesel(table_name = crate::db::schema::employee)]
@@ -82,4 +83,16 @@ pub fn delete_employee(conn: &mut SqliteConnection, id: i32) -> Result<(), Error
         .execute(conn)
         .map_err(|err| Error::Database(err.to_string()))?;
     Ok(())
+}
+
+pub fn get_employee_with_tasks(conn: &mut SqliteConnection, employee_id: i32) -> Result<(Employee, Vec<Task>), Error> {
+    let employee = get_employee(conn, employee_id)?;
+    let tasks = task::table
+        .inner_join(employee_on_task::table.on(employee_on_task::task_id.eq(task::id)))
+        .inner_join(employee::table.on(employee::id.eq(employee_on_task::employee_id)))
+        .filter(employee::id.eq(employee_id))
+        .select(task::all_columns)
+        .load::<Task>(conn)
+        .map_err(|err| Error::Database(err.to_string()))?;
+    Ok((employee, tasks))
 }

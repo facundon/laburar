@@ -7,6 +7,7 @@
 		const path = $page.url.pathname.split('/').filter(Boolean)
 		const routes: { [key: string]: string } = {
 			employees: 'Personal',
+			tasks: 'Tareas',
 			create: 'Crear',
 			edit: 'Editar',
 			view: 'Ver',

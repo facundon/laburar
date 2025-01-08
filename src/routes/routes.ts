@@ -5,4 +5,10 @@ export const ROUTES = {
 		edit: (id: number) => `/employees/${id}/edit`,
 		view: (id: number) => `/employees/${id}`,
 	},
+	task: {
+		list: '/tasks',
+		create: '/tasks/create',
+		edit: (id: number) => `/tasks/${id}/edit`,
+		view: (id: number) => `/tasks/${id}`,
+	},
 } as const

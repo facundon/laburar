@@ -2,3 +2,4 @@
 // It imports and re-exports commands defined in other files within the commands directory.
 
 pub mod employee;
+pub mod task;

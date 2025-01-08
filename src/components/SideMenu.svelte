@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ROUTES } from '$routes'
-	import { Home, Users } from 'lucide-svelte'
+	import { Home, Users, BriefcaseBusiness } from 'lucide-svelte'
 	import { page } from '$app/state'
 
 	export let isSidebarOpen: boolean
@@ -21,6 +21,12 @@
 			<a href={ROUTES.employee.list} aria-label="Personal" class:active={isActive(ROUTES.employee.list)}>
 				<Users />
 				<span class="menu-text">Personal</span>
+			</a>
+		</li>
+		<li>
+			<a href={ROUTES.task.list} aria-label="Tareas" class:active={isActive(ROUTES.task.list)}>
+				<BriefcaseBusiness />
+				<span class="menu-text">Tareas</span>
 			</a>
 		</li>
 	</ul>

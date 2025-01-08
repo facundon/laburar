@@ -5,6 +5,7 @@
 	import Button from '$components/Button.svelte'
 	import Modal from '$components/Modal.svelte'
 	import { Delete, Pencil } from 'lucide-svelte'
+	import MainContainer from '$components/MainContainer.svelte'
 
 	const { data } = $props()
 	const employee = data.employee
@@ -39,9 +40,8 @@
 	}
 </script>
 
-<main class="container">
+<MainContainer title={employee?.name || 'Cargando'}>
 	{#if employee}
-		<h1>{employee.firstName} {employee.lastName}</h1>
 		<p><strong>Teléfono:</strong> {employee.phone}</p>
 		<p><strong>Dirección:</strong> {employee.address}</p>
 		{#if employee.startDate}
@@ -55,45 +55,23 @@
 			</p>
 		{/if}
 		<div class="actions">
-			<Button href={ROUTES.employee.edit(employee.id)}>
-				<Pencil style="margin-right: 10px;" size={18} />
-				Editar
-			</Button>
-			<Button style="margin-left: auto;" outlined variant="error" onclick={confirmDelete}>
-				<Delete style="margin-right: 10px;" size={18} />
-				Eliminar
-			</Button>
+			<Button href={ROUTES.employee.edit(employee.id)} Icon={Pencil}>Editar</Button>
+			<Button style="margin-left: auto;" outlined variant="error" onclick={confirmDelete} Icon={Delete}>Eliminar</Button>
 		</div>
 		<Modal
 			bind:show={showModal}
-			title="Confirm Deletion"
-			message={`Are you sure you want to delete ${employee.name}?`}
+			isDestructive
+			title="Confirmar acción"
+			message={`¿Estás seguro de que deseas eliminar a "${employee.name}"?`}
 			onconfirm={handleConfirm}
 			onclose={handleClose}
 		/>
 	{:else}
 		<p>Cargando...</p>
 	{/if}
-</main>
+</MainContainer>
 
 <style>
-	.container {
-		max-width: 600px;
-		margin: 0 auto;
-		padding: 2rem;
-		padding-top: 1rem;
-		border-radius: 8px;
-		background-color: var(--gray-main);
-		color: #fff;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	}
-
-	h1 {
-		margin-bottom: 2rem;
-		text-align: center;
-		color: #fff;
-	}
-
 	p {
 		margin-bottom: 0.5rem;
 		color: #fff;

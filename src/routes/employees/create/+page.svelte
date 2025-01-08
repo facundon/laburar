@@ -3,6 +3,8 @@
 	import { ROUTES } from '$routes'
 	import { Employee } from '$models/employee'
 	import Button from '$components/Button.svelte'
+	import MainContainer from '$components/MainContainer.svelte'
+	import FormGroup from '$components/FormGroup.svelte'
 	import { Plus } from 'lucide-svelte'
 
 	let firstName = ''
@@ -35,29 +37,23 @@
 	}
 </script>
 
-<main class="container">
-	<h1>Agregar Personal</h1>
+<MainContainer title="Agregar Personal">
 	<form onsubmit={createEmployee}>
-		<div class="form-group">
-			<label for="firstName">Nombre</label>
+		<FormGroup label="Nombre" id="firstName">
 			<input id="firstName" bind:value={firstName} required />
-		</div>
-		<div class="form-group">
-			<label for="lastName">Apellido</label>
+		</FormGroup>
+		<FormGroup label="Apellido" id="lastName">
 			<input id="lastName" bind:value={lastName} required />
-		</div>
-		<div class="form-group">
-			<label for="address">Dirección</label>
+		</FormGroup>
+		<FormGroup label="Dirección" id="address">
 			<input id="address" bind:value={address} required />
-		</div>
-		<div class="form-group">
-			<label for="phone">Teléfono</label>
+		</FormGroup>
+		<FormGroup label="Teléfono" id="phone">
 			<input id="phone" bind:value={phone} />
-		</div>
-		<div class="form-group">
-			<label for="startDate">Fecha de inicio</label>
+		</FormGroup>
+		<FormGroup label="Fecha de inicio" id="startDate">
 			<input id="startDate" type="date" oninput={handleDateChange} />
-		</div>
+		</FormGroup>
 		<div class="actions">
 			<Button outlined variant="secondary" href={ROUTES.employee.list}>Cancelar</Button>
 			<Button type="submit" style="margin-left: auto;">
@@ -66,42 +62,10 @@
 			</Button>
 		</div>
 	</form>
-</main>
+</MainContainer>
 
 <style>
-	.container {
-		max-width: 600px;
-		margin: 0 auto;
-		padding: 2rem;
-		padding-top: 1rem;
-		background-color: var(--gray-main);
-		color: #fff;
-		border-radius: 8px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	}
-
 	.actions {
 		display: flex;
-	}
-
-	h1 {
-		margin-bottom: 2rem;
-	}
-
-	.form-group {
-		margin-bottom: 1rem;
-	}
-
-	label {
-		display: block;
-		margin-bottom: 0.5rem;
-		font-weight: bold;
-	}
-
-	input {
-		width: 100%;
-		padding: 0.5rem;
-		border: 1px solid #ccc;
-		border-radius: 4px;
 	}
 </style>

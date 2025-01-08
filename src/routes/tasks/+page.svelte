@@ -6,12 +6,12 @@
 	import LinkList from '$components/LinkList.svelte'
 
 	const { data } = $props()
-	const employees = data.employees
+	const tasks = data.tasks
 </script>
 
 {#snippet Actions()}
-	<Button href={ROUTES.employee.create} Icon={Plus}>Agregar Personal</Button>
+	<Button href={ROUTES.task.create} Icon={Plus}>Agregar Tarea</Button>
 {/snippet}
-<MainContainer title="Personal" {Actions}>
-	<LinkList entities={employees} getHref={id => ROUTES.employee.view(id)} />
+<MainContainer title="Tarea" {Actions}>
+	<LinkList entities={tasks} getHref={id => ROUTES.task.view(id)} />
 </MainContainer>

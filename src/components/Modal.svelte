@@ -1,7 +1,8 @@
 <script lang="ts">
 	import Button from '$components/Button.svelte'
+	import { Check, Trash2 } from 'lucide-svelte'
 
-	let { show = $bindable(false), title = '', message = '', onclose, onconfirm } = $props()
+	let { show = $bindable(false), title = '', message = '', onclose, onconfirm, isDestructive = false } = $props()
 
 	function close() {
 		onclose()
@@ -19,7 +20,7 @@
 		<p>{message}</p>
 		<div class="actions">
 			<Button onclick={close}>Cancel</Button>
-			<Button variant="error" onclick={confirm}>Confirm</Button>
+			<Button variant={isDestructive ? 'error' : 'primary'} onclick={confirm} Icon={isDestructive ? Trash2 : Check}>Confirm</Button>
 		</div>
 	</div>
 {/if}

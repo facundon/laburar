@@ -2,7 +2,8 @@ mod commands;
 mod db;
 mod error;
 
-use commands::employee::{create_employee_command, delete_employee_command, get_employee_command, list_employees_command, update_employee_command};
+use commands::employee::{create_employee_command, delete_employee_command, get_employee_command, list_employees_command, update_employee_command,get_employee_with_tasks_command};
+use commands::task::{create_task_command, delete_task_command, get_task_command, list_tasks_command, update_task_command,get_task_with_employees_command};
 use db::sqlite::run_migrations;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -19,7 +20,14 @@ pub fn run() {
           delete_employee_command,
           get_employee_command,
           list_employees_command,
-          update_employee_command
+          update_employee_command,
+          create_task_command,
+          delete_task_command,
+          get_task_command,
+          list_tasks_command,
+          update_task_command,
+          get_employee_with_tasks_command,
+          get_task_with_employees_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -1,0 +1,16 @@
+-- Your SQL goes here
+CREATE TABLE task (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE employee_on_task (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  employee_id INTEGER NOT NULL,
+  task_id INTEGER NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (employee_id) REFERENCES employee(id),
+  FOREIGN KEY (task_id) REFERENCES task(id)
+);

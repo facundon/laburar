@@ -11,3 +11,30 @@ diesel::table! {
         created_at -> Nullable<Timestamp>,
     }
 }
+
+diesel::table! {
+    employee_on_task (id) {
+        id -> Integer,
+        employee_id -> Integer,
+        task_id -> Integer,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    task (id) {
+        id -> Integer,
+        name -> Text,
+        description -> Nullable<Text>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::joinable!(employee_on_task -> employee (employee_id));
+diesel::joinable!(employee_on_task -> task (task_id));
+
+diesel::allow_tables_to_appear_in_same_query!(
+    employee,
+    employee_on_task,
+    task,
+);

@@ -4,6 +4,8 @@
 	import { format } from 'date-fns'
 	import Button from '$components/Button.svelte'
 	import { Save } from 'lucide-svelte'
+	import FromGroup from '$components/FormGroup.svelte'
+	import MainContainer from '$components/MainContainer.svelte'
 
 	const { data } = $props()
 	let employee = data.employee
@@ -26,35 +28,29 @@
 	}
 </script>
 
-<main class="container">
+<MainContainer title={`Editar ${employee?.name}`}>
 	{#if employee}
-		<h1>Editar {employee.firstName} {employee.lastName}</h1>
 		<form onsubmit={updateEmployee}>
-			<div class="form-group">
-				<label for="firstName">Nombre</label>
+			<FromGroup label="Nombre" id="firstName">
 				<input id="firstName" bind:value={employee.firstName} required />
-			</div>
-			<div class="form-group">
-				<label for="lastName">Apellido</label>
+			</FromGroup>
+			<FromGroup label="Apellido" id="lastName">
 				<input id="lastName" bind:value={employee.lastName} required />
-			</div>
-			<div class="form-group">
-				<label for="phone">Teléfono</label>
+			</FromGroup>
+			<FromGroup label="Teléfono" id="phone">
 				<input id="phone" bind:value={employee.phone} />
-			</div>
-			<div class="form-group">
-				<label for="address">Dirección</label>
+			</FromGroup>
+			<FromGroup label="Dirección" id="address">
 				<input id="address" bind:value={employee.address} required />
-			</div>
-			<div class="form-group">
-				<label for="startDate">Fecha de inicio</label>
+			</FromGroup>
+			<FromGroup label="Fecha de inicio" id="startDate">
 				<input
 					id="startDate"
 					type="date"
 					value={employee.startDate ? format(employee.startDate, 'yyyy-MM-dd') : ''}
 					oninput={handleDateChange}
 				/>
-			</div>
+			</FromGroup>
 			<div class="actions">
 				<Button variant="secondary" outlined href={ROUTES.employee.view(employee.id)}>Cancelar</Button>
 				<Button style="margin-left: auto;" variant="primary">
@@ -66,49 +62,17 @@
 	{:else}
 		<p>Cargando...</p>
 	{/if}
-</main>
+</MainContainer>
 
 <style>
-	.container {
-		max-width: 600px;
-		margin: 0 auto;
-		padding: 2rem;
-		border-radius: 8px;
-		background-color: var(--gray-main);
-		color: #fff;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	}
-
-	h1 {
-		margin-bottom: 1rem;
-		color: #fff;
-	}
-
 	p {
 		margin-bottom: 0.5rem;
 		color: #fff;
-	}
-
-	.form-group {
-		margin-bottom: 1rem;
 	}
 
 	.actions {
 		margin-top: 1rem;
 		display: flex;
 		gap: 1rem;
-	}
-
-	label {
-		display: block;
-		margin-bottom: 0.5rem;
-		font-weight: bold;
-	}
-
-	input {
-		width: 100%;
-		padding: 0.5rem;
-		border: 1px solid #ccc;
-		border-radius: 4px;
 	}
 </style>

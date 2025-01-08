@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import { page } from '$app/state'
 	import { cssVariables } from '$theme'
 	import Breadcrumb from '$components/Breadcrumb.svelte'
 	import SideMenu from '$components/SideMenu.svelte'

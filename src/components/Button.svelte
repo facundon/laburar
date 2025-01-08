@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { HTMLButtonAttributes } from 'svelte/elements'
 	import { goto } from '$app/navigation'
+	import type { Icon as IconType } from 'lucide-svelte'
 
 	type LinkProps = {
 		href: string
@@ -14,10 +15,11 @@
 	type Props = Omit<HTMLButtonAttributes, 'onclick'> & {
 		outlined?: boolean
 		fullWidth?: boolean
+		Icon?: typeof IconType
 		variant?: 'primary' | 'secondary' | 'error'
 	} & (ButtonProps | LinkProps)
 
-	let { children, href, variant: type = 'primary', fullWidth = false, outlined = false, ...rest }: Props = $props()
+	let { children, href, Icon, variant: type = 'primary', fullWidth = false, outlined = false, ...rest }: Props = $props()
 </script>
 
 <button
@@ -25,6 +27,9 @@
 	onclick={href ? () => goto(href) : onclick}
 	{...rest}
 >
+	{#if Icon}
+		<Icon style="margin-right: 8px;" strokeWidth={1.5} />
+	{/if}
 	{@render children?.()}
 </button>
 

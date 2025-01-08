@@ -1,4 +1,5 @@
-pub use crate::db::models::employee::{create_employee,delete_employee,update_employee,list_employees,get_employee};
+pub use crate::db::models::employee::{create_employee,delete_employee,update_employee,list_employees,get_employee,get_employee_with_tasks};
+use crate::db::models::task::Task;
 use crate::db::{models::employee::Employee, sqlite::establish_connection};
 use crate::error::Error;
 use chrono::NaiveDateTime;
@@ -55,6 +56,12 @@ pub fn update_employee_command(
 
 #[command(rename_all = "snake_case")]
 pub fn delete_employee_command(id: i32) -> Result<(), Error> {
+  let mut conn = establish_connection();
+  delete_employee(&mut conn, id)
+}
+
+#[command(rename_all = "snake_case")]
+pub fn get_employee_with_tasks_command(id: i32) -> Result<(Employee, Vec<Task>), Error> {
     let mut conn = establish_connection();
-    delete_employee(&mut conn, id)
+    get_employee_with_tasks(&mut conn, id)
 }
