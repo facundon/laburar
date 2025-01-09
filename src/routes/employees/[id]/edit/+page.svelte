@@ -28,8 +28,8 @@
 	}
 </script>
 
-<MainContainer title={`Editar ${employee?.name}`}>
-	{#if employee}
+{#if employee}
+	<MainContainer title={`Editar ${employee.name}`}>
 		<form onsubmit={updateEmployee}>
 			<FromGroup label="Nombre" id="firstName">
 				<input id="firstName" bind:value={employee.firstName} required />
@@ -59,17 +59,10 @@
 				</Button>
 			</div>
 		</form>
-	{:else}
-		<p>Cargando...</p>
-	{/if}
-</MainContainer>
+	</MainContainer>
+{/if}
 
 <style>
-	p {
-		margin-bottom: 0.5rem;
-		color: #fff;
-	}
-
 	.actions {
 		margin-top: 1rem;
 		display: flex;

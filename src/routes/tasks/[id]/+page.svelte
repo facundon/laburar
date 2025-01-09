@@ -35,8 +35,8 @@
 	}
 </script>
 
-<MainContainer title={task?.name || 'Unknown Task'}>
-	{#if task}
+{#if task}
+	<MainContainer title={task.name}>
 		<strong>Descripción:</strong>
 		<p class="area">{task.description}</p>
 		<div class="actions">
@@ -51,10 +51,8 @@
 			onconfirm={handleConfirm}
 			onclose={handleClose}
 		/>
-	{:else}
-		<p>Cargando...</p>
-	{/if}
-</MainContainer>
+	</MainContainer>
+{/if}
 
 <style>
 	p.area {

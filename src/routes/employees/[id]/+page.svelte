@@ -40,8 +40,8 @@
 	}
 </script>
 
-<MainContainer title={employee?.name || 'Cargando'}>
-	{#if employee}
+{#if employee}
+	<MainContainer title={employee.name}>
 		<p><strong>Teléfono:</strong> {employee.phone}</p>
 		<p><strong>Dirección:</strong> {employee.address}</p>
 		{#if employee.startDate}
@@ -66,10 +66,8 @@
 			onconfirm={handleConfirm}
 			onclose={handleClose}
 		/>
-	{:else}
-		<p>Cargando...</p>
-	{/if}
-</MainContainer>
+	</MainContainer>
+{/if}
 
 <style>
 	p {
