@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state'
+	import { ChevronRight } from 'lucide-svelte'
+	import { breadcrumbData } from '$context'
 
 	const routes: { [key: string]: string } = {
 		employees: 'Personal',
@@ -11,11 +13,16 @@
 	}
 
 	const path = $derived(page.url.pathname.split('/').filter(Boolean))
+
 	const breadcrumb = $derived(
-		path.map((segment, index) => ({
-			name: routes[segment as keyof typeof routes] || segment,
-			url: '/' + path.slice(0, index + 1).join('/'),
-		})),
+		path.map((segment, index) => {
+			let name = routes[segment as keyof typeof routes] || segment
+			if (!isNaN(Number(segment))) name = breadcrumbData.name || 'Detalle'
+			return {
+				name,
+				url: '/' + path.slice(0, index + 1).join('/'),
+			}
+		}),
 	)
 </script>
 
@@ -23,7 +30,7 @@
 	{#each breadcrumb as { name, url }, index}
 		{#if index < breadcrumb.length - 1}
 			<a href={url}>{name}</a>
-			<span class="separator">|</span>
+			<ChevronRight size={18} strokeWidth={1} style="margin-inline: 0.5rem;" />
 		{:else}
 			<span class="active">{name}</span>
 		{/if}
@@ -46,9 +53,5 @@
 	.breadcrumb span.active {
 		font-weight: 600;
 		color: var(--secondary-dark);
-	}
-
-	.separator {
-		margin: 0 0.5rem;
 	}
 </style>

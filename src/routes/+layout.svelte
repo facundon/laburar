@@ -79,7 +79,8 @@
 	.container {
 		max-width: 1024px;
 		margin: 0 auto;
-		padding: 1rem;
+		padding-inline: 4rem;
+		padding-block: 2rem;
 	}
 
 	.hamburger {
