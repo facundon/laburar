@@ -42,7 +42,7 @@
 
 {#if employee}
 	{#snippet Actions()}
-		<Button variant="secondary" href={ROUTES.employee.assignTask(employee.id)} Icon={ClipboardList}>Asignar Tareas</Button>
+		<Button variant="secondary" href={ROUTES.employee.assignTasks(employee.id)} Icon={ClipboardList}>Asignar Tareas</Button>
 	{/snippet}
 	<MainContainer title={employee.name} {Actions}>
 		<p><strong>Teléfono:</strong> {employee.phone}</p>

@@ -3,16 +3,26 @@
 	import { ROUTES } from '$routes'
 	import Button from '$components/Button.svelte'
 	import MainContainer from '$components/MainContainer.svelte'
+	import Checkbox from '$components/Checkbox.svelte' // Import the new Checkbox component
 	import { Save } from 'lucide-svelte'
 
 	let { data } = $props()
 	const employee = data.employee
+	const tasks = data.tasks
+	let selectedTasks = new Set()
 
-	async function assignTask() {
+	function toggleTask(taskId: number) {
+		if (selectedTasks.has(taskId)) selectedTasks.delete(taskId)
+		else selectedTasks.add(taskId)
+	}
+
+	async function assignTasks() {
 		if (!employee) return
 		try {
-			// await invoke('assign_task_command', task.toCreateDTO())
-			window.location.href = ROUTES.employee.view(employee.id)
+			const tasksToAssign = Array.from(selectedTasks)
+			console.log(tasksToAssign)
+			// await invoke('assign_tasks_command', { employeeId: employee.id, tasks: tasksToAssign });
+			// window.location.href = ROUTES.employee.view(employee.id)
 		} catch (error) {
 			console.error('Failed to assign task:', error)
 		}
@@ -20,8 +30,13 @@
 </script>
 
 {#if employee}
-	<MainContainer title={`Asignar Tarea a ${employee.name}`}>
-		<form onsubmit={assignTask}>
+	<MainContainer title={`Asignar Tareas a ${employee.name}`}>
+		<form onsubmit={assignTasks}>
+			<div class="task-list">
+				{#each tasks as task}
+					<Checkbox id={task.id.toString()} onchange={() => toggleTask(task.id)} label={task.name} />
+				{/each}
+			</div>
 			<div class="actions">
 				<Button outlined variant="secondary" href={ROUTES.employee.view(employee.id)}>Cancelar</Button>
 				<Button type="submit" style="margin-left: auto;">
@@ -36,5 +51,14 @@
 <style>
 	.actions {
 		display: flex;
+	}
+
+	.task-list {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+		gap: 10px;
+		max-height: 450px;
+		overflow-y: auto;
+		margin-bottom: 2rem;
 	}
 </style>

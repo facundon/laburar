@@ -4,7 +4,7 @@ export const ROUTES = {
 		create: '/employees/create',
 		edit: (id: number) => `/employees/${id}/edit`,
 		view: (id: number) => `/employees/${id}`,
-		assignTask: (id: number) => `/employees/${id}/assign-task`,
+		assignTasks: (id: number) => `/employees/${id}/assign-task`,
 	},
 	task: {
 		list: '/tasks',
