@@ -15,6 +15,7 @@ const config = {
 			$routes: './src/routes/routes.ts',
 			$theme: './src/theme',
 			$components: './src/components',
+			$queries: './src/queries',
 		},
 	},
 }
