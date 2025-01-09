@@ -4,7 +4,7 @@
 	import { differenceInYears, format } from 'date-fns'
 	import Button from '$components/Button.svelte'
 	import Modal from '$components/Modal.svelte'
-	import { Delete, Pencil } from 'lucide-svelte'
+	import { ClipboardList, Delete, Pencil } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 
 	const { data } = $props()
@@ -41,7 +41,10 @@
 </script>
 
 {#if employee}
-	<MainContainer title={employee.name}>
+	{#snippet Actions()}
+		<Button variant="secondary" href={ROUTES.employee.assignTask(employee.id)} Icon={ClipboardList}>Asignar Tareas</Button>
+	{/snippet}
+	<MainContainer title={employee.name} {Actions}>
 		<p><strong>Teléfono:</strong> {employee.phone}</p>
 		<p><strong>Dirección:</strong> {employee.address}</p>
 		{#if employee.startDate}
@@ -55,7 +58,7 @@
 			</p>
 		{/if}
 		<div class="actions">
-			<Button href={ROUTES.employee.edit(employee.id)} Icon={Pencil}>Editar</Button>
+			<Button outlined href={ROUTES.employee.edit(employee.id)} Icon={Pencil}>Editar</Button>
 			<Button style="margin-left: auto;" outlined variant="error" onclick={confirmDelete} Icon={Delete}>Eliminar</Button>
 		</div>
 		<Modal

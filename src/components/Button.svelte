@@ -108,6 +108,7 @@
 
 	.button.secondary:hover:not(.outlined):not(:disabled) {
 		background-color: var(--secondary-dark);
+		border-color: var(--secondary-dark);
 	}
 
 	.button.error:hover:not(.outlined):not(:disabled) {

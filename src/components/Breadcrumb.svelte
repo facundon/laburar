@@ -1,27 +1,27 @@
 <script lang="ts">
-	import { page } from '$app/stores'
-	import { derived } from 'svelte/store'
-	import { ROUTES } from '$routes'
+	import { page } from '$app/state'
 
-	const breadcrumb = derived(page, $page => {
-		const path = $page.url.pathname.split('/').filter(Boolean)
-		const routes: { [key: string]: string } = {
-			employees: 'Personal',
-			tasks: 'Tareas',
-			create: 'Crear',
-			edit: 'Editar',
-			view: 'Ver',
-		}
-		return path.map((segment, index) => ({
+	const routes: { [key: string]: string } = {
+		employees: 'Personal',
+		tasks: 'Tareas',
+		'assign-task': 'Asignar Tarea',
+		create: 'Crear',
+		edit: 'Editar',
+		view: 'Ver',
+	}
+
+	const path = $derived(page.url.pathname.split('/').filter(Boolean))
+	const breadcrumb = $derived(
+		path.map((segment, index) => ({
 			name: routes[segment as keyof typeof routes] || segment,
 			url: '/' + path.slice(0, index + 1).join('/'),
-		}))
-	})
+		})),
+	)
 </script>
 
 <nav class="breadcrumb">
-	{#each $breadcrumb as { name, url }, index}
-		{#if index < $breadcrumb.length - 1}
+	{#each breadcrumb as { name, url }, index}
+		{#if index < breadcrumb.length - 1}
 			<a href={url}>{name}</a>
 			<span class="separator">|</span>
 		{:else}

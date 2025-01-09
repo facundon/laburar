@@ -40,7 +40,7 @@
 		<strong>Descripción:</strong>
 		<p class="area">{task.description}</p>
 		<div class="actions">
-			<Button href={ROUTES.task.edit(task.id)} Icon={Pencil}>Editar</Button>
+			<Button outlined href={ROUTES.task.edit(task.id)} Icon={Pencil}>Editar</Button>
 			<Button style="margin-left: auto;" outlined variant="error" onclick={confirmDelete} Icon={Delete}>Eliminar</Button>
 		</div>
 		<Modal
