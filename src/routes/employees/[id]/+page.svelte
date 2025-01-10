@@ -9,6 +9,7 @@
 
 	const { data } = $props()
 	const employee = data.employee
+	const tasks = data.tasks
 
 	let showModal = $state(false)
 
@@ -70,6 +71,13 @@
 			onclose={handleClose}
 		/>
 	</MainContainer>
+	{#if tasks.length > 0}
+		<MainContainer title="Tareas" style="margin-top: 2rem;">
+			{#each tasks as task}
+				<p>{task.name}</p>
+			{/each}
+		</MainContainer>
+	{/if}
 {/if}
 
 <style>

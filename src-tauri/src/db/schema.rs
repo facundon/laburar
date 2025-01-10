@@ -17,6 +17,8 @@ diesel::table! {
         id -> Integer,
         employee_id -> Integer,
         task_id -> Integer,
+        isPrimary -> Nullable<Bool>,
+        efficiency -> Integer,
         created_at -> Nullable<Timestamp>,
     }
 }
@@ -26,6 +28,9 @@ diesel::table! {
         id -> Integer,
         name -> Text,
         description -> Nullable<Text>,
+        area -> Nullable<Text>,
+        difficulty -> Text,
+        frequency -> Text,
         created_at -> Nullable<Timestamp>,
     }
 }
@@ -33,8 +38,4 @@ diesel::table! {
 diesel::joinable!(employee_on_task -> employee (employee_id));
 diesel::joinable!(employee_on_task -> task (task_id));
 
-diesel::allow_tables_to_appear_in_same_query!(
-    employee,
-    employee_on_task,
-    task,
-);
+diesel::allow_tables_to_appear_in_same_query!(employee, employee_on_task, task,);

@@ -5,6 +5,7 @@
 	import Modal from '$components/Modal.svelte'
 	import { Delete, Pencil } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
+	import Chip from '$components/Chip.svelte'
 
 	const { data } = $props()
 	const task = data.task
@@ -39,6 +40,16 @@
 	<MainContainer title={task.name}>
 		<strong>Descripción:</strong>
 		<p class="area">{task.description}</p>
+
+		<strong>Frecuencia:</strong>
+		<p class="frequency">{task.frequency}</p>
+
+		<strong>Área:</strong>
+		<Chip>{task.area}</Chip>
+
+		<strong>Dificultad:</strong>
+		<p class="difficulty {task.difficulty.toLowerCase()}">{task.difficulty}</p>
+
 		<div class="actions">
 			<Button outlined href={ROUTES.task.edit(task.id)} Icon={Pencil}>Editar</Button>
 			<Button style="margin-left: auto;" outlined variant="error" onclick={confirmDelete} Icon={Delete}>Eliminar</Button>
@@ -60,7 +71,6 @@
 		color: #fff;
 		white-space: pre-wrap;
 	}
-
 	.actions {
 		margin-top: 3rem;
 		display: flex;

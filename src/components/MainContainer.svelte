@@ -4,13 +4,14 @@
 	interface Props {
 		title: string
 		Actions?: Snippet
+		style?: string
 		children: () => any
 	}
 
-	let { title, Actions, children }: Props = $props()
+	let { title, Actions, style, children }: Props = $props()
 </script>
 
-<main class="container">
+<main class="container" {style}>
 	<div class="header">
 		<h1>{title}</h1>
 		{#if Actions}<Actions />{/if}

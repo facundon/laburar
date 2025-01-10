@@ -1,5 +1,5 @@
-use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 use diesel::prelude::*;
+use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 use dotenvy::dotenv;
 use std::{env, error::Error};
 
@@ -15,7 +15,9 @@ pub fn establish_connection() -> SqliteConnection {
         // Production environment
         let mut path = std::path::PathBuf::from(tauri::path::BaseDirectory::Data.variable());
         path.push("database.db");
-        path.to_str().expect("Failed to convert path to string").to_string()
+        path.to_str()
+            .expect("Failed to convert path to string")
+            .to_string()
     };
 
     SqliteConnection::establish(&database_url)

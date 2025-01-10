@@ -1,14 +1,5 @@
-type CreateEmployeeDTO = {
-	first_name: string
-	last_name: string
-	address: string
-	phone?: string
-	start_date?: string
-}
-
-type UpdateEmployeeDTO = CreateEmployeeDTO & {
-	id: number
-}
+type CreateEmployeeDTO = Omit<EmployeeDTO, 'id' | 'created_at'>
+type UpdateEmployeeDTO = Omit<EmployeeDTO, 'created_at'>
 
 export type EmployeeDTO = {
 	id: number
@@ -67,12 +58,8 @@ export class Employee {
 
 	public toUpdateDTO(): UpdateEmployeeDTO {
 		return {
+			...this.toCreateDTO(),
 			id: this.id,
-			first_name: this.firstName,
-			last_name: this.lastName,
-			address: this.address,
-			phone: this.phone,
-			start_date: this.startDate?.toISOString(),
 		}
 	}
 }

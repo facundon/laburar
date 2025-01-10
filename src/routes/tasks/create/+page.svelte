@@ -8,8 +8,11 @@
 	import FormGroup from '$components/FormGroup.svelte'
 	import TextArea from '$components/TextArea.svelte'
 
-	let name = ''
-	let description = ''
+	let name = $state('')
+	let description = $state('')
+	let frequency = $state('')
+	let difficulty = $state('')
+	let area = $state('')
 
 	async function createTask() {
 		try {
@@ -17,6 +20,9 @@
 				id: 0,
 				name,
 				description,
+				area,
+				frequency,
+				difficulty,
 				createdAt: new Date(),
 			})
 			await invoke('create_task_command', task.toCreateDTO())
@@ -35,12 +41,18 @@
 		<FormGroup label="Descripción" id="description">
 			<TextArea id="description" bind:value={description}></TextArea>
 		</FormGroup>
+		<FormGroup label="Area" id="area">
+			<input id="area" bind:value={area} />
+		</FormGroup>
+		<FormGroup label="Frecuencia" id="frequency">
+			<input id="frequency" bind:value={frequency} required />
+		</FormGroup>
+		<FormGroup label="Dificultad" id="dificulty">
+			<input id="dificulty" bind:value={difficulty} required />
+		</FormGroup>
 		<div class="actions">
 			<Button outlined variant="secondary" href={ROUTES.task.list}>Cancelar</Button>
-			<Button type="submit" style="margin-left: auto;">
-				<Plus style="margin-right: 5px;" />
-				Crear
-			</Button>
+			<Button type="submit" Icon={Plus}>Crear</Button>
 		</div>
 	</form>
 </MainContainer>
@@ -48,5 +60,6 @@
 <style>
 	.actions {
 		display: flex;
+		justify-content: space-between;
 	}
 </style>

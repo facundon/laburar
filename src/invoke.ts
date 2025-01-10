@@ -8,9 +8,11 @@ type Command =
 	| 'update_employee_command'
 	| 'create_task_command'
 	| 'get_task_command'
+	| 'get_tasks_for_employee_command'
 	| 'list_tasks_command'
 	| 'delete_task_command'
 	| 'update_task_command'
+	| 'assign_tasks_to_employee_command'
 
 export const invoke = async <T>(command: Command, params?: InvokeArgs, parser?: (data: any) => T): Promise<T> => {
 	const response = await tauriInvoke<T>(command, params)

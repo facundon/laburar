@@ -20,9 +20,8 @@
 		if (!employee) return
 		try {
 			const tasksToAssign = Array.from(selectedTasks)
-			console.log(tasksToAssign)
-			// await invoke('assign_tasks_command', { employeeId: employee.id, tasks: tasksToAssign });
-			// window.location.href = ROUTES.employee.view(employee.id)
+			await invoke('assign_tasks_to_employee_command', { employee_id: employee.id, task_ids: tasksToAssign })
+			window.location.href = ROUTES.employee.view(employee.id)
 		} catch (error) {
 			console.error('Failed to assign task:', error)
 		}
