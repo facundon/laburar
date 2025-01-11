@@ -30,7 +30,6 @@
 
 <style>
 	textarea {
-		width: 100%;
 		border-radius: 4px;
 		resize: none;
 		min-height: 1rem;
@@ -40,6 +39,7 @@
 	.textarea-wrapper {
 		width: fit-content;
 		position: relative;
+		flex-grow: 1;
 	}
 	.word-counter {
 		text-align: right;

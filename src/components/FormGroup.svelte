@@ -1,5 +1,11 @@
 <script lang="ts">
-	let { children, id, label } = $props()
+	interface Props {
+		id: string
+		label: string
+		children: () => any
+	}
+
+	let { children, id, label }: Props = $props()
 </script>
 
 <div class="form-group">
@@ -10,6 +16,8 @@
 <style>
 	.form-group {
 		margin-bottom: 1rem;
+		width: fit-content;
+		flex: 1;
 	}
 
 	label {
@@ -22,5 +30,10 @@
 		padding: 0.3rem;
 		border: 2px solid var(--secondary-dark);
 		border-radius: 4px;
+		width: 100%;
+	}
+
+	:global(.form-group > .textarea-wrapper, .select-wrapper) {
+		width: 100% !important;
 	}
 </style>
