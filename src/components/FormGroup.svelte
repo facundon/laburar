@@ -18,10 +18,9 @@
 		font-weight: bold;
 	}
 
-	:global(.form-group input) {
-		width: 100%;
-		padding: 0.5rem;
-		border: 1px solid #ccc;
+	:global(.form-group input, select, textarea) {
+		padding: 0.3rem;
+		border: 2px solid var(--secondary-dark);
 		border-radius: 4px;
 	}
 </style>

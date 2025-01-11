@@ -22,17 +22,12 @@
 		}
 	}
 
-	function confirmDelete() {
-		showModal = true
-	}
-
-	function handleClose() {
-		showModal = false
-	}
+	const openModal = () => (showModal = true)
+	const closeModal = () => (showModal = false)
 
 	function handleConfirm() {
 		deleteTask()
-		handleClose()
+		closeModal()
 	}
 </script>
 
@@ -48,11 +43,11 @@
 		<Chip>{task.area}</Chip>
 
 		<strong>Dificultad:</strong>
-		<p class="difficulty {task.difficulty.toLowerCase()}">{task.difficulty}</p>
+		<p class="difficulty {task.difficulty}">{task.difficulty}</p>
 
 		<div class="actions">
 			<Button outlined href={ROUTES.task.edit(task.id)} Icon={Pencil}>Editar</Button>
-			<Button style="margin-left: auto;" outlined variant="error" onclick={confirmDelete} Icon={Delete}>Eliminar</Button>
+			<Button outlined variant="error" onclick={openModal} Icon={Delete}>Eliminar</Button>
 		</div>
 		<Modal
 			bind:show={showModal}
@@ -60,7 +55,7 @@
 			isDestructive
 			message={`¿Estás seguro de que deseas eliminar la tarea "${task.name}"?`}
 			onconfirm={handleConfirm}
-			onclose={handleClose}
+			onclose={closeModal}
 		/>
 	</MainContainer>
 {/if}
@@ -74,5 +69,6 @@
 	.actions {
 		margin-top: 3rem;
 		display: flex;
+		justify-content: space-between;
 	}
 </style>

@@ -3,12 +3,11 @@
 	import { ROUTES } from '$routes'
 	import Button from '$components/Button.svelte'
 	import { Save } from 'lucide-svelte'
-	import FromGroup from '$components/FormGroup.svelte'
 	import MainContainer from '$components/MainContainer.svelte'
-	import TextArea from '$components/TextArea.svelte'
+	import TaskForm from '$pages/tasks/components/TaskForm.svelte'
 
 	const { data } = $props()
-	let task = data.task
+	let task = $state(data.task)
 
 	async function updateTask(e: Event) {
 		e.preventDefault()
@@ -24,21 +23,12 @@
 
 {#if task}
 	<MainContainer title={`Editar ${task.name}`}>
-		<form onsubmit={updateTask}>
-			<FromGroup label="Nombre" id="name">
-				<input id="name" bind:value={task.name} required />
-			</FromGroup>
-			<FromGroup label="Descripción" id="description">
-				<TextArea id="description" bind:value={task.description}></TextArea>
-			</FromGroup>
+		<TaskForm onsubmit={updateTask} bind:task>
 			<div class="actions">
 				<Button variant="secondary" outlined href={ROUTES.employee.view(task.id)}>Cancelar</Button>
-				<Button style="margin-left: auto;" variant="primary">
-					<Save style="margin-right: 10px;" size={18} />
-					Guardar
-				</Button>
+				<Button variant="primary" Icon={Save} type="submit">Guardar</Button>
 			</div>
-		</form>
+		</TaskForm>
 	</MainContainer>
 {/if}
 
@@ -46,6 +36,6 @@
 	.actions {
 		margin-top: 1rem;
 		display: flex;
-		gap: 1rem;
+		justify-content: space-between;
 	}
 </style>

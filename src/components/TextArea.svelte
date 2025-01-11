@@ -16,28 +16,31 @@
 	})
 </script>
 
-<textarea
-	bind:value
-	oninput={e => updateWordCount((e.target as HTMLTextAreaElement)?.value)}
-	{...props}
-	style={`height: ${currentLines * 20}px;`}
-></textarea>
-<div class="word-counter" style={currentWords > (maxlength || 0) ? 'color: var(--error-light);' : ''}>
-	{currentWords}/{maxlength}
+<div class="textarea-wrapper">
+	<textarea
+		bind:value
+		oninput={e => updateWordCount((e.target as HTMLTextAreaElement)?.value)}
+		{...props}
+		style={`height: ${currentLines * 20}px;`}
+	></textarea>
+	<div class="word-counter" style={currentWords > (maxlength || 0) ? 'color: var(--error-light);' : ''}>
+		{currentWords}/{maxlength}
+	</div>
 </div>
 
 <style>
 	textarea {
-		font-size: 1rem;
 		width: 100%;
-		padding: 0.5rem;
-		border: 1px solid #ccc;
 		border-radius: 4px;
 		resize: none;
 		min-height: 1rem;
 		max-height: 150px;
 	}
 
+	.textarea-wrapper {
+		width: fit-content;
+		position: relative;
+	}
 	.word-counter {
 		text-align: right;
 		margin-top: 0.5rem;

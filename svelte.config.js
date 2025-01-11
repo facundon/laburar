@@ -17,6 +17,7 @@ const config = {
 			$components: './src/components',
 			$queries: './src/queries',
 			$context: './src/routes/state.svelte.ts',
+			$pages: './src/routes',
 		},
 	},
 }

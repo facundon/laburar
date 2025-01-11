@@ -9,7 +9,7 @@
 </script>
 
 <span class="chip {variant} {outlined ? 'outlined' : ''}">
-	{@render children()}
+	{@render children?.()}
 </span>
 
 <style>

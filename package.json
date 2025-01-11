@@ -16,6 +16,7 @@
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
     "date-fns": "^4.1.0",
+    "lodash.startcase": "^4.4.0",
     "lucide-svelte": "^0.469.0"
   },
   "devDependencies": {
@@ -23,6 +24,7 @@
     "@sveltejs/kit": "^2.9.0",
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
     "@tauri-apps/cli": "^2",
+    "@types/lodash.startcase": "^4.4.9",
     "prettier": "^3.4.2",
     "svelte": "^5.0.0",
     "svelte-check": "^4.0.0",

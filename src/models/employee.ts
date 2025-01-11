@@ -20,14 +20,14 @@ export class Employee {
 	phone?: string
 	startDate?: Date
 
-	constructor(params: Omit<Employee, 'name' | 'toCreateDTO' | 'toUpdateDTO'>) {
-		this.id = params.id
-		this.firstName = params.firstName
-		this.lastName = params.lastName
-		this.phone = params.phone
-		this.address = params.address
-		this.createdAt = params.createdAt
-		this.startDate = params.startDate
+	constructor(params?: Partial<Omit<Employee, 'name' | 'toCreateDTO' | 'toUpdateDTO'>>) {
+		this.id = params?.id || 0
+		this.firstName = params?.firstName || ''
+		this.lastName = params?.lastName || ''
+		this.phone = params?.phone || ''
+		this.address = params?.address || ''
+		this.createdAt = params?.createdAt || new Date()
+		this.startDate = params?.startDate || new Date()
 	}
 
 	get name() {

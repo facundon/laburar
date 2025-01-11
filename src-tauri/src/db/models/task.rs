@@ -13,7 +13,7 @@ pub struct Task {
     pub name: String,
     pub description: Option<String>,
     pub area: Option<String>,
-    pub difficulty: String,
+    pub difficulty: i32,
     pub frequency: String,
     pub created_at: Option<NaiveDateTime>,
 }
@@ -24,7 +24,7 @@ pub struct NewTask<'a> {
     pub name: &'a str,
     pub description: Option<&'a str>,
     pub area: Option<&'a str>,
-    pub difficulty: &'a str,
+    pub difficulty: i32,
     pub frequency: &'a str,
 }
 
@@ -33,7 +33,7 @@ pub fn create_task(
     name: &str,
     description: Option<&str>,
     area: Option<&str>,
-    difficulty: &str,
+    difficulty: i32,
     frequency: &str,
 ) -> Result<Task, Error> {
     let new_task = NewTask {
@@ -70,7 +70,7 @@ pub fn update_task(
     name: &str,
     description: Option<&str>,
     area: Option<&str>,
-    difficulty: &str,
+    difficulty: i32,
     frequency: &str,
 ) -> Result<Task, Error> {
     diesel::update(task::table.find(id))

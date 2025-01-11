@@ -61,8 +61,14 @@
 	:global(.lucide *) {
 		vector-effect: non-scaling-stroke;
 	}
-	:global(input, textarea) {
+	:global(input, textarea, select) {
+		font-family: 'Urbanist', sans-serif;
 		font-size: 1rem;
+	}
+
+	:global(select) {
+		appearance: none;
+		padding: 0.5rem;
 	}
 
 	.layout {

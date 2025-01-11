@@ -12,7 +12,7 @@ pub fn create_task_command(
     name: &str,
     description: Option<&str>,
     area: Option<&str>,
-    difficulty: &str,
+    difficulty: i32,
     frequency: &str,
 ) -> Result<Task, Error> {
     let mut conn = establish_connection();
@@ -37,7 +37,7 @@ pub fn update_task_command(
     name: &str,
     description: Option<&str>,
     area: Option<&str>,
-    difficulty: &str,
+    difficulty: i32,
     frequency: &str,
 ) -> Result<Task, Error> {
     let mut conn = establish_connection();
