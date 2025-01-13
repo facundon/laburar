@@ -1,10 +1,8 @@
 pub use crate::db::models::area::{
-    create_area, delete_area, get_area, get_area_with_tasks, list_areas, update_area,
+    create_area, delete_area, get_area, get_area_with_assignments, list_areas, update_area, Area,
+    AreaWithAssignments,
 };
-use crate::db::{
-    models::area::{Area, AreaWithTask},
-    sqlite::establish_connection,
-};
+use crate::db::sqlite::establish_connection;
 use crate::error::Error;
 use tauri::command;
 
@@ -21,9 +19,9 @@ pub fn get_area_command(id: i32) -> Result<Area, Error> {
 }
 
 #[command(rename_all = "snake_case")]
-pub fn get_area_with_tasks_command(id: i32) -> Result<AreaWithTask, Error> {
+pub fn get_area_with_assignments_command(id: i32) -> Result<AreaWithAssignments, Error> {
     let mut conn = establish_connection();
-    get_area_with_tasks(&mut conn, id)
+    get_area_with_assignments(&mut conn, id)
 }
 
 #[command(rename_all = "snake_case")]

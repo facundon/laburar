@@ -53,12 +53,13 @@
 			onclose={closeModal}
 		/>
 	</MainContainer>
-	{#if area.tasks.length > 0}
+	{#if area.assignments.length > 0}
 		<MainContainer title="Tareas" style="margin-top: 1rem;">
-			{#each area.tasks as task}
+			{#each area.assignments as assignment}
 				<div>
-					<h3>{task.name}</h3>
-					<p>{task.description}</p>
+					<h4>{assignment.taskName}</h4>
+					<p>{assignment.difficulty}</p>
+					<p>{assignment.frequency}</p>
 				</div>
 			{/each}
 		</MainContainer>

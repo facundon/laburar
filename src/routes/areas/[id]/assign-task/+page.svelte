@@ -57,7 +57,7 @@
 			</div>
 
 			<div class="actions">
-				<Button outlined variant="secondary" href={ROUTES.employee.view(area.id)}>Cancelar</Button>
+				<Button outlined variant="secondary" href={ROUTES.area.view(area.id)}>Cancelar</Button>
 				<Button type="submit" Icon={Save}>Asignar</Button>
 			</div>
 		</form>

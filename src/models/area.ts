@@ -1,13 +1,13 @@
-import { Task, type TaskDTO } from '$models/task'
+import { Assignment, type AssignmentDTO } from '$models/assignment'
 
-type CreateAreaDTO = Omit<AreaDTO, 'id' | 'created_at' | 'tasks'>
-type UpdateAreaDTO = Omit<AreaDTO, 'created_at' | 'tasks'>
+type CreateAreaDTO = Omit<AreaDTO, 'id' | 'created_at' | 'assignments'>
+type UpdateAreaDTO = Omit<AreaDTO, 'created_at' | 'assignments'>
 
 export type AreaDTO = {
 	id: number
 	name: string
 	description?: string
-	tasks?: TaskDTO[]
+	assignments?: AssignmentDTO[]
 	created_at: string
 }
 
@@ -15,14 +15,14 @@ export class Area {
 	id: number
 	name: string
 	description?: string
-	tasks: Task[]
+	assignments: Assignment[]
 	createdAt: Date
 
 	constructor(params?: Partial<Omit<Area, 'toCreateDTO' | 'toUpdateDTO'>>) {
 		this.id = params?.id || 0
 		this.name = params?.name || ''
 		this.description = params?.description || ''
-		this.tasks = params?.tasks || []
+		this.assignments = params?.assignments || []
 		this.createdAt = params?.createdAt || new Date()
 	}
 
@@ -31,7 +31,7 @@ export class Area {
 			id: dto.id,
 			name: dto.name,
 			description: dto.description,
-			tasks: dto.tasks?.map(Task.fromDTO),
+			assignments: dto.assignments?.map(Assignment.fromDTO),
 			createdAt: new Date(dto.created_at),
 		})
 	}

@@ -15,7 +15,7 @@ type Command =
 	| 'create_area_command'
 	| 'delete_area_command'
 	| 'get_area_command'
-	| 'get_area_with_tasks_command'
+	| 'get_area_with_assignments_command'
 	| 'list_areas_command'
 	| 'update_area_command'
 	| 'create_assignment_command'

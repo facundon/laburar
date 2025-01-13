@@ -1,11 +1,11 @@
-use crate::db::schema::{area, assignment};
-use crate::db::{models::task::Task, schema::task};
+use crate::db::models::assignment::{Assignment, AssignmentWithNames};
+use crate::db::schema::{area, assignment, task};
 use crate::error::Error;
 use chrono::NaiveDateTime;
 use diesel::{prelude::*, SelectableHelper, SqliteConnection};
 use serde::{Deserialize, Serialize};
 
-#[derive(Default, Queryable, Selectable, Serialize, Deserialize, Debug)]
+#[derive(Default, Queryable, Selectable, Serialize, Deserialize, Debug, Clone)]
 #[diesel(table_name = crate::db::schema::area)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct Area {
@@ -14,11 +14,12 @@ pub struct Area {
     pub description: Option<String>,
     pub created_at: Option<NaiveDateTime>,
 }
+
 #[derive(Serialize, Deserialize, Debug)]
-pub struct AreaWithTask {
+pub struct AreaWithAssignments {
     #[serde(flatten)]
     pub area: Area,
-    pub tasks: Vec<Task>,
+    pub assignments: Vec<AssignmentWithNames>,
 }
 
 #[derive(Insertable)]
@@ -49,32 +50,46 @@ pub fn get_area(conn: &mut SqliteConnection, id: i32) -> Result<Area, Error> {
         .map_err(|err| Error::Database(err.to_string()))
 }
 
-pub fn get_area_with_tasks(conn: &mut SqliteConnection, id: i32) -> Result<AreaWithTask, Error> {
-    area::table
-        .inner_join(assignment::table.inner_join(task::table))
-        .filter(area::id.eq(id))
-        .select((area::all_columns, task::all_columns))
-        .load(conn)
-        .map(|results| {
-            let mut area = None;
-            let mut tasks = Vec::new();
-            for (a, t) in results {
-                if area.is_none() {
-                    area = Some(a);
-                }
-                tasks.push(t);
-            }
-            AreaWithTask {
-                area: area.unwrap(),
-                tasks,
-            }
-        })
-        .map_err(|err| Error::Database(err.to_string()))
-}
-
 pub fn list_areas(conn: &mut SqliteConnection) -> Result<Vec<Area>, Error> {
     area::table
         .load(conn)
+        .map_err(|err| Error::Database(err.to_string()))
+}
+
+pub fn get_area_with_assignments(
+    conn: &mut SqliteConnection,
+    area_id: i32,
+) -> Result<AreaWithAssignments, Error> {
+    area::table
+        .left_join(
+            assignment::table
+                .inner_join(task::table.on(task::id.eq(assignment::task_id)))
+                .on(assignment::area_id.eq(area::id)),
+        )
+        .select((
+            area::all_columns,
+            Option::<Assignment>::as_select(),
+            task::name.nullable(),
+        ))
+        .filter(area::id.eq(area_id))
+        .load::<(Area, Option<Assignment>, Option<String>)>(conn)
+        .and_then(|results| {
+            if results.is_empty() {
+                return Err(diesel::result::Error::NotFound);
+            }
+            let mut assignments = vec![];
+            let area = results[0].0.clone();
+            for (_, assignment, task_name) in results {
+                if let (Some(assignment), Some(task_name)) = (assignment, task_name) {
+                    assignments.push(AssignmentWithNames {
+                        assignment,
+                        area_name: area.name.clone(),
+                        task_name,
+                    });
+                }
+            }
+            Ok(AreaWithAssignments { area, assignments })
+        })
         .map_err(|err| Error::Database(err.to_string()))
 }
 
