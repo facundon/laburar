@@ -1,15 +1,15 @@
 <script lang="ts">
 	import FormGroup from '$components/FormGroup.svelte'
 	import TextArea from '$components/TextArea.svelte'
-	import { Task } from '$models/task'
+	import { Area } from '$models/area'
 
 	interface Props {
-		task: Task
+		area: Area
 		onsubmit: (event: Event) => void
 		children: () => any
 	}
 
-	let { task = $bindable(), onsubmit = $bindable(), children }: Props = $props()
+	let { area: task = $bindable(), onsubmit = $bindable(), children }: Props = $props()
 </script>
 
 <form {onsubmit}>

@@ -7,9 +7,7 @@ export type TaskDTO = {
 	id: number
 	name: string
 	description: string
-	area: string
-	difficulty: number
-	frequency: string
+
 	created_at: string
 }
 
@@ -17,18 +15,12 @@ export class Task {
 	id: number
 	name: string
 	description: string
-	area: string
-	difficulty: number
-	frequency: string
 	createdAt: Date
 
 	constructor(params?: Partial<Omit<Task, 'toCreateDTO' | 'toUpdateDTO'>>) {
 		this.id = params?.id || 0
 		this.name = params?.name || ''
 		this.description = params?.description || ''
-		this.area = params?.area || ''
-		this.difficulty = params?.difficulty || 1
-		this.frequency = params?.frequency || ''
 		this.createdAt = params?.createdAt || new Date()
 	}
 
@@ -37,9 +29,6 @@ export class Task {
 			id: dto.id,
 			name: dto.name,
 			description: dto.description,
-			area: dto.area,
-			difficulty: dto.difficulty,
-			frequency: dto.frequency,
 			createdAt: new Date(dto.created_at),
 		})
 	}
@@ -48,9 +37,6 @@ export class Task {
 		return {
 			name: this.name,
 			description: this.description,
-			area: this.area,
-			difficulty: this.difficulty,
-			frequency: this.frequency,
 		}
 	}
 
@@ -61,14 +47,6 @@ export class Task {
 		}
 	}
 }
-
-export const TaskArea = {
-	HEALTH: 'health',
-	FINANCE: 'finance',
-	EDUCATION: 'education',
-	PERSONAL: 'personal',
-} as const
-export type TaskArea = ValueOf<typeof TaskArea>
 
 export const TaskFrequency = {
 	DIARIA: 'diaria',

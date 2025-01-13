@@ -12,4 +12,10 @@ export const ROUTES = {
 		edit: (id: number) => `/tasks/${id}/edit`,
 		view: (id: number) => `/tasks/${id}`,
 	},
+	area: {
+		list: '/areas',
+		create: '/areas/create',
+		edit: (id: number) => `/areas/${id}/edit`,
+		view: (id: number) => `/areas/${id}`,
+	},
 } as const

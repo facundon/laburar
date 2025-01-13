@@ -4,31 +4,31 @@
 	import Button from '$components/Button.svelte'
 	import { Save } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
-	import TaskForm from '$pages/tasks/components/TaskForm.svelte'
+	import AreaForm from '$pages/areas/components/AreaForm.svelte'
 
 	const { data } = $props()
-	let task = $state(data.task)
+	let area = $state(data.area)
 
-	async function updateTask(e: Event) {
+	async function updateArea(e: Event) {
 		e.preventDefault()
-		if (!task) return
+		if (!area) return
 		try {
-			await invoke('update_task_command', task.toUpdateDTO())
-			window.location.href = ROUTES.task.view(task.id)
+			await invoke('update_area_command', area.toUpdateDTO())
+			window.location.href = ROUTES.area.view(area.id)
 		} catch (error) {
-			console.error('Failed to update task:', error)
+			console.error('Failed to update area:', error)
 		}
 	}
 </script>
 
-{#if task}
-	<MainContainer title={`Editar ${task.name}`}>
-		<TaskForm onsubmit={updateTask} bind:task>
+{#if area}
+	<MainContainer title={`Editar ${area.name}`}>
+		<AreaForm onsubmit={updateArea} bind:area>
 			<div class="actions">
-				<Button variant="secondary" outlined href={ROUTES.task.view(task.id)}>Cancelar</Button>
+				<Button variant="secondary" outlined href={ROUTES.area.view(area.id)}>Cancelar</Button>
 				<Button variant="primary" Icon={Save} type="submit">Guardar</Button>
 			</div>
-		</TaskForm>
+		</AreaForm>
 	</MainContainer>
 {/if}
 

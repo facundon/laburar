@@ -7,17 +7,17 @@
 	import MainContainer from '$components/MainContainer.svelte'
 
 	const { data } = $props()
-	const task = data.task
+	const area = data.area
 
 	let showModal = $state(false)
 
-	async function deleteTask() {
+	async function deleteArea() {
 		try {
-			if (!task) return
-			await invoke('delete_task_command', { id: task.id })
-			window.location.href = ROUTES.task.list
+			if (!area) return
+			await invoke('delete_area_command', { id: area.id })
+			window.location.href = ROUTES.area.list
 		} catch (error) {
-			console.error('Failed to delete task:', error)
+			console.error('Failed to delete area:', error)
 		}
 	}
 
@@ -25,25 +25,25 @@
 	const closeModal = () => (showModal = false)
 
 	function handleConfirm() {
-		deleteTask()
+		deleteArea()
 		closeModal()
 	}
 </script>
 
-{#if task}
-	<MainContainer title={task.name}>
+{#if area}
+	<MainContainer title={area.name}>
 		<strong>Descripción:</strong>
-		<p class="area">{task.description}</p>
+		<p class="area">{area.description}</p>
 
 		<div class="actions">
-			<Button outlined href={ROUTES.task.edit(task.id)} Icon={Pencil}>Editar</Button>
+			<Button outlined href={ROUTES.area.edit(area.id)} Icon={Pencil}>Editar</Button>
 			<Button outlined variant="error" onclick={openModal} Icon={Delete}>Eliminar</Button>
 		</div>
 		<Modal
 			bind:show={showModal}
 			title="Confirmar acción"
 			isDestructive
-			message={`¿Estás seguro de que deseas eliminar la tarea "${task.name}"?`}
+			message={`¿Estás seguro de que deseas eliminar la area "${area.name}"?`}
 			onconfirm={handleConfirm}
 			onclose={closeModal}
 		/>

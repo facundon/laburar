@@ -5,6 +5,7 @@
 
 	const routes: { [key: string]: string } = {
 		employees: 'Personal',
+		areas: 'Areas',
 		tasks: 'Tareas',
 		'assign-task': 'Asignar Tarea',
 		create: 'Crear',
