@@ -3,8 +3,8 @@ mod db;
 mod error;
 
 use commands::area::{
-    create_area_command, delete_area_command, get_area_command, list_areas_command,
-    update_area_command,
+    create_area_command, delete_area_command, get_area_command, get_area_with_tasks_command,
+    list_areas_command, update_area_command,
 };
 use commands::assignment::{
     create_assignment_command, delete_assignment_command, get_assignment_command,
@@ -48,6 +48,7 @@ pub fn run() {
             create_area_command,
             delete_area_command,
             get_area_command,
+            get_area_with_tasks_command,
             list_areas_command,
             update_area_command,
             create_assignment_command,

@@ -1,8 +1,8 @@
 import { breadcrumbData } from '$context'
-import { getArea } from '$queries/areas/getArea'
+import { getAreaWithTasks } from '$queries/areas/getAreaWithTasks'
 
 export const load = async ({ params }) => {
-	const area = await getArea(Number(params.id))
+	const area = await getAreaWithTasks(Number(params.id))
 	if (area) breadcrumbData.name = area.name
 	return { area }
 }

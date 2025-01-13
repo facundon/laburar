@@ -1,3 +1,5 @@
+import { toTitleCase } from '$utils'
+
 type CreateAssignmentDTO = Omit<AssignmentDTO, 'id' | 'created_at'>
 type UpdateAssignmentDTO = Omit<AssignmentDTO, 'created_at'>
 
@@ -62,3 +64,21 @@ export class Assignment {
 		}
 	}
 }
+
+export const AssignmentFrequency = {
+	DIARIA: 'Diaria',
+	SEMANAL: 'Semanal',
+	MENSUAL: 'Mensual',
+} as const
+export type AssignmentFrequency = ValueOf<typeof AssignmentFrequency>
+export const AssignmentFrequencies = Object.values(AssignmentFrequency).map(value => ({ label: value, value }))
+
+export const AssignmentDifficulty = {
+	TRIVIAL: 0,
+	FACIL: 1,
+	MEDIA: 2,
+	COMPLICADO: 3,
+	DIFICIL: 4,
+} as const
+export type AssignmentDifficulty = ValueOf<typeof AssignmentDifficulty>
+export const AssignmentDifficulties = Object.entries(AssignmentDifficulty).map(([label, value]) => ({ label: toTitleCase(label), value }))

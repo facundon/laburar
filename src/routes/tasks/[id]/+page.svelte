@@ -32,8 +32,10 @@
 
 {#if task}
 	<MainContainer title={task.name}>
-		<strong>Descripción:</strong>
-		<p class="area">{task.description}</p>
+		{#if task.description}
+			<strong>Descripción:</strong>
+			<p class="description">{task.description}</p>
+		{/if}
 
 		<div class="actions">
 			<Button outlined href={ROUTES.task.edit(task.id)} Icon={Pencil}>Editar</Button>
@@ -51,7 +53,7 @@
 {/if}
 
 <style>
-	p.area {
+	p.description {
 		margin-bottom: 0.5rem;
 		color: #fff;
 		white-space: pre-wrap;

@@ -1,3 +1,5 @@
+import { toTitleCase } from '$utils'
+
 type CreateEmployeeAssignmentDTO = Omit<EmployeeAssignmentDTO, 'id' | 'created_at'>
 type UpdateEmployeeAssignmentDTO = Omit<EmployeeAssignmentDTO, 'created_at'>
 
@@ -67,3 +69,13 @@ export class EmployeeAssignment {
 		}
 	}
 }
+
+export const AssignmentEfficiency = {
+	MEDIOCRE: 0,
+	BAJA: 1,
+	MEDIA: 2,
+	ALTA: 3,
+	EXCELENTE: 4,
+} as const
+export type AssignmentEfficiency = ValueOf<typeof AssignmentEfficiency>
+export const AssignmentEfficiencies = Object.entries(AssignmentEfficiency).map(([label, value]) => ({ label: toTitleCase(label), value }))

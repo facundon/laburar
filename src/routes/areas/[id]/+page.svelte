@@ -3,7 +3,7 @@
 	import { ROUTES } from '$routes'
 	import Button from '$components/Button.svelte'
 	import Modal from '$components/Modal.svelte'
-	import { Delete, Pencil } from 'lucide-svelte'
+	import { Delete, Pencil, ClipboardList } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 
 	const { data } = $props()
@@ -31,9 +31,14 @@
 </script>
 
 {#if area}
-	<MainContainer title={area.name}>
-		<strong>Descripción:</strong>
-		<p class="area">{area.description}</p>
+	{#snippet Actions()}
+		<Button variant="secondary" href={ROUTES.area.assignTasks(area.id)} Icon={ClipboardList}>Asignar Tareas</Button>
+	{/snippet}
+	<MainContainer title={area.name} {Actions}>
+		{#if area.description}
+			<strong>Descripción:</strong>
+			<p class="description">{area.description}</p>
+		{/if}
 
 		<div class="actions">
 			<Button outlined href={ROUTES.area.edit(area.id)} Icon={Pencil}>Editar</Button>
@@ -48,10 +53,20 @@
 			onclose={closeModal}
 		/>
 	</MainContainer>
+	{#if area.tasks.length > 0}
+		<MainContainer title="Tareas" style="margin-top: 1rem;">
+			{#each area.tasks as task}
+				<div>
+					<h3>{task.name}</h3>
+					<p>{task.description}</p>
+				</div>
+			{/each}
+		</MainContainer>
+	{/if}
 {/if}
 
 <style>
-	p.area {
+	p.description {
 		margin-bottom: 0.5rem;
 		color: #fff;
 		white-space: pre-wrap;

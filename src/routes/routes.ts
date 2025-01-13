@@ -17,5 +17,6 @@ export const ROUTES = {
 		create: '/areas/create',
 		edit: (id: number) => `/areas/${id}/edit`,
 		view: (id: number) => `/areas/${id}`,
+		assignTasks: (id: number) => `/areas/${id}/assign-task`,
 	},
 } as const

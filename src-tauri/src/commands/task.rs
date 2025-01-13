@@ -18,9 +18,9 @@ pub fn get_task_command(id: i32) -> Result<Task, Error> {
 }
 
 #[command(rename_all = "snake_case")]
-pub fn list_tasks_command() -> Result<Vec<Task>, Error> {
+pub fn list_tasks_command(exclude_ids: Vec<i32>) -> Result<Vec<Task>, Error> {
     let mut conn = establish_connection();
-    list_tasks(&mut conn)
+    list_tasks(&mut conn, exclude_ids)
 }
 
 #[command(rename_all = "snake_case")]

@@ -42,8 +42,9 @@ pub fn get_task(conn: &mut SqliteConnection, id: i32) -> Result<Task, Error> {
         .map_err(|err| Error::Database(err.to_string()))
 }
 
-pub fn list_tasks(conn: &mut SqliteConnection) -> Result<Vec<Task>, Error> {
+pub fn list_tasks(conn: &mut SqliteConnection, exclude_ids: Vec<i32>) -> Result<Vec<Task>, Error> {
     task::table
+        .filter(task::id.ne_all(&exclude_ids))
         .load(conn)
         .map_err(|err| Error::Database(err.to_string()))
 }
