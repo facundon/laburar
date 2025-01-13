@@ -20,7 +20,6 @@ type Command =
 	| 'create_assignment_command'
 	| 'delete_assignment_command'
 	| 'get_assignment_command'
-	| 'list_assignments_command'
 	| 'update_assignment_command'
 	| 'create_assignments_to_employee_command'
 	| 'delete_employee_assignment_command'

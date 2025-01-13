@@ -8,6 +8,8 @@ export type AssignmentDTO = {
 	difficulty: number
 	frequency: string
 	created_at: string
+	task_name?: string
+	area_name?: string
 }
 
 export class Assignment {
@@ -17,6 +19,8 @@ export class Assignment {
 	difficulty: number
 	frequency: string
 	createdAt: Date
+	taskName?: string
+	areaName?: string
 
 	constructor(params?: Partial<Omit<Assignment, 'toCreateDTO' | 'toUpdateDTO'>>) {
 		this.id = params?.id || 0
@@ -25,6 +29,8 @@ export class Assignment {
 		this.difficulty = params?.difficulty || 1
 		this.frequency = params?.frequency || ''
 		this.createdAt = params?.createdAt || new Date()
+		this.taskName = params?.taskName
+		this.areaName = params?.areaName
 	}
 
 	static fromDTO(dto: AssignmentDTO): Assignment {
@@ -35,6 +41,8 @@ export class Assignment {
 			difficulty: dto.difficulty,
 			frequency: dto.frequency,
 			createdAt: new Date(dto.created_at),
+			taskName: dto.task_name,
+			areaName: dto.area_name,
 		})
 	}
 

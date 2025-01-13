@@ -1,4 +1,4 @@
-use crate::db::schema::assignment;
+use crate::db::schema::{area, assignment, task};
 use crate::error::Error;
 use chrono::NaiveDateTime;
 use diesel::{prelude::*, RunQueryDsl, SqliteConnection};
@@ -14,6 +14,14 @@ pub struct Assignment {
     pub difficulty: i32,
     pub frequency: String,
     pub created_at: Option<NaiveDateTime>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct AssignmentWithNames {
+    #[serde(flatten)]
+    pub assignment: Assignment,
+    pub task_name: String,
+    pub area_name: String,
 }
 
 #[derive(Insertable)]
@@ -46,16 +54,18 @@ pub fn create_assignment(
         .map_err(|err| Error::Database(err.to_string()))
 }
 
-pub fn get_assignment(conn: &mut SqliteConnection, id: i32) -> Result<Assignment, Error> {
+pub fn get_assignment(conn: &mut SqliteConnection, id: i32) -> Result<AssignmentWithNames, Error> {
     assignment::table
-        .find(id)
+        .inner_join(task::table.on(task::id.eq(assignment::task_id)))
+        .inner_join(area::table.on(area::id.eq(assignment::area_id)))
+        .select((assignment::all_columns, task::name, area::name))
+        .filter(assignment::id.eq(id))
         .first(conn)
-        .map_err(|err| Error::Database(err.to_string()))
-}
-
-pub fn list_assignments(conn: &mut SqliteConnection) -> Result<Vec<Assignment>, Error> {
-    assignment::table
-        .load(conn)
+        .map(|(assignment, task_name, area_name)| AssignmentWithNames {
+            assignment,
+            task_name,
+            area_name,
+        })
         .map_err(|err| Error::Database(err.to_string()))
 }
 

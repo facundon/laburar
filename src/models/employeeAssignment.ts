@@ -9,6 +9,8 @@ export type EmployeeAssignmentDTO = {
 	efficiency: number
 	assigned_date?: string
 	created_at: string
+	task_name?: string
+	area_name?: string
 }
 
 export class EmployeeAssignment {
@@ -19,6 +21,8 @@ export class EmployeeAssignment {
 	efficiency: number
 	assignedDate?: Date
 	createdAt: Date
+	taskName?: string
+	areaName?: string
 
 	constructor(params?: Partial<Omit<EmployeeAssignment, 'toCreateDTO' | 'toUpdateDTO'>>) {
 		this.id = params?.id || 0
@@ -28,6 +32,8 @@ export class EmployeeAssignment {
 		this.efficiency = params?.efficiency || 0
 		this.assignedDate = params?.assignedDate || new Date()
 		this.createdAt = params?.createdAt || new Date()
+		this.taskName = params?.taskName
+		this.areaName = params?.areaName
 	}
 
 	static fromDTO(dto: EmployeeAssignmentDTO): EmployeeAssignment {
@@ -39,6 +45,8 @@ export class EmployeeAssignment {
 			efficiency: dto.efficiency,
 			assignedDate: dto.assigned_date ? new Date(dto.assigned_date) : undefined,
 			createdAt: new Date(dto.created_at),
+			taskName: dto.task_name,
+			areaName: dto.area_name,
 		})
 	}
 

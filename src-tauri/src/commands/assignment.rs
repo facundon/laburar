@@ -1,7 +1,10 @@
 pub use crate::db::models::assignment::{
-    create_assignment, delete_assignment, get_assignment, list_assignments, update_assignment,
+    create_assignment, delete_assignment, get_assignment, update_assignment,
 };
-use crate::db::{models::assignment::Assignment, sqlite::establish_connection};
+use crate::db::{
+    models::assignment::{Assignment, AssignmentWithNames},
+    sqlite::establish_connection,
+};
 use crate::error::Error;
 use tauri::command;
 
@@ -17,15 +20,9 @@ pub fn create_assignment_command(
 }
 
 #[command(rename_all = "snake_case")]
-pub fn get_assignment_command(id: i32) -> Result<Assignment, Error> {
+pub fn get_assignment_command(id: i32) -> Result<AssignmentWithNames, Error> {
     let mut conn = establish_connection();
     get_assignment(&mut conn, id)
-}
-
-#[command(rename_all = "snake_case")]
-pub fn list_assignments_command() -> Result<Vec<Assignment>, Error> {
-    let mut conn = establish_connection();
-    list_assignments(&mut conn)
 }
 
 #[command(rename_all = "snake_case")]

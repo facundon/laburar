@@ -1,4 +1,4 @@
-use crate::db::schema::employee_assignment;
+use crate::db::schema::{area, assignment, employee_assignment, task};
 use crate::error::Error;
 use chrono::NaiveDateTime;
 use diesel::{prelude::*, RunQueryDsl, SqliteConnection};
@@ -8,13 +8,21 @@ use serde::{Deserialize, Serialize};
 #[diesel(table_name = employee_assignment)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct EmployeeAssignment {
-    id: i32,
-    employee_id: i32,
-    assignment_id: i32,
-    is_primary: Option<bool>,
-    efficiency: i32,
-    assigned_date: Option<NaiveDateTime>,
-    created_at: Option<NaiveDateTime>,
+    pub id: i32,
+    pub employee_id: i32,
+    pub assignment_id: i32,
+    pub is_primary: Option<bool>,
+    pub efficiency: i32,
+    pub assigned_date: Option<NaiveDateTime>,
+    pub created_at: Option<NaiveDateTime>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct EmployeeAssignmentWithNames {
+    #[serde(flatten)]
+    pub employee_assignment_id: EmployeeAssignment,
+    pub task_name: String,
+    pub area_name: String,
 }
 
 #[derive(Insertable)]
@@ -30,11 +38,27 @@ pub struct NewEmployeeAssignment<'a> {
 pub fn list_employee_assignments(
     conn: &mut SqliteConnection,
     employee_id: i32,
-) -> Result<Vec<EmployeeAssignment>, Error> {
+) -> Result<Vec<EmployeeAssignmentWithNames>, Error> {
     let assignments = employee_assignment::table
+        .inner_join(
+            assignment::table
+                .inner_join(area::table.on(area::id.eq(assignment::area_id)))
+                .inner_join(task::table.on(task::id.eq(assignment::task_id))),
+        )
+        .select((employee_assignment::all_columns, task::name, area::name))
         .filter(employee_assignment::employee_id.eq(employee_id))
-        .select(employee_assignment::all_columns)
         .load(conn)
+        .map(|assignments| {
+            let mut assignments_with_names = vec![];
+            for (employee_assignment, task_name, area_name) in assignments {
+                assignments_with_names.push(EmployeeAssignmentWithNames {
+                    employee_assignment_id: employee_assignment,
+                    task_name,
+                    area_name,
+                });
+            }
+            assignments_with_names
+        })
         .map_err(|err| Error::Database(err.to_string()))?;
     Ok(assignments)
 }
