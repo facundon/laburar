@@ -1,6 +1,26 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
+    area (id) {
+        id -> Integer,
+        name -> Text,
+        description -> Nullable<Text>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    assignment (id) {
+        id -> Integer,
+        task_id -> Integer,
+        area_id -> Integer,
+        difficulty -> Integer,
+        frequency -> Text,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
     employee (id) {
         id -> Integer,
         first_name -> Text,
@@ -13,13 +33,14 @@ diesel::table! {
 }
 
 diesel::table! {
-    employee_on_task (id) {
+    employee_assignment (id) {
         id -> Integer,
         employee_id -> Integer,
-        task_id -> Integer,
-        isPrimary -> Nullable<Bool>,
+        assignment_id -> Integer,
+        is_primary -> Nullable<Bool>,
         efficiency -> Integer,
         created_at -> Nullable<Timestamp>,
+        assigned_date -> Nullable<Timestamp>,
     }
 }
 
@@ -28,18 +49,19 @@ diesel::table! {
         id -> Integer,
         name -> Text,
         description -> Nullable<Text>,
-        area -> Nullable<Text>,
-        difficulty -> Integer,
-        frequency -> Text,
         created_at -> Nullable<Timestamp>,
     }
 }
 
-diesel::joinable!(employee_on_task -> employee (employee_id));
-diesel::joinable!(employee_on_task -> task (task_id));
+diesel::joinable!(assignment -> area (area_id));
+diesel::joinable!(assignment -> task (task_id));
+diesel::joinable!(employee_assignment -> assignment (assignment_id));
+diesel::joinable!(employee_assignment -> employee (employee_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
+    area,
+    assignment,
     employee,
-    employee_on_task,
+    employee_assignment,
     task,
 );

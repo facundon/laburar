@@ -1,6 +1,6 @@
-import { getTasksForEmployee } from '$queries/tasks/getTasksForEmployee'
+import { getAssignmentsForEmployee } from '$queries/assignments/getAssignmentsForEmployee'
 
 export const load = async ({ params }) => {
-	const tasks = await getTasksForEmployee(Number(params.id))
-	return { tasks }
+	const assignments = await getAssignmentsForEmployee(Number(params.id))
+	return { assignments }
 }

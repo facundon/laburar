@@ -1,22 +1,14 @@
-use crate::db::models::employee::Employee;
 pub use crate::db::models::task::{
-    create_task, delete_task, get_task, get_task_with_employees, get_tasks_for_employee,
-    list_tasks, update_task,
+    create_task, delete_task, get_task, get_tasks_for_area, list_tasks, update_task,
 };
 use crate::db::{models::task::Task, sqlite::establish_connection};
 use crate::error::Error;
 use tauri::command;
 
 #[command(rename_all = "snake_case")]
-pub fn create_task_command(
-    name: &str,
-    description: Option<&str>,
-    area: Option<&str>,
-    difficulty: i32,
-    frequency: &str,
-) -> Result<Task, Error> {
+pub fn create_task_command(name: &str, description: Option<&str>) -> Result<Task, Error> {
     let mut conn = establish_connection();
-    create_task(&mut conn, name, description, area, difficulty, frequency)
+    create_task(&mut conn, name, description)
 }
 
 #[command(rename_all = "snake_case")]
@@ -32,24 +24,9 @@ pub fn list_tasks_command() -> Result<Vec<Task>, Error> {
 }
 
 #[command(rename_all = "snake_case")]
-pub fn update_task_command(
-    id: i32,
-    name: &str,
-    description: Option<&str>,
-    area: Option<&str>,
-    difficulty: i32,
-    frequency: &str,
-) -> Result<Task, Error> {
+pub fn update_task_command(id: i32, name: &str, description: Option<&str>) -> Result<Task, Error> {
     let mut conn = establish_connection();
-    update_task(
-        &mut conn,
-        id,
-        name,
-        description,
-        area,
-        difficulty,
-        frequency,
-    )
+    update_task(&mut conn, id, name, description)
 }
 
 #[command(rename_all = "snake_case")]
@@ -59,13 +36,7 @@ pub fn delete_task_command(id: i32) -> Result<(), Error> {
 }
 
 #[command(rename_all = "snake_case")]
-pub fn get_task_with_employees_command(id: i32) -> Result<(Task, Vec<Employee>), Error> {
+pub fn get_tasks_for_area_command(area_id: i32) -> Result<Vec<Task>, Error> {
     let mut conn = establish_connection();
-    get_task_with_employees(&mut conn, id)
-}
-
-#[command(rename_all = "snake_case")]
-pub fn get_tasks_for_employee_command(employee_id: i32) -> Result<Vec<Task>, Error> {
-    let mut conn = establish_connection();
-    get_tasks_for_employee(&mut conn, employee_id)
+    get_tasks_for_area(&mut conn, area_id)
 }
