@@ -1,5 +1,5 @@
-type CreateTaskDTO = Omit<TaskDTO, 'id' | 'created_at'>
 type UpdateTaskDTO = Omit<TaskDTO, 'created_at'>
+type CreateTaskDTO = Omit<UpdateTaskDTO, 'id'>
 
 export type TaskDTO = {
 	id: number

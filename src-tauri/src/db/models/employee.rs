@@ -1,10 +1,11 @@
-use crate::db::schema::employee;
+use crate::db::models::employee_assignment::{EmployeeAssignment, EmployeeAssignmentWithNames};
+use crate::db::schema::{area, assignment, employee, employee_assignment, task};
 use crate::error::Error;
 use chrono::NaiveDateTime;
 use diesel::{prelude::*, RunQueryDsl, SqliteConnection};
 use serde::{Deserialize, Serialize};
 
-#[derive(Queryable, Selectable, Serialize, Deserialize, Debug)]
+#[derive(Queryable, Selectable, Serialize, Deserialize, Debug, Clone)]
 #[diesel(table_name = employee)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct Employee {
@@ -15,6 +16,13 @@ pub struct Employee {
     pub address: String,
     pub start_date: Option<NaiveDateTime>,
     pub created_at: Option<NaiveDateTime>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct EmployeeWithAssignments {
+    #[serde(flatten)]
+    pub employee: Employee,
+    pub assignments: Vec<EmployeeAssignmentWithNames>,
 }
 
 #[derive(Insertable)]
@@ -54,6 +62,73 @@ pub fn get_employee(conn: &mut SqliteConnection, id: i32) -> Result<Employee, Er
     employee::table
         .find(id)
         .first(conn)
+        .map_err(|err| Error::Database(err.to_string()))
+}
+
+pub fn get_employee_with_assignments(
+    conn: &mut SqliteConnection,
+    id: i32,
+) -> Result<EmployeeWithAssignments, Error> {
+    employee::table
+        .left_join(
+            employee_assignment::table
+                .inner_join(
+                    assignment::table
+                        .on(assignment::id.eq(employee_assignment::assignment_id))
+                        .inner_join(task::table.on(task::id.eq(assignment::task_id)))
+                        .inner_join(area::table.on(area::id.eq(assignment::area_id))),
+                )
+                .on(employee::id.eq(employee_assignment::employee_id)),
+        )
+        .filter(employee::id.eq(id))
+        .select((
+            employee::all_columns,
+            employee_assignment::all_columns.nullable(),
+            area::id.nullable(),
+            area::name.nullable(),
+            task::id.nullable(),
+            task::name.nullable(),
+        ))
+        .load(conn)
+        .and_then(
+            |results: Vec<(
+                Employee,
+                Option<EmployeeAssignment>,
+                Option<i32>,
+                Option<String>,
+                Option<i32>,
+                Option<String>,
+            )>| {
+                if results.is_empty() {
+                    return Err(diesel::result::Error::NotFound);
+                }
+                let employee = results[0].0.clone();
+                let mut employee_with_assignments = vec![];
+
+                for (_, employee_assignment, area_id, area_name, task_id, task_name) in results {
+                    if let (
+                        Some(employee_assignment),
+                        Some(area_id),
+                        Some(area_name),
+                        Some(task_id),
+                        Some(task_name),
+                    ) = (employee_assignment, area_id, area_name, task_id, task_name)
+                    {
+                        employee_with_assignments.push(EmployeeAssignmentWithNames {
+                            employee_assignment,
+                            area_id,
+                            area_name,
+                            task_id,
+                            task_name,
+                        });
+                    }
+                }
+                Ok(EmployeeWithAssignments {
+                    employee,
+                    assignments: employee_with_assignments,
+                })
+            },
+        )
         .map_err(|err| Error::Database(err.to_string()))
 }
 

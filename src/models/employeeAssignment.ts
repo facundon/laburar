@@ -1,7 +1,7 @@
 import { toTitleCase } from '$utils'
 
-type CreateEmployeeAssignmentDTO = Omit<EmployeeAssignmentDTO, 'id' | 'created_at'>
-type UpdateEmployeeAssignmentDTO = Omit<EmployeeAssignmentDTO, 'created_at'>
+type UpdateEmployeeAssignmentDTO = Omit<EmployeeAssignmentDTO, 'created_at' | 'area_id' | 'area_name' | 'task_id' | 'task_name'>
+type CreateEmployeeAssignmentDTO = Omit<UpdateEmployeeAssignmentDTO, 'id'>
 
 export type EmployeeAssignmentDTO = {
 	id: number
@@ -11,8 +11,10 @@ export type EmployeeAssignmentDTO = {
 	efficiency: number
 	assigned_date?: string
 	created_at: string
-	task_name?: string
+	area_id?: number
 	area_name?: string
+	task_id?: number
+	task_name?: string
 }
 
 export class EmployeeAssignment {
@@ -23,10 +25,12 @@ export class EmployeeAssignment {
 	efficiency: number
 	assignedDate?: Date
 	createdAt: Date
-	taskName?: string
+	areaId?: number
 	areaName?: string
+	taskId?: number
+	taskName?: string
 
-	constructor(params?: Partial<Omit<EmployeeAssignment, 'toCreateDTO' | 'toUpdateDTO'>>) {
+	constructor(params?: Partial<Omit<EmployeeAssignment, 'toCreateDTO' | 'toUpdateDTO' | 'name'>>) {
 		this.id = params?.id || 0
 		this.employeeId = params?.employeeId || 0
 		this.assignmentId = params?.assignmentId || 0
@@ -34,8 +38,10 @@ export class EmployeeAssignment {
 		this.efficiency = params?.efficiency || 0
 		this.assignedDate = params?.assignedDate || new Date()
 		this.createdAt = params?.createdAt || new Date()
-		this.taskName = params?.taskName
+		this.areaId = params?.areaId || 0
 		this.areaName = params?.areaName
+		this.taskId = params?.taskId || 0
+		this.taskName = params?.taskName
 	}
 
 	static fromDTO(dto: EmployeeAssignmentDTO): EmployeeAssignment {
@@ -47,9 +53,15 @@ export class EmployeeAssignment {
 			efficiency: dto.efficiency,
 			assignedDate: dto.assigned_date ? new Date(dto.assigned_date) : undefined,
 			createdAt: new Date(dto.created_at),
-			taskName: dto.task_name,
+			areaId: dto.area_id,
 			areaName: dto.area_name,
+			taskId: dto.task_id,
+			taskName: dto.task_name,
 		})
+	}
+
+	get name() {
+		return `${this.areaName} - ${this.taskName}`
 	}
 
 	public toCreateDTO(): CreateEmployeeAssignmentDTO {

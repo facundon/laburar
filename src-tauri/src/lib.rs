@@ -11,8 +11,8 @@ use commands::assignment::{
     list_assignments_command, update_assignment_command,
 };
 use commands::employee::{
-    create_employee_command, delete_employee_command, get_employee_command, list_employees_command,
-    update_employee_command,
+    create_employee_command, delete_employee_command, get_employee_command,
+    get_employee_with_assignments_command, list_employees_command, update_employee_command,
 };
 use commands::employee_assignment::{
     create_assignments_to_employee_command, delete_employee_assignment_command,
@@ -37,6 +37,7 @@ pub fn run() {
             create_employee_command,
             delete_employee_command,
             get_employee_command,
+            get_employee_with_assignments_command,
             list_employees_command,
             update_employee_command,
             create_task_command,

@@ -1,8 +1,8 @@
 import { breadcrumbData } from '$context'
-import { getEmployee } from '$queries/employees/getEmployee'
+import { getEmployeeWithAssignments } from '$queries/employees'
 
 export const load = async ({ params }) => {
-	const employee = await getEmployee(Number(params.id))
+	const employee = await getEmployeeWithAssignments(Number(params.id))
 	if (employee) breadcrumbData.name = employee.name
 	return { employee }
 }

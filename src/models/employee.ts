@@ -1,5 +1,7 @@
-type CreateEmployeeDTO = Omit<EmployeeDTO, 'id' | 'created_at'>
-type UpdateEmployeeDTO = Omit<EmployeeDTO, 'created_at'>
+import { EmployeeAssignment, type EmployeeAssignmentDTO } from '$models/employeeAssignment'
+
+type UpdateEmployeeDTO = Omit<EmployeeDTO, 'created_at' | 'assignments'>
+type CreateEmployeeDTO = Omit<UpdateEmployeeDTO, 'id'>
 
 export type EmployeeDTO = {
 	id: number
@@ -9,6 +11,7 @@ export type EmployeeDTO = {
 	phone?: string
 	start_date?: string
 	created_at: string
+	assignments: EmployeeAssignmentDTO[]
 }
 
 export class Employee {
@@ -19,6 +22,7 @@ export class Employee {
 	createdAt: Date
 	phone?: string
 	startDate?: Date
+	assignments: EmployeeAssignment[]
 
 	constructor(params?: Partial<Omit<Employee, 'name' | 'toCreateDTO' | 'toUpdateDTO'>>) {
 		this.id = params?.id || 0
@@ -28,6 +32,7 @@ export class Employee {
 		this.address = params?.address || ''
 		this.createdAt = params?.createdAt || new Date()
 		this.startDate = params?.startDate || new Date()
+		this.assignments = params?.assignments || []
 	}
 
 	get name() {
@@ -43,6 +48,7 @@ export class Employee {
 			phone: dto.phone,
 			startDate: dto.start_date ? new Date(dto.start_date) : undefined,
 			createdAt: new Date(dto.created_at),
+			assignments: dto.assignments?.map(EmployeeAssignment.fromDTO),
 		})
 	}
 

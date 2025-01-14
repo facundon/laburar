@@ -3,7 +3,7 @@
 	import { ROUTES } from '$routes'
 	import Button from '$components/Button.svelte'
 	import MainContainer from '$components/MainContainer.svelte'
-	import Checkbox from '$components/Checkbox.svelte' // Import the new Checkbox component
+	import Checkbox from '$components/Checkbox.svelte'
 	import { Save } from 'lucide-svelte'
 
 	let { data } = $props()

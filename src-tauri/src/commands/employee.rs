@@ -1,7 +1,11 @@
 pub use crate::db::models::employee::{
-    create_employee, delete_employee, get_employee, list_employees, update_employee,
+    create_employee, delete_employee, get_employee, get_employee_with_assignments, list_employees,
+    update_employee,
 };
-use crate::db::{models::employee::Employee, sqlite::establish_connection};
+use crate::db::{
+    models::employee::{Employee, EmployeeWithAssignments},
+    sqlite::establish_connection,
+};
 use crate::error::Error;
 use chrono::NaiveDateTime;
 use tauri::command;
@@ -38,6 +42,12 @@ pub fn create_employee_command(
 pub fn get_employee_command(id: i32) -> Result<Employee, Error> {
     let mut conn = establish_connection();
     get_employee(&mut conn, id)
+}
+
+#[command(rename_all = "snake_case")]
+pub fn get_employee_with_assignments_command(id: i32) -> Result<EmployeeWithAssignments, Error> {
+    let mut conn = establish_connection();
+    get_employee_with_assignments(&mut conn, id)
 }
 
 #[command(rename_all = "snake_case")]

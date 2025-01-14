@@ -1,7 +1,7 @@
 import { Assignment, type AssignmentDTO } from '$models/assignment'
 
-type CreateAreaDTO = Omit<AreaDTO, 'id' | 'created_at' | 'assignments'>
 type UpdateAreaDTO = Omit<AreaDTO, 'created_at' | 'assignments'>
+type CreateAreaDTO = Omit<UpdateAreaDTO, 'id'>
 
 export type AreaDTO = {
 	id: number

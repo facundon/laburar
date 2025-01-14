@@ -4,12 +4,13 @@
 	import { differenceInYears, format } from 'date-fns'
 	import Button from '$components/Button.svelte'
 	import Modal from '$components/Modal.svelte'
-	import { ClipboardList, Delete, Pencil } from 'lucide-svelte'
+	import { ClipboardPlus, Delete, Pencil } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
+	import Table from '$components/Table.svelte'
+	import Rating from '$components/Rating.svelte'
 
 	const { data } = $props()
 	const employee = data.employee
-	const assignments = data.assignments
 
 	let showModal = $state(false)
 
@@ -43,7 +44,7 @@
 
 {#if employee}
 	{#snippet Actions()}
-		<Button variant="secondary" href={ROUTES.employee.assignTasks(employee.id)} Icon={ClipboardList}>Asignar Tareas</Button>
+		<Button variant="secondary" href={ROUTES.employee.assignTasks(employee.id)} Icon={ClipboardPlus}>Asignar Tareas</Button>
 	{/snippet}
 	<MainContainer title={employee.name} {Actions}>
 		<p><strong>Teléfono:</strong> {employee.phone}</p>
@@ -60,7 +61,7 @@
 		{/if}
 		<div class="actions">
 			<Button outlined href={ROUTES.employee.edit(employee.id)} Icon={Pencil}>Editar</Button>
-			<Button style="margin-left: auto;" outlined variant="error" onclick={confirmDelete} Icon={Delete}>Eliminar</Button>
+			<Button outlined variant="error" onclick={confirmDelete} Icon={Delete}>Eliminar</Button>
 		</div>
 		<Modal
 			bind:show={showModal}
@@ -71,11 +72,23 @@
 			onclose={handleClose}
 		/>
 	</MainContainer>
-	{#if assignments.length > 0}
-		<MainContainer title="Tareas" style="margin-top: 2rem;">
-			{#each assignments as assignment}
-				<p>{assignment.difficulty}</p>
-			{/each}
+
+	{#if employee.assignments.length > 0}
+		<MainContainer title="Tareas Asignadas" style="margin-top: 1rem;">
+			{#if employee.assignments.length > 0}
+				<Table
+					rows={employee.assignments}
+					columns={[
+						{ field: 'name', headerName: 'Nombre' },
+						{
+							field: 'efficiency',
+							headerName: 'Eficiencia',
+							renderCell: value => ({ component: Rating, props: { rating: Number(value) } }),
+						},
+						{ field: 'isPrimary', headerName: 'Es Primaria', formatValue: value => (value ? 'Sí' : 'No') },
+					]}
+				/>
+			{/if}
 		</MainContainer>
 	{/if}
 {/if}
@@ -89,5 +102,6 @@
 	.actions {
 		margin-top: 3rem;
 		display: flex;
+		justify-content: space-between;
 	}
 </style>

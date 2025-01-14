@@ -1,4 +1,4 @@
-import { getEmployeeList } from '$queries/employees/getEmployeeList'
+import { getEmployeeList } from '$queries/employees'
 
 export const load = async () => {
 	const employees = await getEmployeeList()

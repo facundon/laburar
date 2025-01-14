@@ -4,6 +4,7 @@ type Command =
 	| 'create_employee_command'
 	| 'delete_employee_command'
 	| 'get_employee_command'
+	| 'get_employee_with_assignments_command'
 	| 'list_employees_command'
 	| 'update_employee_command'
 	| 'create_task_command'

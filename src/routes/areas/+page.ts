@@ -1,4 +1,4 @@
-import { getAreaList } from '$queries/areas/getAreaList'
+import { getAreaList } from '$queries/areas'
 
 export const load = async () => {
 	const areas = await getAreaList()

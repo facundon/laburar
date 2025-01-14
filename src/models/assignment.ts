@@ -1,7 +1,7 @@
 import { toTitleCase } from '$utils'
 
-type CreateAssignmentDTO = Omit<AssignmentDTO, 'id' | 'created_at'>
 type UpdateAssignmentDTO = Omit<AssignmentDTO, 'created_at'>
+type CreateAssignmentDTO = Omit<UpdateAssignmentDTO, 'id'>
 
 export type AssignmentDTO = {
 	id: number
@@ -24,7 +24,7 @@ export class Assignment {
 	taskName?: string
 	areaName?: string
 
-	constructor(params?: Partial<Omit<Assignment, 'toCreateDTO' | 'toUpdateDTO'>>) {
+	constructor(params?: Partial<Omit<Assignment, 'toCreateDTO' | 'toUpdateDTO' | 'name'>>) {
 		this.id = params?.id || 0
 		this.taskId = params?.taskId || 0
 		this.areaId = params?.areaId || 0
@@ -46,6 +46,10 @@ export class Assignment {
 			taskName: dto.task_name,
 			areaName: dto.area_name,
 		})
+	}
+
+	get name() {
+		return `${this.areaName} - ${this.taskName}`
 	}
 
 	public toCreateDTO(): CreateAssignmentDTO {

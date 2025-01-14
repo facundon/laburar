@@ -1,7 +1,7 @@
-<script lang="ts" generics="T extends object">
-	import type { Component, Snippet } from 'svelte'
+<script lang="ts" generics="T extends object, P extends Record<string, any>">
+	import type { Component } from 'svelte'
 
-	type ColumnDef<T> = {
+	type ColumnDef<T, P extends Record<string, any>> = {
 		[K in keyof T]: {
 			field: K
 			width?: number
@@ -9,17 +9,17 @@
 			headerName: string
 			formatValue?: (value: T[K]) => string
 			renderCell?: (value: T[K]) => {
-				component: Snippet | Component
-				props: any
+				component: Component<P>
+				props: P
 			}
 		}
 	}[keyof T]
-	interface Props<T extends object> {
-		columns: ColumnDef<T>[]
+	interface Props<T extends object, P extends Record<string, any>> {
+		columns: ColumnDef<T, P>[]
 		rows: T[]
 	}
 
-	let { columns, rows }: Props<T> = $props()
+	let { columns, rows }: Props<T, P> = $props()
 </script>
 
 <table>
@@ -85,13 +85,16 @@
 	tr:last-child td {
 		border-bottom: none;
 	}
+	tr {
+		background-color: #f2f2f2;
+	}
 
-	tr:nth-child(even) {
+	/* tr:nth-child(even) {
 		background-color: #f2f2f2d7;
 	}
 	tr:nth-child(odd) {
 		background-color: #f2f2f2;
-	}
+	} */
 
 	th {
 		background-color: var(--primary-main);

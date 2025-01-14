@@ -3,10 +3,9 @@
 	import { ROUTES } from '$routes'
 	import Button from '$components/Button.svelte'
 	import Modal from '$components/Modal.svelte'
-	import { Delete, Pencil, ClipboardList } from 'lucide-svelte'
+	import { Delete, Pencil, ClipboardPlus } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import Table from '$components/Table.svelte'
-	import Rating from '$components/Rating.svelte'
 	import { AssignmentDifficulties } from '$models/assignment.js'
 
 	const { data } = $props()
@@ -35,7 +34,7 @@
 
 {#if area}
 	{#snippet Actions()}
-		<Button variant="secondary" href={ROUTES.area.assignTasks(area.id)} Icon={ClipboardList}>Asignar Tareas</Button>
+		<Button variant="secondary" href={ROUTES.area.assignTasks(area.id)} Icon={ClipboardPlus}>Asignar Tareas</Button>
 	{/snippet}
 	<MainContainer title={area.name} {Actions}>
 		{#if area.description}

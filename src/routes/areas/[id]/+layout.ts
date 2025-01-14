@@ -1,5 +1,5 @@
 import { breadcrumbData } from '$context'
-import { getAreaWithAssignments } from '$queries/areas/getAreaWithAssignments'
+import { getAreaWithAssignments } from '$queries/areas'
 
 export const load = async ({ params }) => {
 	const area = await getAreaWithAssignments(Number(params.id))

@@ -20,9 +20,11 @@ pub struct EmployeeAssignment {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct EmployeeAssignmentWithNames {
     #[serde(flatten)]
-    pub employee_assignment_id: EmployeeAssignment,
-    pub task_name: String,
+    pub employee_assignment: EmployeeAssignment,
+    pub area_id: i32,
     pub area_name: String,
+    pub task_id: i32,
+    pub task_name: String,
 }
 
 #[derive(Insertable)]
@@ -45,16 +47,24 @@ pub fn list_employee_assignments(
                 .inner_join(area::table.on(area::id.eq(assignment::area_id)))
                 .inner_join(task::table.on(task::id.eq(assignment::task_id))),
         )
-        .select((employee_assignment::all_columns, task::name, area::name))
+        .select((
+            employee_assignment::all_columns,
+            task::name,
+            area::name,
+            task::id,
+            area::id,
+        ))
         .filter(employee_assignment::employee_id.eq(employee_id))
         .load(conn)
         .map(|assignments| {
             let mut assignments_with_names = vec![];
-            for (employee_assignment, task_name, area_name) in assignments {
+            for (employee_assignment, task_name, area_name, task_id, area_id) in assignments {
                 assignments_with_names.push(EmployeeAssignmentWithNames {
-                    employee_assignment_id: employee_assignment,
-                    task_name,
+                    employee_assignment,
+                    area_id,
                     area_name,
+                    task_id,
+                    task_name,
                 });
             }
             assignments_with_names
