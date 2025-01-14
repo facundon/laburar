@@ -8,7 +8,7 @@ use commands::area::{
 };
 use commands::assignment::{
     create_assignment_command, delete_assignment_command, get_assignment_command,
-    update_assignment_command,
+    list_assignments_command, update_assignment_command,
 };
 use commands::employee::{
     create_employee_command, delete_employee_command, get_employee_command, list_employees_command,
@@ -52,6 +52,7 @@ pub fn run() {
             list_areas_command,
             update_area_command,
             create_assignment_command,
+            list_assignments_command,
             delete_assignment_command,
             get_assignment_command,
             update_assignment_command,

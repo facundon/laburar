@@ -54,6 +54,25 @@ pub fn create_assignment(
         .map_err(|err| Error::Database(err.to_string()))
 }
 
+pub fn list_assignments(conn: &mut SqliteConnection) -> Result<Vec<AssignmentWithNames>, Error> {
+    assignment::table
+        .inner_join(task::table.on(task::id.eq(assignment::task_id)))
+        .inner_join(area::table.on(area::id.eq(assignment::area_id)))
+        .select((assignment::all_columns, task::name, area::name))
+        .load(conn)
+        .map(|assignments| {
+            assignments
+                .into_iter()
+                .map(|(assignment, task_name, area_name)| AssignmentWithNames {
+                    assignment,
+                    task_name,
+                    area_name,
+                })
+                .collect()
+        })
+        .map_err(|err| Error::Database(err.to_string()))
+}
+
 pub fn get_assignment(conn: &mut SqliteConnection, id: i32) -> Result<AssignmentWithNames, Error> {
     assignment::table
         .inner_join(task::table.on(task::id.eq(assignment::task_id)))

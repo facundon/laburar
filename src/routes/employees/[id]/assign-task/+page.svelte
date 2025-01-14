@@ -8,7 +8,7 @@
 
 	let { data } = $props()
 	const employee = data.employee
-	const tasks = data.tasks
+	const assignments = data.assignments
 	let selectedTasks = new Set()
 
 	function toggleTask(taskId: number) {
@@ -19,8 +19,8 @@
 	async function assignTasks() {
 		if (!employee) return
 		try {
-			const tasksToAssign = Array.from(selectedTasks)
-			await invoke('assign_tasks_to_employee_command', { employee_id: employee.id, task_ids: tasksToAssign })
+			const assignmentIds = Array.from(selectedTasks)
+			await invoke('create_assignments_to_employee_command', { employee_id: employee.id, assignment_ids: assignmentIds })
 			window.location.href = ROUTES.employee.view(employee.id)
 		} catch (error) {
 			console.error('Failed to assign task:', error)
@@ -32,8 +32,12 @@
 	<MainContainer title={`Asignar Tareas a ${employee.name}`}>
 		<form onsubmit={assignTasks}>
 			<div class="task-list">
-				{#each tasks as task}
-					<Checkbox id={task.id.toString()} onchange={() => toggleTask(task.id)} label={task.name} />
+				{#each assignments as assignment}
+					<Checkbox
+						id={assignment.id.toString()}
+						onchange={() => toggleTask(assignment.id)}
+						label={`${assignment.taskName} - ${assignment.areaName}`}
+					/>
 				{/each}
 			</div>
 			<div class="actions">
