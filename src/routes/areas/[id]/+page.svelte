@@ -5,6 +5,8 @@
 	import Modal from '$components/Modal.svelte'
 	import { Delete, Pencil, ClipboardList } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
+	import Table from '$components/Table.svelte'
+	import Rating from '$components/Rating.svelte'
 
 	const { data } = $props()
 	const area = data.area
@@ -55,13 +57,23 @@
 	</MainContainer>
 	{#if area.assignments.length > 0}
 		<MainContainer title="Tareas" style="margin-top: 1rem;">
-			{#each area.assignments as assignment}
-				<div>
-					<h4>{assignment.taskName}</h4>
-					<p>{assignment.difficulty}</p>
-					<p>{assignment.frequency}</p>
-				</div>
-			{/each}
+			{#if area.assignments.length > 0}
+				<Table
+					rows={area.assignments}
+					columns={[
+						{ field: 'taskName', headerName: 'Tarea' },
+						{
+							field: 'difficulty',
+							headerName: 'Dificultad',
+							renderCell: row => ({
+								component: Rating,
+								props: { rating: row.difficulty },
+							}),
+						},
+						{ field: 'frequency', headerName: 'Frecuencia' },
+					]}
+				/>
+			{/if}
 		</MainContainer>
 	{/if}
 {/if}
