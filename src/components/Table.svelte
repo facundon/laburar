@@ -1,16 +1,19 @@
 <script lang="ts" generics="T extends object">
 	import type { Component, Snippet } from 'svelte'
 
-	interface ColumnDef<T> {
-		field: keyof T
-		width?: number
-		isBold?: boolean
-		headerName: string
-		renderCell?: (row: T) => {
-			component: Snippet | Component
-			props: any
+	type ColumnDef<T> = {
+		[K in keyof T]: {
+			field: K
+			width?: number
+			isBold?: boolean
+			headerName: string
+			formatValue?: (value: T[K]) => string
+			renderCell?: (value: T[K]) => {
+				component: Snippet | Component
+				props: any
+			}
 		}
-	}
+	}[keyof T]
 	interface Props<T extends object> {
 		columns: ColumnDef<T>[]
 		rows: T[]
@@ -31,15 +34,21 @@
 		{#each rows as row}
 			<tr>
 				{#each columns as column}
+					{@const value = row[column.field]}
+					{@const formatedValue = column.formatValue ? column.formatValue(value) : value}
 					{#if column.renderCell}
-						{@const CustomCell = column.renderCell(row)}
+						{@const CustomCell = column.renderCell(value)}
 						<td>
 							<CustomCell.component {...CustomCell.props} />
 						</td>
-					{:else if column.isBold}
-						<td><strong>{row[column.field]}</strong></td>
 					{:else}
-						<td>{row[column.field]}</td>
+						<td>
+							{#if column.isBold}
+								<strong>{formatedValue}</strong>
+							{:else}
+								{formatedValue}
+							{/if}
+						</td>
 					{/if}
 				{/each}
 			</tr>
@@ -55,8 +64,18 @@
 
 	th,
 	td {
-		padding: 0.5rem;
 		border-bottom: 1px solid #626262;
+		padding: 0.25rem;
+	}
+
+	td:first-child,
+	th:first-child {
+		padding-left: 1rem;
+	}
+
+	td:last-child,
+	th:last-child {
+		padding-right: 1rem;
 	}
 
 	th {

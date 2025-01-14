@@ -7,6 +7,7 @@
 	import MainContainer from '$components/MainContainer.svelte'
 	import Table from '$components/Table.svelte'
 	import Rating from '$components/Rating.svelte'
+	import { AssignmentDifficulties } from '$models/assignment.js'
 
 	const { data } = $props()
 	const area = data.area
@@ -65,10 +66,7 @@
 						{
 							field: 'difficulty',
 							headerName: 'Dificultad',
-							renderCell: row => ({
-								component: Rating,
-								props: { rating: row.difficulty },
-							}),
+							formatValue: value => AssignmentDifficulties.find(d => d.value === value)?.label || value.toString(),
 						},
 						{ field: 'frequency', headerName: 'Frecuencia' },
 					]}
