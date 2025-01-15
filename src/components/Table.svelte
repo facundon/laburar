@@ -1,5 +1,16 @@
 <script lang="ts" generics="T extends object, P extends Record<string, any>">
 	import type { Component } from 'svelte'
+	import type { IconProps, Icon as IconType } from 'lucide-svelte'
+
+	type RenderIcon = {
+		component: typeof IconType
+		props: IconProps
+	}
+
+	type RenderComponent<P extends Record<string, any>> = {
+		component: Component<P>
+		props: P
+	}
 
 	type ColumnDef<T, P extends Record<string, any>> = {
 		[K in keyof T]: {
@@ -8,10 +19,7 @@
 			isBold?: boolean
 			headerName: string
 			formatValue?: (value: T[K]) => string
-			renderCell?: (value: T[K]) => {
-				component: Component<P>
-				props: P
-			}
+			renderCell?: (value: T[K]) => RenderComponent<P> | RenderIcon
 		}
 	}[keyof T]
 	interface Props<T extends object, P extends Record<string, any>> {
@@ -39,7 +47,7 @@
 					{#if column.renderCell}
 						{@const CustomCell = column.renderCell(value)}
 						<td>
-							<CustomCell.component {...CustomCell.props} />
+							<CustomCell.component {...CustomCell.props as P} />
 						</td>
 					{:else}
 						<td>

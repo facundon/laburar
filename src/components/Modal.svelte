@@ -26,6 +26,10 @@
 {/if}
 
 <style>
+	p {
+		white-space: pre-wrap;
+		line-height: 2rem;
+	}
 	.modal-backdrop {
 		position: fixed;
 		top: 0;
@@ -43,10 +47,12 @@
 		transform: translate(-50%, -50%);
 		background: white;
 		color: #333;
-		padding: 2rem;
+		padding-inline: 1.5rem;
+		padding-bottom: 1rem;
 		border-radius: 8px;
 		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 		z-index: 20;
+		max-width: clamp(20rem, 50vw, 45rem);
 	}
 
 	.actions {

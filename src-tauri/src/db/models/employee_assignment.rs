@@ -126,7 +126,7 @@ pub fn delete_employee_assignment(
         employee_assignment::table.filter(
             employee_assignment::employee_id
                 .eq(employee_id)
-                .and(employee_assignment::assignment_id.eq(assignment_id)),
+                .and(employee_assignment::id.eq(assignment_id)),
         ),
     )
     .execute(conn)

@@ -8,45 +8,74 @@
 	import MainContainer from '$components/MainContainer.svelte'
 	import Table from '$components/Table.svelte'
 	import Rating from '$components/Rating.svelte'
+	import { invalidateAll } from '$app/navigation'
 
 	const { data } = $props()
-	const employee = data.employee
+	let employee = $state(data.employee)
 
-	let showModal = $state(false)
+	$effect(() => {
+		if (data?.employee === employee) return
+		employee = data.employee
+	})
 
+	let assignmentToDelete = $state<{ name: string; id: number } | null>(null)
+	let showDeleteEmployeeModal = $state(false)
+	let showDeleteAssignmentModal = $derived(assignmentToDelete !== null)
+
+	const handleOpenDeleteEmployee = () => (showDeleteEmployeeModal = true)
+	const handleCloseDeleteEmployee = () => (showDeleteEmployeeModal = false)
 	async function deleteEmployee() {
 		try {
 			if (!employee) return
 			await invoke('delete_employee_command', { id: employee.id })
+			handleCloseDeleteEmployee()
 			window.location.href = ROUTES.employee.list
 		} catch (error) {
 			console.error('Failed to delete employee:', error)
 		}
 	}
 
-	function confirmDelete() {
-		showModal = true
+	const openDeleteAssignmentModal = (assignment: { name: string; id: number }) => (assignmentToDelete = assignment)
+	const closeDeleteAssignmentModal = () => (assignmentToDelete = null)
+	async function deleteAssignment() {
+		try {
+			if (!employee || !assignmentToDelete) return
+			console.log({ employee_id: employee.id, assignment_id: assignmentToDelete.id })
+			await invoke('delete_employee_assignment_command', { employee_id: employee.id, assignment_id: assignmentToDelete.id })
+			closeDeleteAssignmentModal()
+			await invalidateAll()
+		} catch (error) {
+			console.error('Failed to delete assignment:', error)
+		}
 	}
 
-	function handleClose() {
-		showModal = false
-	}
+	const employeeAssignmentsWithActions = $derived(
+		employee?.assignments.map(assignment => ({
+			...assignment,
+			name: assignment.name,
+			actions: [
+				{
+					label: 'Editar',
+				},
+				{
+					label: 'Eliminar',
+					variant: 'error',
+					onclick: () => openDeleteAssignmentModal(assignment),
+				},
+			],
+		})) || [],
+	)
 
-	function handleConfirm() {
-		deleteEmployee()
-		handleClose()
-	}
-
-	function getDifferenceInYears(startDate: Date): number {
-		return differenceInYears(new Date(), startDate)
-	}
+	const getDifferenceInYears = (startDate: Date): number => differenceInYears(new Date(), startDate)
 </script>
 
 {#if employee}
-	{#snippet Actions()}
-		<Button variant="secondary" href={ROUTES.employee.assignTasks(employee.id)} Icon={ClipboardPlus}>Asignar Tareas</Button>
-	{/snippet}
-	<MainContainer title={employee.name} {Actions}>
+	<MainContainer title={employee.name}>
+		{#snippet Actions()}
+			{#if employee}
+				<Button variant="secondary" href={ROUTES.employee.assignTasks(employee.id)} Icon={ClipboardPlus}>Asignar Tareas</Button>
+			{/if}
+		{/snippet}
 		<p><strong>Teléfono:</strong> {employee.phone}</p>
 		<p><strong>Dirección:</strong> {employee.address}</p>
 		{#if employee.startDate}
@@ -61,15 +90,15 @@
 		{/if}
 		<div class="actions">
 			<Button outlined href={ROUTES.employee.edit(employee.id)} Icon={Pencil}>Editar</Button>
-			<Button outlined variant="error" onclick={confirmDelete} Icon={Delete}>Eliminar</Button>
+			<Button outlined variant="error" onclick={handleOpenDeleteEmployee} Icon={Delete}>Eliminar</Button>
 		</div>
 		<Modal
-			bind:show={showModal}
+			bind:show={showDeleteEmployeeModal}
 			isDestructive
 			title="Confirmar acción"
 			message={`¿Estás seguro de que deseas eliminar a "${employee.name}"?`}
-			onconfirm={handleConfirm}
-			onclose={handleClose}
+			onconfirm={deleteEmployee}
+			onclose={handleCloseDeleteEmployee}
 		/>
 	</MainContainer>
 
@@ -77,19 +106,38 @@
 		<MainContainer title="Tareas Asignadas" style="margin-top: 1rem;">
 			{#if employee.assignments.length > 0}
 				<Table
-					rows={employee.assignments}
+					rows={employeeAssignmentsWithActions}
 					columns={[
 						{ field: 'name', headerName: 'Nombre' },
 						{
 							field: 'efficiency',
 							headerName: 'Eficiencia',
-							renderCell: value => ({ component: Rating, props: { rating: Number(value) } }),
+							renderCell: value => ({
+								component: Rating,
+								props: { rating: Number(value) },
+							}),
 						},
 						{ field: 'isPrimary', headerName: 'Es Primaria', formatValue: value => (value ? 'Sí' : 'No') },
+						{
+							field: 'actions',
+							headerName: 'Acciones',
+							renderCell: value => ({
+								component: Delete,
+								props: { onclick: value[1].onclick, color: 'var(--error-main)' },
+							}),
+						},
 					]}
 				/>
 			{/if}
 		</MainContainer>
+		<Modal
+			show={showDeleteAssignmentModal}
+			isDestructive
+			title="Confirmar acción"
+			message={`¿Estás seguro de que deseas eliminar Estás seguro de que deseas eliminar Estás seguro de que deseas eliminar la tarea asignada "${assignmentToDelete?.name}" de ${employee.name}?`}
+			onconfirm={deleteAssignment}
+			onclose={closeDeleteAssignmentModal}
+		/>
 	{/if}
 {/if}
 
