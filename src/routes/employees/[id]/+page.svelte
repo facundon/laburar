@@ -14,8 +14,7 @@
 	let employee = $state(data.employee)
 
 	$effect(() => {
-		if (data?.employee === employee) return
-		employee = data.employee
+		if (data?.employee !== employee) employee = data.employee
 	})
 
 	let assignmentToDelete = $state<{ name: string; id: number } | null>(null)
@@ -40,7 +39,6 @@
 	async function deleteAssignment() {
 		try {
 			if (!employee || !assignmentToDelete) return
-			console.log({ employee_id: employee.id, assignment_id: assignmentToDelete.id })
 			await invoke('delete_employee_assignment_command', { employee_id: employee.id, assignment_id: assignmentToDelete.id })
 			closeDeleteAssignmentModal()
 			await invalidateAll()
@@ -120,7 +118,8 @@
 						{ field: 'isPrimary', headerName: 'Es Primaria', formatValue: value => (value ? 'Sí' : 'No') },
 						{
 							field: 'actions',
-							headerName: 'Acciones',
+							headerName: '',
+							width: 20,
 							renderCell: value => ({
 								component: Delete,
 								props: { onclick: value[1].onclick, color: 'var(--error-main)' },
@@ -134,7 +133,7 @@
 			show={showDeleteAssignmentModal}
 			isDestructive
 			title="Confirmar acción"
-			message={`¿Estás seguro de que deseas eliminar Estás seguro de que deseas eliminar Estás seguro de que deseas eliminar la tarea asignada "${assignmentToDelete?.name}" de ${employee.name}?`}
+			message={`¿Estás seguro de que deseas eliminar la tarea asignada "${assignmentToDelete?.name}" de ${employee.name}?`}
 			onconfirm={deleteAssignment}
 			onclose={closeDeleteAssignmentModal}
 		/>

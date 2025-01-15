@@ -46,11 +46,11 @@
 					{@const formatedValue = column.formatValue ? column.formatValue(value) : value}
 					{#if column.renderCell}
 						{@const CustomCell = column.renderCell(value)}
-						<td>
+						<td width={column.width}>
 							<CustomCell.component {...CustomCell.props as P} />
 						</td>
 					{:else}
-						<td>
+						<td width={column.width}>
 							{#if column.isBold}
 								<strong>{formatedValue}</strong>
 							{:else}
