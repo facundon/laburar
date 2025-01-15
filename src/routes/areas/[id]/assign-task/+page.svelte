@@ -7,6 +7,7 @@
 	import Select from '$components/Select.svelte'
 	import { Assignment, AssignmentDifficulties, AssignmentFrequencies } from '$models/assignment'
 	import FormGroup from '$components/FormGroup.svelte'
+	import CongratsText from '$components/CongratsText.svelte'
 
 	let { data } = $props()
 	const area = data.area
@@ -27,40 +28,44 @@
 
 {#if area}
 	<MainContainer title={`Asignar Tarea a ${area.name}`}>
-		<form onsubmit={assignTasks}>
-			<div class="group">
-				<FormGroup id="taskId" label="Tarea">
-					<Select id="taskId" bind:value={assignment.taskId} required placeholder="Selecciona una tarea">
-						{#each tasks as task}
-							<option value={task.id}>
-								{task.name}
-							</option>
-						{/each}
-					</Select>
-				</FormGroup>
-			</div>
-			<div class="group">
-				<FormGroup id="difficulty" label="Dificultad">
-					<Select id="difficulty" bind:value={assignment.difficulty} required>
-						{#each AssignmentDifficulties as { label, value }}
-							<option {value}>{label}</option>
-						{/each}
-					</Select>
-				</FormGroup>
-				<FormGroup id="frequency" label="Frecuencia">
-					<Select id="frequency" bind:value={assignment.frequency} required>
-						{#each AssignmentFrequencies as { label, value }}
-							<option {value}>{label}</option>
-						{/each}
-					</Select>
-				</FormGroup>
-			</div>
+		{#if tasks.length === 0}
+			<p><CongratsText>Pero que maravilloso trabajo!</CongratsText> Ya asignaste todas las tareas disponibles.</p>
+		{:else}
+			<form onsubmit={assignTasks}>
+				<div class="group">
+					<FormGroup id="taskId" label="Tarea">
+						<Select id="taskId" bind:value={assignment.taskId} required placeholder="Selecciona una tarea">
+							{#each tasks as task}
+								<option value={task.id}>
+									{task.name}
+								</option>
+							{/each}
+						</Select>
+					</FormGroup>
+				</div>
+				<div class="group">
+					<FormGroup id="difficulty" label="Dificultad">
+						<Select id="difficulty" bind:value={assignment.difficulty} required>
+							{#each AssignmentDifficulties as { label, value }}
+								<option {value}>{label}</option>
+							{/each}
+						</Select>
+					</FormGroup>
+					<FormGroup id="frequency" label="Frecuencia">
+						<Select id="frequency" bind:value={assignment.frequency} required>
+							{#each AssignmentFrequencies as { label, value }}
+								<option {value}>{label}</option>
+							{/each}
+						</Select>
+					</FormGroup>
+				</div>
 
-			<div class="actions">
-				<Button outlined variant="secondary" href={ROUTES.area.view(area.id)}>Cancelar</Button>
-				<Button type="submit" Icon={Save}>Asignar</Button>
-			</div>
-		</form>
+				<div class="actions">
+					<Button outlined variant="secondary" href={ROUTES.area.view(area.id)}>Cancelar</Button>
+					<Button type="submit" Icon={Save}>Asignar</Button>
+				</div>
+			</form>
+		{/if}
 	</MainContainer>
 {/if}
 

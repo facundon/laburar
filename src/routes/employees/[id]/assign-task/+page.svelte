@@ -5,6 +5,7 @@
 	import MainContainer from '$components/MainContainer.svelte'
 	import Checkbox from '$components/Checkbox.svelte'
 	import { Save } from 'lucide-svelte'
+	import CongratsText from '$components/CongratsText.svelte'
 
 	let { data } = $props()
 	const employee = data.employee
@@ -30,24 +31,28 @@
 
 {#if employee}
 	<MainContainer title={`Asignar Tareas a ${employee.name}`}>
-		<form onsubmit={assignTasks}>
-			<div class="task-list">
-				{#each assignments as assignment}
-					<Checkbox
-						id={assignment.id.toString()}
-						onchange={() => toggleTask(assignment.id)}
-						label={`${assignment.taskName} - ${assignment.areaName}`}
-					/>
-				{/each}
-			</div>
-			<div class="actions">
-				<Button outlined variant="secondary" href={ROUTES.employee.view(employee.id)}>Cancelar</Button>
-				<Button type="submit" style="margin-left: auto;">
-					<Save style="margin-right: 5px;" />
-					Asignar
-				</Button>
-			</div>
-		</form>
+		{#if assignments.length === 0}
+			<p><CongratsText>Pero que maravilloso trabajo!</CongratsText> {employee.firstName} ya tiene todas las tareas asignadas</p>
+		{:else}
+			<form onsubmit={assignTasks}>
+				<div class="task-list">
+					{#each assignments as assignment}
+						<Checkbox
+							id={assignment.id.toString()}
+							onchange={() => toggleTask(assignment.id)}
+							label={`${assignment.taskName} - ${assignment.areaName}`}
+						/>
+					{/each}
+				</div>
+				<div class="actions">
+					<Button outlined variant="secondary" href={ROUTES.employee.view(employee.id)}>Cancelar</Button>
+					<Button type="submit" style="margin-left: auto;">
+						<Save style="margin-right: 5px;" />
+						Asignar
+					</Button>
+				</div>
+			</form>
+		{/if}
 	</MainContainer>
 {/if}
 

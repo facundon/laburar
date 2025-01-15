@@ -679,6 +679,11 @@ svelte-check@^4.0.0:
     picocolors "^1.0.0"
     sade "^1.7.4"
 
+svelte-confetti@^2.0.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/svelte-confetti/-/svelte-confetti-2.2.0.tgz#3423754f293e6ac3220c9762e5dab6b8c0fbefc3"
+  integrity sha512-exK9uuVTBr2DRQErgibquHDCoLbx0izdmcVkh3sbs+W+AJErgXlbPiJ7N0r2jjM7YLAe5rv1VJW13GAid6DmkA==
+
 svelte@^5.0.0:
   version "5.16.1"
   resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.16.1.tgz#c3030a4b3f477801c669008e5ab12104df3ab05a"
