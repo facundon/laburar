@@ -1,11 +1,22 @@
 <script lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements'
 
-	let { label, id, color = 'primary', ...rest }: HTMLInputAttributes & { label: string; color?: 'primary' | 'secondary' } = $props()
+	let {
+		label,
+		id,
+		color = 'primary',
+		checked = $bindable(),
+		style,
+		...rest
+	}: HTMLInputAttributes & { label: string; color?: 'primary' | 'secondary' } = $props()
+
+	function handleChange(e: Event) {
+		checked = (e.target as HTMLInputElement).checked
+	}
 </script>
 
-<div class="checkbox-container">
-	<input type="checkbox" class={color} {id} {...rest} />
+<div class="checkbox-container" {style}>
+	<input type="checkbox" class={color} {id} {checked} onchange={handleChange} {...rest} />
 	<label for={id}>{label}</label>
 </div>
 

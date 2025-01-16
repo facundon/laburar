@@ -4,15 +4,22 @@
 	import { differenceInYears, format } from 'date-fns'
 	import Button from '$components/Button.svelte'
 	import Modal from '$components/Modal.svelte'
-	import { ClipboardPlus, Delete, Pencil } from 'lucide-svelte'
+	import { ClipboardPlus, Delete, Edit, Pencil } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import Table from '$components/Table.svelte'
 	import Rating from '$components/Rating.svelte'
+	import EditEmployeeAssignmentForm from '$pages/employees/[id]/EditEmployeeAssignmentForm.svelte'
+	import type { EmployeeAssignment } from '$models/employeeAssignment.js'
 
 	const { data } = $props()
-	const employee = data.employee
+	let employee = $state(data.employee)
+
+	$effect(() => {
+		if (data?.employee !== employee) employee = data.employee
+	})
 
 	let assignmentToDelete = $state<{ name: string; id: number } | null>(null)
+	let assignmentToEdit = $state<EmployeeAssignment | null>(null)
 	let showDeleteEmployeeModal = $state(false)
 	let showDeleteAssignmentModal = $derived(assignmentToDelete !== null)
 
@@ -29,41 +36,35 @@
 		}
 	}
 
-	const openDeleteAssignmentModal = (assignment: { name: string; id: number }) => (assignmentToDelete = assignment)
 	const closeDeleteAssignmentModal = () => (assignmentToDelete = null)
 	async function deleteAssignment() {
 		try {
 			if (!employee || !assignmentToDelete) return
 			await invoke('delete_employee_assignment_command', { employee_id: employee.id, assignment_id: assignmentToDelete.id })
-			// employee.assignments = employee.assignments.filter(assignment => assignment.id !== assignmentToDelete)
 			closeDeleteAssignmentModal()
 		} catch (error) {
 			console.error('Failed to delete assignment:', error)
 		}
 	}
 
-	const employeeAssignmentsWithActions =
+	const closeEditAssignmentModal = () => (assignmentToEdit = null)
+	const employeeAssignmentsWithActions = $derived(
 		employee?.assignments.map(assignment => ({
 			...assignment,
 			name: assignment.name,
-			actions: [
-				{
-					label: 'Editar',
-				},
-				{
-					label: 'Eliminar',
-					variant: 'error',
-					onclick: () => openDeleteAssignmentModal(assignment),
-				},
-			],
-		})) || []
+			delete: () => (assignmentToDelete = assignment),
+			edit: () => (assignmentToEdit = assignment),
+		})) || [],
+	)
 
 	const getDifferenceInYears = (startDate: Date): number => differenceInYears(new Date(), startDate)
 </script>
 
 {#if employee}
 	{#snippet Actions()}
-		<Button variant="secondary" href={ROUTES.employee.assignTasks(employee.id)} Icon={ClipboardPlus}>Asignar Tareas</Button>
+		{#if employee}
+			<Button variant="secondary" href={ROUTES.employee.assignTasks(employee.id)} Icon={ClipboardPlus}>Asignar Tareas</Button>
+		{/if}
 	{/snippet}
 	<MainContainer title={employee.name} {Actions}>
 		<p><strong>Teléfono:</strong> {employee.phone}</p>
@@ -106,9 +107,16 @@
 						},
 						{ field: 'isPrimary', headerName: 'Es Primaria', formatValue: value => (value ? 'Sí' : 'No') },
 						{
-							field: 'actions',
-							headerName: 'Acciones',
-							renderCell: value => ({ component: Delete, props: { onclick: value[1].onclick, color: 'var(--error-main)' } }),
+							field: 'edit',
+							width: 20,
+							headerName: '',
+							renderCell: onclick => ({ component: Edit, props: { onclick, color: 'var(--secondary-dark)', style: 'cursor: pointer;' } }),
+						},
+						{
+							field: 'delete',
+							width: 20,
+							headerName: '',
+							renderCell: onclick => ({ component: Delete, props: { onclick, color: 'var(--error-main)', style: 'cursor: pointer;' } }),
 						},
 					]}
 				/>
@@ -122,6 +130,9 @@
 			onconfirm={deleteAssignment}
 			onclose={closeDeleteAssignmentModal}
 		/>
+		{#if assignmentToEdit !== null}
+			<EditEmployeeAssignmentForm onclose={closeEditAssignmentModal} assignment={assignmentToEdit} {employee} />
+		{/if}
 	{/if}
 {/if}
 

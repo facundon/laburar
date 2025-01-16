@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Confetti from 'svelte-confetti'
+
 	interface Props {
 		rating?: number
 		maxRating?: number
@@ -6,7 +8,9 @@
 		isInteractive?: boolean
 	}
 
-	let { rating = 0, maxRating = 5, displayRating = true, isInteractive = false }: Props = $props()
+	let { rating = $bindable(0), maxRating = 5, displayRating = true, isInteractive = false }: Props = $props()
+
+	let displayConfetti = $state(false)
 
 	const getStars = () => {
 		let stars = []
@@ -22,7 +26,11 @@
 			class="star {isFilled ? '' : 'empty'} {isInteractive ? 'interactive' : ''}"
 			aria-label="Rate {index + 1} stars"
 			disabled={!isInteractive}
-			onclick={() => (rating = index + 1)}
+			onclick={() => {
+				rating = index + 1
+				if (rating === maxRating) displayConfetti = true
+				else displayConfetti = false
+			}}
 			onkeydown={e => (e.key === 'Enter' || e.key === ' ') && (rating = index + 1)}
 		>
 			&#9733;
@@ -30,6 +38,9 @@
 	{/each}
 	{#if displayRating}
 		<span>{rating}/{maxRating}</span>
+	{/if}
+	{#if displayConfetti && isInteractive}
+		<Confetti cone x={[0.25, 2]} />
 	{/if}
 </div>
 

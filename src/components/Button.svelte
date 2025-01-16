@@ -16,7 +16,7 @@
 		outlined?: boolean
 		fullWidth?: boolean
 		Icon?: typeof IconType
-		variant?: 'primary' | 'secondary' | 'error'
+		variant?: 'primary' | 'secondary' | 'error' | 'secondary-dark'
 	} & (ButtonProps | LinkProps)
 
 	let { children, href, Icon, variant: type = 'primary', fullWidth = false, outlined = false, ...rest }: Props = $props()
@@ -89,6 +89,28 @@
 		background-color: transparent;
 		color: var(--error-main);
 		border: 1px solid var(--error-main);
+	}
+
+	.button.secondary-dark {
+		background-color: var(--secondary-dark);
+		color: var(--secondary-contrast);
+		border: 1px solid var(--secondary-dark);
+	}
+
+	.button.secondary-dark.outlined {
+		background-color: transparent;
+		color: var(--secondary-dark);
+		border: 1px solid var(--secondary-dark);
+	}
+
+	.button.secondary-dark:hover:not(.outlined):not(:disabled) {
+		background-color: var(--secondary-darker);
+		border-color: var(--secondary-darker);
+	}
+
+	.button.secondary-dark.outlined:hover:not(:disabled) {
+		background-color: var(--secondary-dark);
+		color: var(--secondary-contrast);
 	}
 
 	.button:hover:not(.outlined):not(:disabled) {

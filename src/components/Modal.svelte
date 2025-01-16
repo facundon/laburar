@@ -2,7 +2,17 @@
 	import Button from '$components/Button.svelte'
 	import { Check, Trash2 } from 'lucide-svelte'
 
-	let { show = $bindable(false), title = '', message = '', onclose, onconfirm, isDestructive = false } = $props()
+	interface Props {
+		show: boolean
+		title: string
+		message?: string
+		onclose: () => void
+		onconfirm: () => void
+		isDestructive?: boolean
+		children?: () => any
+	}
+
+	let { show = $bindable(false), title = '', message = '', onclose, onconfirm, isDestructive = false, children }: Props = $props()
 
 	function close() {
 		onclose()
@@ -17,9 +27,12 @@
 	<div class="modal-backdrop" role="button" tabindex="0" onclick={close} onkeydown={e => e.key === 'Enter' && close()}></div>
 	<div class="modal">
 		<h2>{title}</h2>
-		<p>{message}</p>
+		{#if message}
+			<p>{message}</p>
+		{/if}
+		{@render children?.()}
 		<div class="actions">
-			<Button onclick={close}>Cancel</Button>
+			<Button onclick={close} variant="secondary-dark" outlined>Cancel</Button>
 			<Button variant={isDestructive ? 'error' : 'primary'} onclick={confirm} Icon={isDestructive ? Trash2 : Check}>Confirm</Button>
 		</div>
 	</div>
