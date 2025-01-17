@@ -20,6 +20,7 @@ diesel::table! {
         absence_id -> Integer,
         returned_hours -> Integer,
         notes -> Nullable<Text>,
+        return_date -> Date,
         created_at -> Nullable<Timestamp>,
     }
 }

@@ -1,6 +1,6 @@
 use crate::db::schema::absence_return;
 use crate::error::Error;
-use chrono::NaiveDateTime;
+use chrono::{NaiveDate, NaiveDateTime};
 use diesel::{prelude::*, SqliteConnection};
 use serde::{Deserialize, Serialize};
 
@@ -12,6 +12,7 @@ pub struct AbsenceReturn {
     pub absence_id: i32,
     pub returned_hours: i32,
     pub notes: Option<String>,
+    pub return_date: NaiveDate,
     pub created_at: Option<NaiveDateTime>,
 }
 
@@ -21,6 +22,7 @@ pub struct NewAbsenceReturn<'a> {
     pub absence_id: i32,
     pub returned_hours: i32,
     pub notes: Option<&'a str>,
+    pub return_date: &'a NaiveDate,
 }
 
 pub fn create_absence_return(
@@ -28,11 +30,13 @@ pub fn create_absence_return(
     absence_id: i32,
     returned_hours: i32,
     notes: Option<&str>,
+    return_date: &NaiveDate,
 ) -> Result<AbsenceReturn, Error> {
     let new_absence_return = NewAbsenceReturn {
         absence_id,
         returned_hours,
         notes,
+        return_date,
     };
     diesel::insert_into(absence_return::table)
         .values(&new_absence_return)
@@ -60,11 +64,13 @@ pub fn update_absence_return(
     absence_id: i32,
     returned_hours: i32,
     notes: Option<&str>,
+    return_date: &NaiveDate,
 ) -> Result<AbsenceReturn, Error> {
     let updated_absence_return = NewAbsenceReturn {
         absence_id,
         returned_hours,
         notes,
+        return_date,
     };
     diesel::update(absence_return::table.find(id))
         .set(&updated_absence_return)

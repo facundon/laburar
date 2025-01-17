@@ -17,6 +17,7 @@ CREATE TABLE absence_return (
   absence_id INTEGER NOT NULL,
   returned_hours INTEGER NOT NULL,
   notes TEXT,
+  return_date DATE NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (absence_id) REFERENCES absence(id)
 );
