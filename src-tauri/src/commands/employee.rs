@@ -2,12 +2,14 @@ pub use crate::db::models::employee::{
     create_employee, delete_employee, get_employee, get_employee_with_assignments, list_employees,
     update_employee,
 };
-use crate::db::{
-    models::employee::{Employee, EmployeeWithAssignments},
-    sqlite::establish_connection,
+use crate::{
+    db::{
+        models::employee::{Employee, EmployeeWithAssignments},
+        sqlite::establish_connection,
+    },
+    error::Error,
+    utils::parse_date_time_option,
 };
-use crate::error::Error;
-use chrono::NaiveDateTime;
 use tauri::command;
 
 #[command(rename_all = "snake_case")]
@@ -16,17 +18,11 @@ pub fn create_employee_command(
     first_name: &str,
     last_name: &str,
     phone: Option<&str>,
-    start_date: Option<String>,
+    start_date: Option<&str>,
 ) -> Result<Employee, Error> {
     let mut conn = establish_connection();
 
-    let parsed_start_date: Option<NaiveDateTime> = match start_date {
-        Some(date_str) => Some(
-            NaiveDateTime::parse_from_str(&date_str, "%Y-%m-%dT%H:%M:%S%.fZ")
-                .map_err(|e| Error::DateParse(e))?,
-        ),
-        None => None,
-    };
+    let parsed_start_date = parse_date_time_option(start_date)?;
 
     create_employee(
         &mut conn,
@@ -63,17 +59,11 @@ pub fn update_employee_command(
     first_name: &str,
     last_name: &str,
     phone: Option<&str>,
-    start_date: Option<String>,
+    start_date: Option<&str>,
 ) -> Result<Employee, Error> {
     let mut conn = establish_connection();
 
-    let parsed_start_date: Option<NaiveDateTime> = match start_date {
-        Some(date_str) => Some(
-            NaiveDateTime::parse_from_str(&date_str, "%Y-%m-%dT%H:%M:%S%.fZ")
-                .map_err(|e| Error::DateParse(e))?,
-        ),
-        None => None,
-    };
+    let parsed_start_date = parse_date_time_option(start_date)?;
 
     update_employee(
         &mut conn,

@@ -1,7 +1,16 @@
 mod commands;
 mod db;
 mod error;
+mod utils;
 
+use commands::absence::{
+    create_absence_command, delete_absence_command, get_absence_command,
+    get_absence_with_returns_command, list_absences_command, update_absence_command,
+};
+use commands::absence_return::{
+    create_absence_return_command, delete_absence_return_command, get_absence_return_command,
+    list_absence_returns_command, update_absence_return_command,
+};
 use commands::area::{
     create_area_command, delete_area_command, get_area_command, get_area_with_assignments_command,
     list_areas_command, update_area_command,
@@ -61,6 +70,17 @@ pub fn run() {
             delete_employee_assignment_command,
             list_employee_assignments_command,
             update_employee_assignment_command,
+            create_absence_command,
+            delete_absence_command,
+            get_absence_command,
+            get_absence_with_returns_command,
+            list_absences_command,
+            update_absence_command,
+            create_absence_return_command,
+            delete_absence_return_command,
+            get_absence_return_command,
+            list_absence_returns_command,
+            update_absence_return_command,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

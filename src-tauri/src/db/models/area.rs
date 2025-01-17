@@ -6,7 +6,7 @@ use diesel::{prelude::*, SelectableHelper, SqliteConnection};
 use serde::{Deserialize, Serialize};
 
 #[derive(Default, Queryable, Selectable, Serialize, Deserialize, Debug, Clone)]
-#[diesel(table_name = crate::db::schema::area)]
+#[diesel(table_name = area)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct Area {
     pub id: i32,

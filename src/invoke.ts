@@ -28,6 +28,17 @@ type Command =
 	| 'delete_employee_assignment_command'
 	| 'list_employee_assignments_command'
 	| 'update_employee_assignment_command'
+	| 'create_absence_command'
+	| 'delete_absence_command'
+	| 'get_absence_command'
+	| 'get_absence_with_returns_command'
+	| 'list_absences_command'
+	| 'update_absence_command'
+	| 'create_absence_return_command'
+	| 'delete_absence_return_command'
+	| 'get_absence_return_command'
+	| 'list_absence_returns_command'
+	| 'update_absence_return_command'
 
 export const invoke = async <T>(command: Command, params?: InvokeArgs, parser?: (data: any) => T): Promise<T> => {
 	const response = await tauriInvoke<T>(command, params)

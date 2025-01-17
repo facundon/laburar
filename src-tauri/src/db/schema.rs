@@ -1,6 +1,30 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
+    absence (id) {
+        id -> Integer,
+        employee_id -> Integer,
+        is_justified -> Bool,
+        will_return -> Bool,
+        hours -> Integer,
+        description -> Nullable<Text>,
+        absence_type -> Text,
+        absence_date -> Date,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    absence_return (id) {
+        id -> Integer,
+        absence_id -> Integer,
+        returned_hours -> Integer,
+        notes -> Nullable<Text>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
     area (id) {
         id -> Integer,
         name -> Text,
@@ -53,12 +77,16 @@ diesel::table! {
     }
 }
 
+diesel::joinable!(absence -> employee (employee_id));
+diesel::joinable!(absence_return -> absence (absence_id));
 diesel::joinable!(assignment -> area (area_id));
 diesel::joinable!(assignment -> task (task_id));
 diesel::joinable!(employee_assignment -> assignment (assignment_id));
 diesel::joinable!(employee_assignment -> employee (employee_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
+    absence,
+    absence_return,
     area,
     assignment,
     employee,
