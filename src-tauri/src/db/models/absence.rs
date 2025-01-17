@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::db::models::absence_return::AbsenceReturn;
 use crate::db::schema::{absence, absence_return};
 use crate::error::Error;
@@ -20,7 +22,7 @@ pub struct Absence {
     pub created_at: Option<NaiveDateTime>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct AbsenceWithReturns {
     #[serde(flatten)]
     pub absence: Absence,
@@ -99,6 +101,36 @@ pub fn get_absence_with_returns(
 pub fn list_absences(conn: &mut SqliteConnection) -> Result<Vec<Absence>, Error> {
     absence::table
         .load(conn)
+        .map_err(|err| Error::Database(err.to_string()))
+}
+
+pub fn list_absences_for_employee(
+    conn: &mut SqliteConnection,
+    employee_id: i32,
+) -> Result<Vec<AbsenceWithReturns>, Error> {
+    absence::table
+        .left_join(absence_return::table.on(absence::id.eq(absence_return::absence_id)))
+        .filter(absence::employee_id.eq(employee_id))
+        .select((absence::all_columns, absence_return::all_columns.nullable()))
+        .load::<(Absence, Option<AbsenceReturn>)>(conn)
+        .map(|results| {
+            let mut absences_with_returns: HashMap<i32, AbsenceWithReturns> = HashMap::new();
+
+            for (absence, absence_return) in results {
+                let entry = absences_with_returns
+                    .entry(absence.id)
+                    .or_insert(AbsenceWithReturns {
+                        absence,
+                        returns: Vec::new(),
+                    });
+
+                if let Some(absence_return) = absence_return {
+                    entry.returns.push(absence_return);
+                }
+            }
+
+            absences_with_returns.into_iter().map(|(_, v)| v).collect()
+        })
         .map_err(|err| Error::Database(err.to_string()))
 }
 

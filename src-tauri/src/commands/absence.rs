@@ -1,6 +1,6 @@
 pub use crate::db::models::absence::{
     create_absence, delete_absence, get_absence, get_absence_with_returns, list_absences,
-    update_absence, Absence, AbsenceWithReturns,
+    list_absences_for_employee, update_absence, Absence, AbsenceWithReturns,
 };
 use crate::db::sqlite::establish_connection;
 use crate::error::Error;
@@ -47,6 +47,14 @@ pub fn get_absence_with_returns_command(id: i32) -> Result<AbsenceWithReturns, E
 pub fn list_absences_command() -> Result<Vec<Absence>, Error> {
     let mut conn = establish_connection();
     list_absences(&mut conn)
+}
+
+#[command(rename_all = "snake_case")]
+pub fn list_absences_for_employee_command(
+    employee_id: i32,
+) -> Result<Vec<AbsenceWithReturns>, Error> {
+    let mut conn = establish_connection();
+    list_absences_for_employee(&mut conn, employee_id)
 }
 
 #[command(rename_all = "snake_case")]

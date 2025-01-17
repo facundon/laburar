@@ -39,6 +39,7 @@ type Command =
 	| 'get_absence_return_command'
 	| 'list_absence_returns_command'
 	| 'update_absence_return_command'
+	| 'list_absences_for_employee_command'
 
 export const invoke = async <T>(command: Command, params?: InvokeArgs, parser?: (data: any) => T): Promise<T> => {
 	const response = await tauriInvoke<T>(command, params)

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ROUTES } from '$routes'
-	import { Home, Users, BriefcaseBusiness, Component } from 'lucide-svelte'
+	import { Home, Users, BriefcaseBusiness, Component, ClipboardX } from 'lucide-svelte'
 	import { page } from '$app/state'
 
 	export let isSidebarOpen: boolean
@@ -33,6 +33,12 @@
 			<a href={ROUTES.area.list} aria-label="Areas" class:active={isActive(ROUTES.area.list)}>
 				<Component />
 				<span class="menu-text">Areas</span>
+			</a>
+		</li>
+		<li>
+			<a href={ROUTES.absence.list} aria-label="Faltas" class:active={isActive(ROUTES.absence.list)}>
+				<ClipboardX />
+				<span class="menu-text">Faltas</span>
 			</a>
 		</li>
 	</ul>

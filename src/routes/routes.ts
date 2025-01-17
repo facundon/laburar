@@ -19,4 +19,10 @@ export const ROUTES = {
 		view: (id: number) => `/areas/${id}`,
 		assignTasks: (id: number) => `/areas/${id}/assign-task`,
 	},
+	absence: {
+		list: '/absences',
+		create: '/absences/create',
+		edit: (id: number) => `/absences/${id}/edit`,
+		view: (id: number) => `/absences/${id}`,
+	},
 } as const

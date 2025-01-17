@@ -5,7 +5,8 @@ mod utils;
 
 use commands::absence::{
     create_absence_command, delete_absence_command, get_absence_command,
-    get_absence_with_returns_command, list_absences_command, update_absence_command,
+    get_absence_with_returns_command, list_absences_command, list_absences_for_employee_command,
+    update_absence_command,
 };
 use commands::absence_return::{
     create_absence_return_command, delete_absence_return_command, get_absence_return_command,
@@ -81,6 +82,7 @@ pub fn run() {
             get_absence_return_command,
             list_absence_returns_command,
             update_absence_return_command,
+            list_absences_for_employee_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

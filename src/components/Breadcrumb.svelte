@@ -10,6 +10,7 @@
 		'assign-task': 'Asignar Tarea',
 		create: 'Crear',
 		edit: 'Editar',
+		absences: 'Faltas',
 		view: 'Ver',
 	}
 
