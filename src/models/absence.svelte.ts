@@ -2,12 +2,13 @@ import { AbsenceReturn, type AbsenceReturnDTO } from '$models/absenceReturn'
 import { toTitleCase } from '$utils'
 import { SvelteDate } from 'svelte/reactivity'
 
-type UpdateAbsenceDTO = Omit<AbsenceDTO, 'created_at' | 'returns' | 'is_returned'>
+type UpdateAbsenceDTO = Omit<AbsenceDTO, 'created_at' | 'returns' | 'is_returned' | 'employee_name'>
 type CreateAbsenceDTO = Omit<UpdateAbsenceDTO, 'id'>
 
 export type AbsenceDTO = {
 	id: number
 	employee_id: number
+	employee_name: string
 	is_justified: boolean
 	is_returned: boolean
 	will_return: boolean
@@ -30,6 +31,7 @@ export class Absence {
 	isReturned: boolean = false
 	absenceDate: Date = new SvelteDate()
 	createdAt?: Date
+	employeeName: string = ''
 	returns: AbsenceReturn[] = $state([])
 
 	constructor(params?: Partial<Omit<Absence, 'toCreateDTO' | 'toUpdateDTO'>>) {
@@ -43,6 +45,7 @@ export class Absence {
 		if (params?.absenceDate !== undefined) this.absenceDate = params.absenceDate
 		if (params?.createdAt !== undefined) this.createdAt = params.createdAt
 		if (params?.returns !== undefined) this.returns = params.returns
+		if (params?.employeeName !== undefined) this.employeeName = params.employeeName
 	}
 
 	static fromDTO(dto: AbsenceDTO): Absence {
@@ -58,6 +61,7 @@ export class Absence {
 			createdAt: dto.created_at ? new Date(dto.created_at) : undefined,
 			returns: dto.returns?.map(AbsenceReturn.fromDTO),
 			isReturned: dto.is_returned,
+			employeeName: dto.employee_name,
 		})
 	}
 
@@ -82,10 +86,11 @@ export class Absence {
 }
 
 export const AbsenceType = {
-	ENFERMO: 'enfermo',
-	ESTUDIO: 'estudio',
-	MOTIVO_PERSONAL: 'motivo_personal',
-	OTRO: 'otro',
+	ENFERMO: 'Enfermo',
+	ESTUDIO: 'Estudio',
+	FAMILIAR: 'Familiar',
+	MOTIVO_PERSONAL: 'Motivo Personal',
+	OTRO: 'Otro',
 } as const
 export type AbsenceType = ValueOf<typeof AbsenceType>
-export const AbsenceTypes = Object.entries(AbsenceType).map(([label, value]) => ({ label: toTitleCase(label), value }))
+export const AbsenceTypes = Object.entries(AbsenceType).map(([label, value]) => ({ label: value, value }))

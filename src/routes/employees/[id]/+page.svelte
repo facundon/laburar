@@ -10,6 +10,7 @@
 	import Rating from '$components/Rating.svelte'
 	import EditEmployeeAssignmentForm from '$pages/employees/[id]/EditEmployeeAssignmentForm.svelte'
 	import type { EmployeeAssignment } from '$models/employeeAssignment.js'
+	import { toYesNo } from '$utils'
 
 	const { data } = $props()
 	let employee = $state(data.employee)
@@ -105,7 +106,7 @@
 							headerName: 'Eficiencia',
 							renderCell: value => ({ component: Rating, props: { rating: Number(value) } }),
 						},
-						{ field: 'isPrimary', headerName: 'Es Primaria', formatValue: value => (value ? 'Sí' : 'No') },
+						{ field: 'isPrimary', headerName: 'Es Primaria', formatValue: toYesNo },
 						{
 							field: 'edit',
 							width: 20,

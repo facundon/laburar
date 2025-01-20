@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use crate::db::models::absence_return::AbsenceReturn;
-use crate::db::schema::{absence, absence_return};
+use crate::db::schema::{absence, absence_return, employee};
 use crate::error::Error;
 use chrono::{NaiveDate, NaiveDateTime};
 use diesel::{prelude::*, SqliteConnection};
@@ -27,6 +27,7 @@ pub struct AbsenceWithReturns {
     #[serde(flatten)]
     pub absence: Absence,
     pub is_returned: bool,
+    pub employee_name: String,
     pub returns: Vec<AbsenceReturn>,
 }
 
@@ -80,17 +81,33 @@ pub fn get_absence_with_returns(
     id: i32,
 ) -> Result<AbsenceWithReturns, Error> {
     absence::table
-        .left_join(absence_return::table.on(absence::id.eq(absence_return::absence_id)))
+        .left_join(absence_return::table)
+        .left_join(employee::table)
         .filter(absence::id.eq(id))
-        .select((absence::all_columns, absence_return::all_columns.nullable()))
-        .load::<(Absence, Option<AbsenceReturn>)>(conn)
+        .select((
+            absence::all_columns,
+            absence_return::all_columns.nullable(),
+            employee::first_name.nullable(),
+            employee::last_name.nullable(),
+        ))
+        .load::<(
+            Absence,
+            Option<AbsenceReturn>,
+            Option<String>,
+            Option<String>,
+        )>(conn)
         .map(|results| {
             let mut absence_with_returns = AbsenceWithReturns {
                 absence: results[0].0.clone(),
+                employee_name: format!(
+                    "{} {}",
+                    results[0].2.as_ref().unwrap(),
+                    results[0].3.as_ref().unwrap()
+                ),
                 is_returned: false,
                 returns: Vec::new(),
             };
-            for (_, absence_return) in results {
+            for (_, absence_return, _, _) in results {
                 if let Some(absence_return) = absence_return {
                     absence_with_returns.returns.push(absence_return);
                 }
@@ -119,18 +136,30 @@ pub fn list_absences_for_employee(
     employee_id: i32,
 ) -> Result<Vec<AbsenceWithReturns>, Error> {
     absence::table
-        .left_join(absence_return::table.on(absence::id.eq(absence_return::absence_id)))
+        .left_join(absence_return::table)
+        .left_join(employee::table)
         .filter(absence::employee_id.eq(employee_id))
-        .select((absence::all_columns, absence_return::all_columns.nullable()))
-        .load::<(Absence, Option<AbsenceReturn>)>(conn)
+        .select((
+            absence::all_columns,
+            absence_return::all_columns.nullable(),
+            employee::first_name.nullable(),
+            employee::last_name.nullable(),
+        ))
+        .load::<(
+            Absence,
+            Option<AbsenceReturn>,
+            Option<String>,
+            Option<String>,
+        )>(conn)
         .map(|results| {
             let mut absences_with_returns: HashMap<i32, AbsenceWithReturns> = HashMap::new();
 
-            for (absence, absence_return) in results {
+            for (absence, absence_return, first_name, last_name) in results {
                 let entry = absences_with_returns
                     .entry(absence.id)
                     .or_insert(AbsenceWithReturns {
                         absence,
+                        employee_name: format!("{} {}", first_name.unwrap(), last_name.unwrap()),
                         is_returned: false,
                         returns: Vec::new(),
                     });

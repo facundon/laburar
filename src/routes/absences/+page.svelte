@@ -15,7 +15,7 @@
 <MainContainer title="Faltas" {Actions}>
 	{#if absences}
 		{#each absences as absence}
-			<div>{absence.absenceType}</div>
+			<a href={ROUTES.absence.view(absence.id)}>{absence.absenceType}</a>
 		{/each}
 	{/if}
 </MainContainer>
