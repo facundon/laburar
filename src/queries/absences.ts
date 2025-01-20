@@ -1,5 +1,5 @@
 import { invoke } from '$invoke'
-import { Absence, type AbsenceDTO } from '$models/absence'
+import { Absence, type AbsenceDTO } from '$models/absence.svelte'
 
 export async function listAbsencesForEmployee(employeeId: number) {
 	try {

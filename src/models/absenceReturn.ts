@@ -21,7 +21,7 @@ export class AbsenceReturn {
 	constructor(params?: Partial<Omit<AbsenceReturn, 'toCreateDTO' | 'toUpdateDTO'>>) {
 		this.id = params?.id || 0
 		this.absenceId = params?.absenceId || 0
-		this.returnedHours = params?.returnedHours || 0
+		this.returnedHours = params?.returnedHours || 1
 		this.notes = params?.notes || ''
 		this.createdAt = params?.createdAt || new Date()
 		this.returnDate = params?.returnDate || new Date()

@@ -66,6 +66,12 @@
 		font-size: 1rem;
 	}
 
+	:global(input[type='number'])::-webkit-outer-spin-button,
+	:global(input[type='number'])::-webkit-inner-spin-button {
+		appearance: none;
+		margin: 0;
+	}
+
 	:global(select) {
 		appearance: none;
 		padding: 0.5rem;

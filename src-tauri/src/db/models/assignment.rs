@@ -1,11 +1,15 @@
+use crate::db::models::{area::Area, task::Task};
 use crate::db::schema::{area, assignment, task};
 use crate::error::Error;
 use chrono::NaiveDateTime;
 use diesel::{prelude::*, RunQueryDsl, SqliteConnection};
 use serde::{Deserialize, Serialize};
 
-#[derive(Queryable, Selectable, Serialize, Deserialize, Debug)]
-#[diesel(table_name = crate::db::schema::assignment)]
+#[derive(Queryable, Selectable, Serialize, Deserialize, Associations, Debug)]
+#[diesel(table_name = assignment)]
+#[diesel(belongs_to(Area))]
+#[diesel(belongs_to(Task))]
+#[diesel(primary_key(task_id, area_id))]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct Assignment {
     pub id: i32,

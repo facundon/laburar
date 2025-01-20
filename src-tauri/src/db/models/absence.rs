@@ -26,6 +26,7 @@ pub struct Absence {
 pub struct AbsenceWithReturns {
     #[serde(flatten)]
     pub absence: Absence,
+    pub is_returned: bool,
     pub returns: Vec<AbsenceReturn>,
 }
 
@@ -86,12 +87,21 @@ pub fn get_absence_with_returns(
         .map(|results| {
             let mut absence_with_returns = AbsenceWithReturns {
                 absence: results[0].0.clone(),
+                is_returned: false,
                 returns: Vec::new(),
             };
             for (_, absence_return) in results {
                 if let Some(absence_return) = absence_return {
                     absence_with_returns.returns.push(absence_return);
                 }
+            }
+            let total_returned_hours: i32 = absence_with_returns
+                .returns
+                .iter()
+                .map(|r| r.returned_hours)
+                .sum();
+            if total_returned_hours >= absence_with_returns.absence.hours {
+                absence_with_returns.is_returned = true;
             }
             absence_with_returns
         })
@@ -121,6 +131,7 @@ pub fn list_absences_for_employee(
                     .entry(absence.id)
                     .or_insert(AbsenceWithReturns {
                         absence,
+                        is_returned: false,
                         returns: Vec::new(),
                     });
 
@@ -129,7 +140,17 @@ pub fn list_absences_for_employee(
                 }
             }
 
-            absences_with_returns.into_iter().map(|(_, v)| v).collect()
+            absences_with_returns
+                .into_iter()
+                .map(|(_, mut v)| {
+                    let total_returned_hours: i32 =
+                        v.returns.iter().map(|r| r.returned_hours).sum();
+                    if total_returned_hours >= v.absence.hours {
+                        v.is_returned = true;
+                    }
+                    v
+                })
+                .collect()
         })
         .map_err(|err| Error::Database(err.to_string()))
 }

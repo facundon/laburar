@@ -9,18 +9,18 @@
 		children: () => any
 	}
 
-	let { area: task = $bindable(), onsubmit = $bindable(), children }: Props = $props()
+	let { area = $bindable(), onsubmit = $bindable(), children }: Props = $props()
 </script>
 
 <form {onsubmit}>
 	<div class="group">
 		<FormGroup label="Nombre" id="name">
-			<input id="name" bind:value={task.name} required />
+			<input id="name" bind:value={area.name} required />
 		</FormGroup>
 	</div>
 	<div class="group">
 		<FormGroup label="Descripción" id="description">
-			<TextArea id="description" bind:value={task.description}></TextArea>
+			<TextArea id="description" bind:value={area.description}></TextArea>
 		</FormGroup>
 	</div>
 	{@render children()}

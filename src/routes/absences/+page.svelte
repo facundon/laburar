@@ -9,9 +9,13 @@
 </script>
 
 {#snippet Actions()}
-	<Button href={ROUTES.area.create} Icon={Plus}>Agregar Falta</Button>
+	<Button href={ROUTES.absence.create} Icon={Plus}>Agregar Falta</Button>
 {/snippet}
 
 <MainContainer title="Faltas" {Actions}>
-	{#if absences}{/if}
+	{#if absences}
+		{#each absences as absence}
+			<div>{absence.absenceType}</div>
+		{/each}
+	{/if}
 </MainContainer>

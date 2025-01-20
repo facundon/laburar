@@ -1,0 +1,91 @@
+import { AbsenceReturn, type AbsenceReturnDTO } from '$models/absenceReturn'
+import { toTitleCase } from '$utils'
+import { SvelteDate } from 'svelte/reactivity'
+
+type UpdateAbsenceDTO = Omit<AbsenceDTO, 'created_at' | 'returns' | 'is_returned'>
+type CreateAbsenceDTO = Omit<UpdateAbsenceDTO, 'id'>
+
+export type AbsenceDTO = {
+	id: number
+	employee_id: number
+	is_justified: boolean
+	is_returned: boolean
+	will_return: boolean
+	hours: number
+	description?: string
+	absence_type: string
+	absence_date: string
+	created_at?: string
+	returns: AbsenceReturnDTO[]
+}
+
+export class Absence {
+	id: number
+	employeeId: number = $state(0)
+	isJustified: boolean = $state(false)
+	willReturn: boolean = $state(false)
+	hours: number = $state(4)
+	description?: string = $state('')
+	absenceType: string = $state('')
+	isReturned: boolean = false
+	absenceDate: Date = new SvelteDate()
+	createdAt?: Date
+	returns: AbsenceReturn[] = $state([])
+
+	constructor(params?: Partial<Omit<Absence, 'toCreateDTO' | 'toUpdateDTO'>>) {
+		this.id = params?.id || 0
+		if (params?.employeeId) this.employeeId = params.employeeId
+		if (params?.isJustified !== undefined) this.isJustified = params.isJustified
+		if (params?.willReturn !== undefined) this.willReturn = params.willReturn
+		if (params?.hours !== undefined) this.hours = params.hours
+		if (params?.description !== undefined) this.description = params.description
+		if (params?.absenceType !== undefined) this.absenceType = params.absenceType
+		if (params?.absenceDate !== undefined) this.absenceDate = params.absenceDate
+		if (params?.createdAt !== undefined) this.createdAt = params.createdAt
+		if (params?.returns !== undefined) this.returns = params.returns
+	}
+
+	static fromDTO(dto: AbsenceDTO): Absence {
+		return new Absence({
+			id: dto.id,
+			employeeId: dto.employee_id,
+			isJustified: dto.is_justified,
+			willReturn: dto.will_return,
+			hours: dto.hours,
+			description: dto.description,
+			absenceType: dto.absence_type,
+			absenceDate: new SvelteDate(dto.absence_date),
+			createdAt: dto.created_at ? new Date(dto.created_at) : undefined,
+			returns: dto.returns?.map(AbsenceReturn.fromDTO),
+			isReturned: dto.is_returned,
+		})
+	}
+
+	public toCreateDTO(): CreateAbsenceDTO {
+		return {
+			employee_id: this.employeeId,
+			is_justified: this.isJustified,
+			will_return: this.willReturn,
+			hours: this.hours,
+			description: this.description,
+			absence_type: this.absenceType,
+			absence_date: this.absenceDate.toString(),
+		}
+	}
+
+	public toUpdateDTO(): UpdateAbsenceDTO {
+		return {
+			...this.toCreateDTO(),
+			id: this.id,
+		}
+	}
+}
+
+export const AbsenceType = {
+	ENFERMO: 'enfermo',
+	ESTUDIO: 'estudio',
+	MOTIVO_PERSONAL: 'motivo_personal',
+	OTRO: 'otro',
+} as const
+export type AbsenceType = ValueOf<typeof AbsenceType>
+export const AbsenceTypes = Object.entries(AbsenceType).map(([label, value]) => ({ label: toTitleCase(label), value }))
