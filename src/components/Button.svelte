@@ -25,6 +25,7 @@
 <button
 	class="button {type} {outlined ? 'outlined' : ''} {fullWidth ? 'fullwidth' : ''}"
 	onclick={href ? () => goto(href) : onclick}
+	type={href ? 'button' : rest.type}
 	{...rest}
 >
 	{#if Icon}
@@ -104,18 +105,18 @@
 	}
 
 	.button.secondary-dark:hover:not(.outlined):not(:disabled) {
-		background-color: var(--secondary-darker);
-		border-color: var(--secondary-darker);
+		background-color: var(--secondary-dark);
+		border-color: var(--secondary-dark);
 	}
 
 	.button.secondary-dark.outlined:hover:not(:disabled) {
-		background-color: var(--secondary-dark);
+		background-color: var(--secondary-light);
 		color: var(--secondary-contrast);
 	}
 
 	.button:hover:not(.outlined):not(:disabled) {
-		background-color: var(--primary-dark);
-		border-color: var(--primary-dark);
+		background-color: var(--primary-light);
+		border-color: var(--primary-light);
 	}
 
 	.button.primary.outlined:hover:not(:disabled) {
@@ -129,12 +130,12 @@
 	}
 
 	.button.secondary:hover:not(.outlined):not(:disabled) {
-		background-color: var(--secondary-dark);
-		border-color: var(--secondary-dark);
+		background-color: var(--secondary-light);
+		border-color: var(--secondary-light);
 	}
 
 	.button.error:hover:not(.outlined):not(:disabled) {
-		background-color: var(--error-dark);
+		background-color: var(--error-light);
 	}
 
 	.button.error.outlined:hover:not(:disabled) {

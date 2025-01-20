@@ -23,6 +23,13 @@ pub struct Absence {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct AbsenceWithEmployee {
+    #[serde(flatten)]
+    absence: Absence,
+    employee_name: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct AbsenceWithReturns {
     #[serde(flatten)]
     pub absence: Absence,
@@ -125,9 +132,24 @@ pub fn get_absence_with_returns(
         .map_err(|err| Error::Database(err.to_string()))
 }
 
-pub fn list_absences(conn: &mut SqliteConnection) -> Result<Vec<Absence>, Error> {
+pub fn list_absences(conn: &mut SqliteConnection) -> Result<Vec<AbsenceWithEmployee>, Error> {
     absence::table
-        .load(conn)
+        .inner_join(employee::table)
+        .select((
+            Absence::as_select(),
+            employee::first_name,
+            employee::last_name,
+        ))
+        .load::<(Absence, String, String)>(conn)
+        .map(|results| {
+            results
+                .into_iter()
+                .map(|(absence, first_name, last_name)| AbsenceWithEmployee {
+                    absence,
+                    employee_name: Some(format!("{} {}", first_name, last_name)).unwrap(),
+                })
+                .collect()
+        })
         .map_err(|err| Error::Database(err.to_string()))
 }
 

@@ -2,7 +2,7 @@
 	import FormGroup from '$components/FormGroup.svelte'
 	import NumberInput from '$components/NumberInput.svelte'
 	import TextArea from '$components/TextArea.svelte'
-	import type { AbsenceReturn } from '$models/absenceReturn'
+	import type { AbsenceReturn } from '$models/absenceReturn.svelte'
 
 	interface Props {
 		absenceReturn: AbsenceReturn

@@ -46,7 +46,7 @@
 
 <style>
 	.side-menu {
-		width: 250px;
+		width: 200px;
 		background-color: var(--gray-main);
 		padding: 1rem;
 		color: var(--gray-contrast);
@@ -66,7 +66,7 @@
 	}
 
 	.side-menu li {
-		margin-bottom: 1rem;
+		margin-bottom: 0.5rem;
 	}
 
 	.side-menu a {

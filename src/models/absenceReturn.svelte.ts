@@ -1,3 +1,5 @@
+import { SvelteDate } from 'svelte/reactivity'
+
 type UpdateAbsenceReturnDTO = Omit<AbsenceReturnDTO, 'created_at'>
 type CreateAbsenceReturnDTO = Omit<UpdateAbsenceReturnDTO, 'id'>
 
@@ -13,18 +15,18 @@ export type AbsenceReturnDTO = {
 export class AbsenceReturn {
 	id: number
 	absenceId: number
-	returnedHours: number
-	returnDate: Date
-	notes?: string
+	returnedHours: number = $state(1)
+	returnDate: Date = new SvelteDate()
+	notes?: string = $state()
 	createdAt?: Date
 
-	constructor(params?: Partial<Omit<AbsenceReturn, 'toCreateDTO' | 'toUpdateDTO'>>) {
-		this.id = params?.id || 0
-		this.absenceId = params?.absenceId || 0
-		this.returnedHours = params?.returnedHours || 1
-		this.notes = params?.notes || ''
-		this.createdAt = params?.createdAt || new Date()
-		this.returnDate = params?.returnDate || new Date()
+	constructor(params: Partial<Omit<AbsenceReturn, 'toCreateDTO' | 'toUpdateDTO'>> & { absenceId: number }) {
+		this.id = params.id || 0
+		this.absenceId = params.absenceId
+		this.createdAt = params.createdAt || new Date()
+		if (params.returnedHours) this.returnedHours = params.returnedHours
+		if (params.notes !== undefined) this.notes = params.notes
+		if (params.returnDate !== undefined) this.returnDate = params.returnDate
 	}
 
 	static fromDTO(dto: AbsenceReturnDTO): AbsenceReturn {
@@ -34,7 +36,7 @@ export class AbsenceReturn {
 			returnedHours: dto.returned_hours,
 			notes: dto.notes,
 			createdAt: dto.created_at ? new Date(dto.created_at) : undefined,
-			returnDate: new Date(dto.return_date),
+			returnDate: new SvelteDate(dto.return_date),
 		})
 	}
 
@@ -43,7 +45,7 @@ export class AbsenceReturn {
 			absence_id: this.absenceId,
 			returned_hours: this.returnedHours,
 			notes: this.notes,
-			return_date: this.returnDate.toISOString(),
+			return_date: this.returnDate.toString(),
 		}
 	}
 

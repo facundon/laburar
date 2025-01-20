@@ -24,5 +24,6 @@ export const ROUTES = {
 		create: '/absences/create',
 		edit: (id: number) => `/absences/${id}/edit`,
 		view: (id: number) => `/absences/${id}`,
+		return: (id: number) => `/absences/${id}/return`,
 	},
 } as const

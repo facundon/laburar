@@ -21,7 +21,7 @@
 
 <style>
 	.container {
-		max-width: 800px;
+		max-width: 1366px;
 		margin: 0 auto;
 		padding: 2rem;
 		background-color: var(--gray-main);

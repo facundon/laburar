@@ -1,4 +1,4 @@
-import { AbsenceReturn, type AbsenceReturnDTO } from '$models/absenceReturn'
+import { AbsenceReturn, type AbsenceReturnDTO } from '$models/absenceReturn.svelte'
 import { toTitleCase } from '$utils'
 import { SvelteDate } from 'svelte/reactivity'
 

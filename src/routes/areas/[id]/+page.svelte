@@ -50,16 +50,7 @@
 		area?.assignments.map(assignment => ({
 			...assignment,
 			name: assignment.name,
-			actions: [
-				{
-					label: 'Editar',
-				},
-				{
-					label: 'Eliminar',
-					variant: 'error',
-					onclick: () => openDeleteAssignmentModal({ name: assignment.taskName as string, id: assignment.id }),
-				},
-			],
+			delete: { name: assignment.taskName as string, id: assignment.id },
 		})) || [],
 	)
 </script>
@@ -103,12 +94,16 @@
 						},
 						{ field: 'frequency', headerName: 'Frecuencia' },
 						{
-							field: 'actions',
+							field: 'delete',
 							headerName: '',
 							width: 20,
 							renderCell: value => ({
 								component: Delete,
-								props: { onclick: value[1].onclick, color: 'var(--error-main)' },
+								props: {
+									onclick: () => openDeleteAssignmentModal(value),
+									color: 'var(--error-main)',
+									style: 'cursor: pointer;',
+								},
 							}),
 						},
 					]}

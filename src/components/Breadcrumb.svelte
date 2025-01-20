@@ -7,6 +7,7 @@
 		employees: 'Personal',
 		areas: 'Areas',
 		tasks: 'Tareas',
+		return: 'Devolución',
 		'assign-task': 'Asignar Tarea',
 		create: 'Crear',
 		edit: 'Editar',
