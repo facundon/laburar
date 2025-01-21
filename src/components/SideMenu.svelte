@@ -50,9 +50,9 @@
 				</a>
 			</li>
 			<li>
-				<a href={ROUTES.absence.list} aria-label="Faltas" class:active={isActive(ROUTES.absence.list)}>
+				<a href={ROUTES.absence.list} aria-label="Ausencias" class:active={isActive(ROUTES.absence.list)}>
 					<ClipboardX />
-					<span class="menu-text">Faltas</span>
+					<span class="menu-text">Ausencias</span>
 				</a>
 			</li>
 		</ul>

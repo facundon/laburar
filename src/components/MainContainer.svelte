@@ -24,6 +24,7 @@
 		max-width: 1366px;
 		margin: 0 auto;
 		padding: 2rem;
+		padding-top: 0.5rem;
 		background-color: var(--gray-main);
 		color: #fff;
 		border-radius: 8px;

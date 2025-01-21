@@ -3,7 +3,7 @@ import { Absence, type AbsenceDTO } from '$models/absence.svelte'
 
 export async function listAbsencesForEmployee(employeeId: number) {
 	try {
-		return invoke('list_absences_for_employee_command', { employee_id: employeeId }, Absence.fromDTO)
+		return invoke('list_absences_for_employee_command', { employee_id: employeeId }, (data: AbsenceDTO[]) => data.map(Absence.fromDTO))
 	} catch (error) {
 		console.error('Failed to fetch absence:', error)
 		return null

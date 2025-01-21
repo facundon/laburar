@@ -26,7 +26,7 @@
 	<Button href={ROUTES.absence.create} Icon={Plus}>Agregar Falta</Button>
 {/snippet}
 
-<MainContainer title="Faltas" {Actions}>
+<MainContainer title="Ausencias" {Actions}>
 	{#if absencesWithActions}
 		<Table
 			rows={absencesWithActions}

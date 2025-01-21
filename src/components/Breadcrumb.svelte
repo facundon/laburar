@@ -11,7 +11,7 @@
 		'assign-task': 'Asignar Tarea',
 		create: 'Crear',
 		edit: 'Editar',
-		absences: 'Faltas',
+		absences: 'Ausencias',
 		view: 'Ver',
 	}
 

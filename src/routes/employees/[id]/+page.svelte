@@ -4,17 +4,28 @@
 	import { differenceInYears } from 'date-fns'
 	import Button from '$components/Button.svelte'
 	import Modal from '$components/Modal.svelte'
-	import { ClipboardPlus, Delete, Edit, Pencil } from 'lucide-svelte'
+	import { ClipboardPlus, Delete, Edit, Eye, Pencil } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import Table from '$components/Table.svelte'
 	import Rating from '$components/Rating.svelte'
 	import EditEmployeeAssignmentForm from '$pages/employees/[id]/EditEmployeeAssignmentForm.svelte'
 	import type { EmployeeAssignment } from '$models/employeeAssignment.svelte.js'
 	import { toYesNo } from '$utils'
-	import { invalidate, invalidateAll } from '$app/navigation'
+	import { goto, invalidate, invalidateAll } from '$app/navigation'
 
 	const { data } = $props()
 	let employee = $state(data.employee)
+	const absencesWithActions =
+		data.absences?.map(absence => ({
+			...absence,
+			absenceDate: absence.absenceDate,
+			hours: absence.hours,
+			employeeName: absence.employeeName,
+			isJustified: absence.isJustified,
+			willReturn: absence.willReturn,
+			isReturned: absence.isReturned,
+			view: ROUTES.absence.view(absence.id),
+		})) || []
 
 	$effect(() => {
 		if (data?.employee !== employee) employee = data.employee
@@ -131,6 +142,30 @@
 				/>
 			{/if}
 		</MainContainer>
+		{#if absencesWithActions.length}
+			<MainContainer title="Ausencias" style="margin-top: 1rem;">
+				<Table
+					rows={absencesWithActions}
+					columns={[
+						{ field: 'absenceDate', headerName: 'Fecha', formatValue: value => value.toLocaleDateString() },
+						{ field: 'hours', headerName: 'Horas' },
+						{ field: 'isJustified', headerName: 'Justificada', formatValue: toYesNo },
+						{ field: 'willReturn', headerName: 'Devolverá', formatValue: toYesNo },
+						{ field: 'isReturned', headerName: 'Devolvió', formatValue: toYesNo },
+						{
+							field: 'view',
+							width: 20,
+							headerName: '',
+							renderCell: href => ({
+								component: Eye,
+								props: { onclick: () => goto(href), color: 'var(--secondary-dark)', style: 'cursor: pointer;' },
+							}),
+						},
+					]}
+				/>
+			</MainContainer>
+		{/if}
+
 		<Modal
 			show={showDeleteAssignmentModal}
 			isDestructive
