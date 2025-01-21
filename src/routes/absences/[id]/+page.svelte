@@ -19,14 +19,9 @@
 	})
 
 	let returnToDelete = $state<AbsenceReturn | null>(null)
-	let deleteReturnOpen = $derived(returnToDelete !== null)
-
-	let absenceReturnsWithActions = $derived(
-		absence?.returns.map(r => ({ ...r, returnedHours: r.returnedHours, notes: r.notes, delete: () => (returnToDelete = r) })),
-	)
+	let showDeleteReturn = $derived(returnToDelete !== null)
 
 	const closeDeleteReturnModal = () => (returnToDelete = null)
-
 	async function deleteReturn() {
 		if (!returnToDelete) return
 		try {
@@ -37,6 +32,23 @@
 			console.error('Failed to delete absence return:', err)
 		}
 	}
+
+	let showDeleteAbsence = $state(false)
+	const showDeleteModal = () => (showDeleteAbsence = true)
+	const closeDeleteAbsence = () => (showDeleteAbsence = false)
+	async function deleteAbsence() {
+		if (!absence) return
+		try {
+			await invoke('delete_absence_command', { id: absence.id })
+			window.location.href = ROUTES.absence.list
+		} catch (err) {
+			console.error('Failed to delete absence:', err)
+		}
+	}
+
+	let absenceReturnsWithActions = $derived(
+		absence?.returns.map(r => ({ ...r, returnedHours: r.returnedHours, notes: r.notes, delete: () => (returnToDelete = r) })),
+	)
 </script>
 
 {#if absence}
@@ -58,9 +70,17 @@
 		{/if}
 		<div class="actions">
 			<Button Icon={Pencil} href={ROUTES.absence.edit(absence.id)} outlined>Editar</Button>
-			<Button Icon={Delete} outlined variant="error">Eliminar</Button>
+			<Button Icon={Delete} outlined variant="error" onclick={showDeleteModal}>Eliminar</Button>
 		</div>
 	</MainContainer>
+	<Modal
+		show={showDeleteAbsence}
+		isDestructive
+		title="Confirmar acción"
+		message={`¿Estás seguro de que deseas eliminar la falta del día ${absence?.absenceDate.toLocaleDateString()} de ${absence.employeeName}?`}
+		onconfirm={deleteAbsence}
+		onclose={closeDeleteAbsence}
+	/>
 {/if}
 
 {#if absenceReturnsWithActions?.length}
@@ -76,13 +96,13 @@
 		/>
 	</MainContainer>
 	<Modal
-		show={deleteReturnOpen}
+		show={showDeleteReturn}
 		isDestructive
 		title="Confirmar acción"
 		message={`¿Estás seguro de que deseas eliminar la devolucion del día ${returnToDelete?.returnDate.toLocaleDateString()}?`}
 		onconfirm={deleteReturn}
 		onclose={closeDeleteReturnModal}
-	></Modal>
+	/>
 {/if}
 
 <style>

@@ -14,6 +14,9 @@
 		absences?.map(absence => ({
 			...absence,
 			hours: absence.hours || 0,
+			isJustified: absence.isJustified,
+			willReturn: absence.willReturn,
+			isReturned: absence.isReturned,
 			view: ROUTES.absence.view(absence.id),
 		})),
 	)
@@ -33,7 +36,7 @@
 				{ field: 'employeeName', headerName: 'Personal' },
 				{ field: 'isJustified', headerName: 'Justificada', formatValue: toYesNo },
 				{ field: 'willReturn', headerName: 'Devolverá', formatValue: toYesNo },
-				{ field: 'willReturn', headerName: 'Devolvió', formatValue: toYesNo },
+				{ field: 'isReturned', headerName: 'Devolvió', formatValue: toYesNo },
 				{
 					field: 'view',
 					width: 20,

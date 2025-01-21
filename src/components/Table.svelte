@@ -39,6 +39,11 @@
 		</tr>
 	</thead>
 	<tbody>
+		{#if rows.length === 0}
+			<tr>
+				<td colspan={columns.length} class="missing-row">No hay datos</td>
+			</tr>
+		{/if}
 		{#each rows as row}
 			<tr>
 				{#each columns as column}
@@ -65,6 +70,10 @@
 </table>
 
 <style>
+	.missing-row {
+		text-align: center;
+		padding: 3rem;
+	}
 	table {
 		width: 100%;
 		border-collapse: collapse;

@@ -9,17 +9,18 @@
 
 	interface Props {
 		absence: Absence
+		isEditMode?: boolean
 		onsubmit: (event: Event) => void
 		children?: () => any
 	}
 
-	let { absence = $bindable(), onsubmit = $bindable(), children }: Props = $props()
+	let { absence = $bindable(), onsubmit = $bindable(), isEditMode, children }: Props = $props()
 </script>
 
 <form {onsubmit}>
 	<div class="group">
 		<FormGroup label="Personal" id="employee">
-			<EmployeePicker id="employee" bind:value={absence.employeeId} />
+			<EmployeePicker id="employee" bind:value={absence.employeeId} disabled={isEditMode} />
 		</FormGroup>
 		<FormGroup label="Motivo" id="absenceType">
 			<Select id="absenceType" bind:value={absence.absenceType} required>
