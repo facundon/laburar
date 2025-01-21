@@ -1,4 +1,6 @@
 import { toTitleCase } from '$utils'
+import { format } from 'date-fns'
+import { SvelteDate } from 'svelte/reactivity'
 
 type UpdateEmployeeAssignmentDTO = Omit<EmployeeAssignmentDTO, 'created_at' | 'area_id' | 'area_name' | 'task_id' | 'task_name'>
 type CreateEmployeeAssignmentDTO = Omit<UpdateEmployeeAssignmentDTO, 'id'>
@@ -18,30 +20,30 @@ export type EmployeeAssignmentDTO = {
 }
 
 export class EmployeeAssignment {
-	id: number
-	employeeId: number
-	assignmentId: number
-	isPrimary?: boolean
-	efficiency: number
-	assignedDate?: Date
-	createdAt: Date
-	areaId?: number
-	areaName?: string
-	taskId?: number
-	taskName?: string
+	id: number = 0
+	employeeId: number = $state(0)
+	assignmentId: number = $state(0)
+	isPrimary: boolean = $state(false)
+	efficiency: number = $state(1)
+	assignedDate: Date = new SvelteDate()
+	createdAt: Date = new Date()
+	areaId: number = $state(0)
+	areaName: string = $state('')
+	taskId: number = $state(0)
+	taskName: string = $state('')
 
 	constructor(params?: Partial<Omit<EmployeeAssignment, 'toCreateDTO' | 'toUpdateDTO' | 'name'>>) {
-		this.id = params?.id || 0
-		this.employeeId = params?.employeeId || 0
-		this.assignmentId = params?.assignmentId || 0
-		this.isPrimary = params?.isPrimary || false
-		this.efficiency = params?.efficiency || 0
-		this.assignedDate = params?.assignedDate || new Date()
-		this.createdAt = params?.createdAt || new Date()
-		this.areaId = params?.areaId || 0
-		this.areaName = params?.areaName
-		this.taskId = params?.taskId || 0
-		this.taskName = params?.taskName
+		if (params?.id !== undefined) this.id = params.id
+		if (params?.employeeId !== undefined) this.employeeId = params.employeeId
+		if (params?.assignmentId !== undefined) this.assignmentId = params.assignmentId
+		if (params?.isPrimary !== undefined) this.isPrimary = params.isPrimary
+		if (params?.efficiency !== undefined) this.efficiency = params.efficiency
+		if (params?.assignedDate !== undefined) this.assignedDate = params.assignedDate
+		if (params?.createdAt !== undefined) this.createdAt = params.createdAt
+		if (params?.areaId !== undefined) this.areaId = params.areaId
+		if (params?.areaName !== undefined) this.areaName = params.areaName
+		if (params?.taskId !== undefined) this.taskId = params.taskId
+		if (params?.taskName !== undefined) this.taskName = params.taskName
 	}
 
 	static fromDTO(dto: EmployeeAssignmentDTO): EmployeeAssignment {
@@ -51,7 +53,7 @@ export class EmployeeAssignment {
 			assignmentId: dto.assignment_id,
 			isPrimary: dto.is_primary,
 			efficiency: dto.efficiency,
-			assignedDate: dto.assigned_date ? new Date(dto.assigned_date) : undefined,
+			assignedDate: dto.assigned_date ? new SvelteDate(dto.assigned_date) : undefined,
 			createdAt: new Date(dto.created_at),
 			areaId: dto.area_id,
 			areaName: dto.area_name,
@@ -70,7 +72,7 @@ export class EmployeeAssignment {
 			assignment_id: this.assignmentId,
 			is_primary: this.isPrimary,
 			efficiency: this.efficiency,
-			assigned_date: this.assignedDate?.toISOString(),
+			assigned_date: format(this.assignedDate, 'yyyy-MM-dd HH:mm:ss'),
 		}
 	}
 

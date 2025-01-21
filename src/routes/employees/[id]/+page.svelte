@@ -9,8 +9,9 @@
 	import Table from '$components/Table.svelte'
 	import Rating from '$components/Rating.svelte'
 	import EditEmployeeAssignmentForm from '$pages/employees/[id]/EditEmployeeAssignmentForm.svelte'
-	import type { EmployeeAssignment } from '$models/employeeAssignment.js'
+	import type { EmployeeAssignment } from '$models/employeeAssignment.svelte.js'
 	import { toYesNo } from '$utils'
+	import { invalidate, invalidateAll } from '$app/navigation'
 
 	const { data } = $props()
 	let employee = $state(data.employee)
@@ -31,6 +32,7 @@
 			if (!employee) return
 			await invoke('delete_employee_command', { id: employee.id })
 			handleCloseDeleteEmployee()
+			await invalidate(ROUTES.employee.list)
 			window.location.href = ROUTES.employee.list
 		} catch (error) {
 			console.error('Failed to delete employee:', error)
@@ -42,6 +44,7 @@
 		try {
 			if (!employee || !assignmentToDelete) return
 			await invoke('delete_employee_assignment_command', { employee_id: employee.id, assignment_id: assignmentToDelete.id })
+			await invalidateAll()
 			closeDeleteAssignmentModal()
 		} catch (error) {
 			console.error('Failed to delete assignment:', error)
@@ -53,6 +56,11 @@
 		employee?.assignments.map(assignment => ({
 			...assignment,
 			name: assignment.name,
+			efficiency: assignment.efficiency,
+			isPrimary: assignment.isPrimary,
+			areaName: assignment.areaName,
+			assignedDate: assignment.assignedDate,
+			taskName: assignment.taskName,
 			delete: () => (assignmentToDelete = assignment),
 			edit: () => (assignmentToEdit = assignment),
 		})) || [],
@@ -132,7 +140,7 @@
 			onclose={closeDeleteAssignmentModal}
 		/>
 		{#if assignmentToEdit !== null}
-			<EditEmployeeAssignmentForm onclose={closeEditAssignmentModal} assignment={assignmentToEdit} {employee} />
+			<EditEmployeeAssignmentForm onclose={closeEditAssignmentModal} bind:assignment={assignmentToEdit} {employee} />
 		{/if}
 	{/if}
 {/if}

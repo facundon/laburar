@@ -6,11 +6,13 @@
 	import Checkbox from '$components/Checkbox.svelte'
 	import { Save } from 'lucide-svelte'
 	import CongratsText from '$components/CongratsText.svelte'
+	import AssignmentCheckbox from '$pages/employees/[id]/assign-task/AssignmentCheckbox.svelte'
+	import { SvelteSet } from 'svelte/reactivity'
 
 	let { data } = $props()
 	const employee = data.employee
 	const assignments = data.assignments
-	let selectedTasks = new Set()
+	let selectedTasks = new SvelteSet<number>()
 
 	function toggleTask(taskId: number) {
 		if (selectedTasks.has(taskId)) selectedTasks.delete(taskId)
@@ -37,19 +39,12 @@
 			<form onsubmit={assignTasks}>
 				<div class="task-list">
 					{#each assignments as assignment}
-						<Checkbox
-							id={assignment.id.toString()}
-							onchange={() => toggleTask(assignment.id)}
-							label={`${assignment.taskName} - ${assignment.areaName}`}
-						/>
+						<AssignmentCheckbox {assignment} onchange={() => toggleTask(assignment.id)} />
 					{/each}
 				</div>
 				<div class="actions">
 					<Button outlined variant="secondary" href={ROUTES.employee.view(employee.id)}>Cancelar</Button>
-					<Button type="submit" style="margin-left: auto;">
-						<Save style="margin-right: 5px;" />
-						Asignar
-					</Button>
+					<Button type="submit" Icon={Save} disabled={selectedTasks.size === 0}>Asignar</Button>
 				</div>
 			</form>
 		{/if}
@@ -59,6 +54,7 @@
 <style>
 	.actions {
 		display: flex;
+		justify-content: space-between;
 	}
 
 	.task-list {

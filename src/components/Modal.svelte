@@ -32,8 +32,8 @@
 		{/if}
 		{@render children?.()}
 		<div class="actions">
-			<Button onclick={close} variant="secondary-dark" outlined>Cancel</Button>
-			<Button variant={isDestructive ? 'error' : 'primary'} onclick={confirm} Icon={isDestructive ? Trash2 : Check}>Confirm</Button>
+			<Button onclick={close} variant="secondary-dark" outlined>Cancelar</Button>
+			<Button variant={isDestructive ? 'error' : 'primary'} onclick={confirm} Icon={isDestructive ? Trash2 : Check}>Confirmar</Button>
 		</div>
 	</div>
 {/if}

@@ -13,7 +13,7 @@
 </script>
 
 <div class="checkbox-container" {style}>
-	<input type="checkbox" class={color} {id} bind:checked {...rest} />
+	<input {...rest} type="checkbox" class={color} {id} bind:checked />
 	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 	<label
 		for={id}

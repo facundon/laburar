@@ -1,4 +1,4 @@
-import { EmployeeAssignment, type EmployeeAssignmentDTO } from '$models/employeeAssignment'
+import { EmployeeAssignment, type EmployeeAssignmentDTO } from '$models/employeeAssignment.svelte'
 import { format } from 'date-fns'
 import { SvelteDate } from 'svelte/reactivity'
 

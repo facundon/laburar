@@ -37,3 +37,21 @@ CREATE TABLE employee_assignment (
   FOREIGN KEY (assignment_id) REFERENCES assignment(id),
   UNIQUE (employee_id, assignment_id)
 );
+
+INSERT INTO area (name) VALUES 
+('Administración'),
+('Recepción'),
+('Pre Analítica'),
+('Química'),
+('Serología'),
+('Endocrinología'),
+('Bacteriología'),
+('Hematología'),
+('Derivaciones'),
+('Parasitología'),
+('Micología'),
+('Limpieza'),
+('Post Analítica'),
+('Abastecimiento'),
+('Comunicación'),
+('Extracción');

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte'
 	import Confetti from 'svelte-confetti'
 
 	interface Props {
@@ -8,30 +9,32 @@
 		isInteractive?: boolean
 	}
 
-	let { rating = $bindable(0), maxRating = 5, displayRating = true, isInteractive = false }: Props = $props()
+	let { rating = $bindable(1), maxRating = 5, displayRating = true, isInteractive = false }: Props = $props()
 
+	let stars = $state<boolean[]>([])
 	let displayConfetti = $state(false)
 
-	const getStars = () => {
-		let stars = []
-		for (let i = 1; i <= maxRating; i++) stars.push(i <= rating)
-		return stars
+	$effect(() => {
+		stars = Array.from({ length: maxRating }, (_, i) => i < rating)
+	})
+
+	const recompute = (index: number) => {
+		rating = index + 1
+		if (rating === maxRating) displayConfetti = true
+		else displayConfetti = false
+		for (let i = 0; i <= maxRating - 1; i++) stars[i] = i < rating
 	}
 </script>
 
 <div class="rating-wrapper">
-	{#each getStars() as isFilled, index}
+	{#each stars as isFilled, index}
 		<button
 			type="button"
 			class="star {isFilled ? '' : 'empty'} {isInteractive ? 'interactive' : ''}"
 			aria-label="Rate {index + 1} stars"
 			disabled={!isInteractive}
-			onclick={() => {
-				rating = index + 1
-				if (rating === maxRating) displayConfetti = true
-				else displayConfetti = false
-			}}
-			onkeydown={e => (e.key === 'Enter' || e.key === ' ') && (rating = index + 1)}
+			onclick={() => recompute(index)}
+			onkeydown={e => (e.key === 'Enter' || e.key === ' ') && recompute(index)}
 		>
 			&#9733;
 		</button>

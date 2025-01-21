@@ -6,7 +6,7 @@
 	import Rating from '$components/Rating.svelte'
 	import { invoke } from '$invoke'
 	import type { Employee } from '$models/employee.svelte'
-	import type { EmployeeAssignment } from '$models/employeeAssignment'
+	import { EmployeeAssignment } from '$models/employeeAssignment.svelte'
 
 	interface Props {
 		onclose: () => void
@@ -14,19 +14,12 @@
 		employee: Employee
 	}
 
-	let { onclose, assignment, employee }: Props = $props()
-
-	let efficiency = $state(assignment.efficiency)
-	let isPrimary = $state(assignment.isPrimary)
+	let { onclose, assignment = $bindable(), employee }: Props = $props()
+	const newAssigment = new EmployeeAssignment(assignment)
 
 	async function editAssignment() {
 		try {
-			await invoke('update_employee_assignment_command', {
-				employee_id: employee.id,
-				assignment_id: assignment.assignmentId,
-				efficiency,
-				is_primary: isPrimary,
-			})
+			await invoke('update_employee_assignment_command', newAssigment.toUpdateDTO())
 			invalidateAll()
 			onclose()
 		} catch (error) {
@@ -36,8 +29,8 @@
 </script>
 
 <Modal show title="Editar {assignment.name} para {employee.name}" onconfirm={editAssignment} {onclose}>
-	<Checkbox label="Es Primaria" id="isPrimary" bind:checked={isPrimary} style="margin-bottom: 2rem" />
+	<Checkbox label="Es Primaria" bind:checked={newAssigment.isPrimary} style="margin-bottom: 2rem" />
 	<FormGroup label="Eficiencia" id="efficiency">
-		<Rating bind:rating={efficiency} isInteractive />
+		<Rating bind:rating={newAssigment.efficiency} isInteractive />
 	</FormGroup>
 </Modal>
