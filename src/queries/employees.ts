@@ -1,5 +1,5 @@
 import { invoke } from '$invoke'
-import { Employee, type EmployeeDTO } from '$models/employee'
+import { Employee, type EmployeeDTO } from '$models/employee.svelte'
 
 export async function getEmployee(id: number) {
 	try {

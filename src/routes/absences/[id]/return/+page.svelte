@@ -7,6 +7,7 @@
 	import TextArea from '$components/TextArea.svelte'
 	import { invoke } from '$invoke'
 	import { AbsenceReturn } from '$models/absenceReturn.svelte.js'
+	import AbsenceReturnForm from '$pages/absences/components/AbsenceReturnForm.svelte'
 	import { ROUTES } from '$routes'
 	import { Save } from 'lucide-svelte'
 
@@ -29,27 +30,14 @@
 </script>
 
 <MainContainer title="Nueva Devolucion de Horas">
-	<form onsubmit={saveAbsenceReturn}>
-		<div class="group">
-			<FormGroup label="Fecha" id="returnDate">
-				<input type="date" id="returnDate" required bind:value={absenceReturn.returnDate} />
-			</FormGroup>
-			<FormGroup label="Horas" id="returnedHours">
-				<NumberInput id="returnedHours" required bind:value={absenceReturn.returnedHours} />
-			</FormGroup>
-		</div>
-		<div class="group">
-			<FormGroup label="Notas" id="notes">
-				<TextArea id="notes" bind:value={absenceReturn.notes}></TextArea>
-			</FormGroup>
-		</div>
+	<AbsenceReturnForm onsubmit={saveAbsenceReturn} bind:absenceReturn>
 		<div class="group">
 			{#if absence}
 				<Button href={ROUTES.absence.view(absence.id)} outlined variant="secondary">Cancelar</Button>
 				<Button type="submit" Icon={Save}>Guardar</Button>
 			{/if}
 		</div>
-	</form>
+	</AbsenceReturnForm>
 </MainContainer>
 
 <style>

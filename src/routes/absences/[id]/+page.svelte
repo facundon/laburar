@@ -90,7 +90,7 @@
 			columns={[
 				{ field: 'returnDate', headerName: 'Fecha', formatValue: value => value.toLocaleDateString() },
 				{ field: 'returnedHours', headerName: 'Horas' },
-				{ field: 'notes', headerName: 'Notas', width: 700, formatValue: value => value || '-' },
+				{ field: 'notes', headerName: 'Notas', width: 500, formatValue: value => value || '-' },
 				{ field: 'delete', headerName: '', renderCell: onclick => ({ component: Delete, props: { onclick, color: 'var(--error-main)' } }) },
 			]}
 		/>

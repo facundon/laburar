@@ -1,4 +1,5 @@
 <script lang="ts">
+	import DateInput from '$components/DateInput.svelte'
 	import FormGroup from '$components/FormGroup.svelte'
 	import NumberInput from '$components/NumberInput.svelte'
 	import TextArea from '$components/TextArea.svelte'
@@ -16,7 +17,7 @@
 <form {onsubmit}>
 	<div class="group">
 		<FormGroup label="Fecha" id="returnDate">
-			<input type="date" id="returnDate" required bind:value={absenceReturn.returnDate} />
+			<DateInput id="returnDate" required bind:value={absenceReturn.returnDate} />
 		</FormGroup>
 		<FormGroup label="Horas" id="returnedHours">
 			<NumberInput id="returnedHours" required bind:value={absenceReturn.returnedHours} />

@@ -1,7 +1,7 @@
 use crate::db::models::employee_assignment::{EmployeeAssignment, EmployeeAssignmentWithNames};
 use crate::db::schema::{area, assignment, employee, employee_assignment, task};
 use crate::error::Error;
-use chrono::NaiveDateTime;
+use chrono::{NaiveDate, NaiveDateTime};
 use diesel::{prelude::*, RunQueryDsl, SqliteConnection};
 use serde::{Deserialize, Serialize};
 
@@ -14,7 +14,7 @@ pub struct Employee {
     pub last_name: String,
     pub phone: Option<String>,
     pub address: String,
-    pub start_date: Option<NaiveDateTime>,
+    pub start_date: Option<NaiveDate>,
     pub created_at: Option<NaiveDateTime>,
 }
 
@@ -32,7 +32,7 @@ pub struct NewEmployee<'a> {
     pub last_name: &'a str,
     pub address: &'a str,
     pub phone: Option<&'a str>,
-    pub start_date: Option<&'a NaiveDateTime>,
+    pub start_date: Option<&'a NaiveDate>,
 }
 
 pub fn create_employee(
@@ -41,7 +41,7 @@ pub fn create_employee(
     first_name: &str,
     last_name: &str,
     phone: Option<&str>,
-    start_date: Option<&NaiveDateTime>,
+    start_date: Option<&NaiveDate>,
 ) -> Result<Employee, Error> {
     let new_employee = NewEmployee {
         address,
@@ -145,7 +145,7 @@ pub fn update_employee(
     first_name: &str,
     last_name: &str,
     phone: Option<&str>,
-    start_date: Option<&NaiveDateTime>,
+    start_date: Option<&NaiveDate>,
 ) -> Result<Employee, Error> {
     diesel::update(employee::table.find(id))
         .set((

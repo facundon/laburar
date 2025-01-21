@@ -1,7 +1,7 @@
 <script lang="ts">
 	import FormGroup from '$components/FormGroup.svelte'
-	import type { Employee } from '$models/employee'
-	import { format } from 'date-fns'
+	import DateInput from '$components/DateInput.svelte'
+	import type { Employee } from '$models/employee.svelte'
 
 	interface Props {
 		employee: Employee
@@ -36,12 +36,7 @@
 	</div>
 	<div class="group">
 		<FormGroup label="Fecha de inicio" id="startDate">
-			<input
-				id="startDate"
-				type="date"
-				value={employee.startDate ? format(employee.startDate, 'yyyy-MM-dd') : ''}
-				oninput={handleDateChange}
-			/>
+			<DateInput id="startDate" bind:value={employee.startDate} />
 		</FormGroup>
 	</div>
 	{@render children()}

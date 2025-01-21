@@ -52,7 +52,7 @@ diesel::table! {
         last_name -> Text,
         phone -> Nullable<Text>,
         address -> Text,
-        start_date -> Nullable<Timestamp>,
+        start_date -> Nullable<Date>,
         created_at -> Nullable<Timestamp>,
     }
 }

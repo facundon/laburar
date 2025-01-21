@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { invoke } from '$invoke'
 	import { ROUTES } from '$routes'
-	import { differenceInYears, format } from 'date-fns'
+	import { differenceInYears } from 'date-fns'
 	import Button from '$components/Button.svelte'
 	import Modal from '$components/Modal.svelte'
 	import { ClipboardPlus, Delete, Edit, Pencil } from 'lucide-svelte'
@@ -73,7 +73,7 @@
 		{#if employee.startDate}
 			<p>
 				<strong>Fecha de inicio:</strong>
-				{format(employee.startDate, 'dd/MM/yyyy')}
+				{employee.startDate.toLocaleDateString()}
 			</p>
 			<p>
 				<strong>Antigüedad:</strong>

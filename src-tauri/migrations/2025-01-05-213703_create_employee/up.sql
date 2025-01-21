@@ -6,6 +6,6 @@ CREATE TABLE employee (
   last_name VARCHAR(255) NOT NULL,
   phone VARCHAR(255),
   address VARCHAR(255) NOT NULL,
-  start_date TIMESTAMP,
+  start_date DATE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

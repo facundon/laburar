@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { invoke } from '$invoke'
 	import { ROUTES } from '$routes'
-	import { Employee } from '$models/employee'
+	import { Employee } from '$models/employee.svelte'
 	import Button from '$components/Button.svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import { Plus } from 'lucide-svelte'

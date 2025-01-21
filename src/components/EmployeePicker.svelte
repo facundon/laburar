@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Select from '$components/Select.svelte'
-	import { Employee } from '$models/employee'
+	import { Employee } from '$models/employee.svelte'
 	import { getEmployeeList } from '$queries/employees'
 	import { onMount } from 'svelte'
 	import type { HTMLSelectAttributes } from 'svelte/elements'

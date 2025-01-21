@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Checkbox from '$components/Checkbox.svelte'
+	import DateInput from '$components/DateInput.svelte'
 	import EmployeePicker from '$components/EmployeePicker.svelte'
 	import FormGroup from '$components/FormGroup.svelte'
 	import NumberInput from '$components/NumberInput.svelte'
@@ -32,7 +33,7 @@
 	</div>
 	<div class="group">
 		<FormGroup label="Fecha" id="absenceDate">
-			<input type="date" id="absenceDate" required bind:value={absence.absenceDate} />
+			<DateInput id="absenceDate" required bind:value={absence.absenceDate} />
 		</FormGroup>
 		<FormGroup label="Horas" id="hours">
 			<NumberInput id="hours" required bind:value={absence.hours} />

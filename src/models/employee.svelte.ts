@@ -1,4 +1,6 @@
 import { EmployeeAssignment, type EmployeeAssignmentDTO } from '$models/employeeAssignment'
+import { format } from 'date-fns'
+import { SvelteDate } from 'svelte/reactivity'
 
 type UpdateEmployeeDTO = Omit<EmployeeDTO, 'created_at' | 'assignments'>
 type CreateEmployeeDTO = Omit<UpdateEmployeeDTO, 'id'>
@@ -15,24 +17,24 @@ export type EmployeeDTO = {
 }
 
 export class Employee {
-	id: number
-	firstName: string
-	lastName: string
-	address: string
-	createdAt: Date
-	phone?: string
-	startDate?: Date
-	assignments: EmployeeAssignment[]
+	id: number = 0
+	firstName: string = $state('')
+	lastName: string = $state('')
+	address: string = $state('')
+	createdAt: Date = new Date()
+	phone?: string = $state('')
+	startDate?: Date = new SvelteDate()
+	assignments: EmployeeAssignment[] = $state([])
 
 	constructor(params?: Partial<Omit<Employee, 'name' | 'toCreateDTO' | 'toUpdateDTO'>>) {
-		this.id = params?.id || 0
-		this.firstName = params?.firstName || ''
-		this.lastName = params?.lastName || ''
-		this.phone = params?.phone || ''
-		this.address = params?.address || ''
-		this.createdAt = params?.createdAt || new Date()
-		this.startDate = params?.startDate || new Date()
-		this.assignments = params?.assignments || []
+		if (params?.id !== undefined) this.id = params.id
+		if (params?.firstName !== undefined) this.firstName = params.firstName
+		if (params?.lastName !== undefined) this.lastName = params.lastName
+		if (params?.phone !== undefined) this.phone = params.phone
+		if (params?.address !== undefined) this.address = params.address
+		if (params?.createdAt !== undefined) this.createdAt = params.createdAt
+		if (params?.startDate !== undefined) this.startDate = params.startDate
+		if (params?.assignments !== undefined) this.assignments = params.assignments
 	}
 
 	get name() {
@@ -46,7 +48,7 @@ export class Employee {
 			lastName: dto.last_name,
 			address: dto.address,
 			phone: dto.phone,
-			startDate: dto.start_date ? new Date(dto.start_date) : undefined,
+			startDate: dto.start_date ? new SvelteDate(dto.start_date) : undefined,
 			createdAt: new Date(dto.created_at),
 			assignments: dto.assignments?.map(EmployeeAssignment.fromDTO),
 		})
@@ -58,7 +60,7 @@ export class Employee {
 			last_name: this.lastName,
 			address: this.address,
 			phone: this.phone,
-			start_date: this.startDate?.toISOString(),
+			start_date: this.startDate ? format(this.startDate, 'yyyy-MM-dd') : undefined,
 		}
 	}
 

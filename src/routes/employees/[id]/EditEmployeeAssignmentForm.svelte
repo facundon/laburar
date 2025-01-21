@@ -5,7 +5,7 @@
 	import Modal from '$components/Modal.svelte'
 	import Rating from '$components/Rating.svelte'
 	import { invoke } from '$invoke'
-	import type { Employee } from '$models/employee'
+	import type { Employee } from '$models/employee.svelte'
 	import type { EmployeeAssignment } from '$models/employeeAssignment'
 
 	interface Props {

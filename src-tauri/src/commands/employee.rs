@@ -8,7 +8,7 @@ use crate::{
         sqlite::establish_connection,
     },
     error::Error,
-    utils::parse_date_time_option,
+    utils::parse_date_option,
 };
 use tauri::command;
 
@@ -22,7 +22,7 @@ pub fn create_employee_command(
 ) -> Result<Employee, Error> {
     let mut conn = establish_connection();
 
-    let parsed_start_date = parse_date_time_option(start_date)?;
+    let parsed_start_date = parse_date_option(start_date)?;
 
     create_employee(
         &mut conn,
@@ -63,7 +63,7 @@ pub fn update_employee_command(
 ) -> Result<Employee, Error> {
     let mut conn = establish_connection();
 
-    let parsed_start_date = parse_date_time_option(start_date)?;
+    let parsed_start_date = parse_date_option(start_date)?;
 
     update_employee(
         &mut conn,
