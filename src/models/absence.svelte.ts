@@ -1,5 +1,4 @@
 import { AbsenceReturn, type AbsenceReturnDTO } from '$models/absenceReturn.svelte'
-import { toTitleCase } from '$utils'
 import { SvelteDate } from 'svelte/reactivity'
 
 type UpdateAbsenceDTO = Omit<AbsenceDTO, 'created_at' | 'returns' | 'is_returned' | 'employee_name'>
@@ -39,6 +38,7 @@ export class Absence {
 		if (params?.employeeId) this.employeeId = params.employeeId
 		if (params?.isJustified !== undefined) this.isJustified = params.isJustified
 		if (params?.willReturn !== undefined) this.willReturn = params.willReturn
+		if (params?.isReturned !== undefined) this.isReturned = params.isReturned
 		if (params?.hours !== undefined) this.hours = params.hours
 		if (params?.description !== undefined) this.description = params.description
 		if (params?.absenceType !== undefined) this.absenceType = params.absenceType
@@ -93,4 +93,4 @@ export const AbsenceType = {
 	OTRO: 'Otro',
 } as const
 export type AbsenceType = ValueOf<typeof AbsenceType>
-export const AbsenceTypes = Object.entries(AbsenceType).map(([label, value]) => ({ label: value, value }))
+export const AbsenceTypes = Object.entries(AbsenceType).map(([_, value]) => ({ label: value, value }))

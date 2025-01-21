@@ -3,7 +3,9 @@ use std::collections::HashMap;
 use crate::db::models::absence_return::AbsenceReturn;
 use crate::db::schema::{absence, absence_return, employee};
 use crate::error::Error;
+use crate::utils::{parse_date, parse_date_time};
 use chrono::{NaiveDate, NaiveDateTime};
+use diesel::sql_types::{Bool, Integer, Text};
 use diesel::{prelude::*, SqliteConnection};
 use serde::{Deserialize, Serialize};
 
@@ -25,8 +27,36 @@ pub struct Absence {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct AbsenceWithEmployee {
     #[serde(flatten)]
-    absence: Absence,
-    employee_name: String,
+    pub absence: Absence,
+    pub is_returned: bool,
+    pub employee_name: String,
+}
+#[derive(QueryableByName, Debug)]
+struct AbsenceWithComputed {
+    #[diesel(sql_type = Integer)]
+    id: i32,
+    #[diesel(sql_type= Integer)]
+    employee_id: i32,
+    #[diesel(sql_type= Bool)]
+    is_justified: bool,
+    #[diesel(sql_type= Bool)]
+    will_return: bool,
+    #[diesel(sql_type= Integer)]
+    hours: i32,
+    #[diesel(sql_type= Text)]
+    description: String,
+    #[diesel(sql_type= Text)]
+    absence_type: String,
+    #[diesel(sql_type= Text)]
+    absence_date: String,
+    #[diesel(sql_type= Text)]
+    created_at: String,
+    #[diesel(sql_type= Bool)]
+    is_returned: bool,
+    #[diesel(sql_type= Text)]
+    pub first_name: String,
+    #[diesel(sql_type= Text)]
+    pub last_name: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -133,20 +163,51 @@ pub fn get_absence_with_returns(
 }
 
 pub fn list_absences(conn: &mut SqliteConnection) -> Result<Vec<AbsenceWithEmployee>, Error> {
-    absence::table
-        .inner_join(employee::table)
-        .select((
-            Absence::as_select(),
-            employee::first_name,
-            employee::last_name,
-        ))
-        .load::<(Absence, String, String)>(conn)
-        .map(|results| {
-            results
+    let query = r#"
+        SELECT
+            absence.id,
+            absence.employee_id,
+            absence.is_justified,
+            absence.will_return,
+            absence.hours,
+            absence.description,
+            absence.absence_type,
+            absence.absence_date,
+            absence.created_at,
+            employee.first_name,
+            employee.last_name,
+            CASE
+                WHEN absence.hours - IFNULL(SUM(absence_return.returned_hours), 0) <= 0 THEN TRUE
+                ELSE FALSE
+            END AS is_returned
+        FROM absence
+        INNER JOIN employee ON absence.employee_id = employee.id
+        LEFT JOIN absence_return ON absence.id = absence_return.absence_id
+        GROUP BY absence.id, employee.first_name, employee.last_name
+    "#;
+
+    diesel::sql_query(query)
+        .load::<AbsenceWithComputed>(conn)
+        .and_then(|result| {
+            result
                 .into_iter()
-                .map(|(absence, first_name, last_name)| AbsenceWithEmployee {
-                    absence,
-                    employee_name: Some(format!("{} {}", first_name, last_name)).unwrap(),
+                .map(|absence| {
+                    let employee_name = format!("{} {}", absence.first_name, absence.last_name);
+                    Ok(AbsenceWithEmployee {
+                        employee_name,
+                        is_returned: absence.is_returned,
+                        absence: Absence {
+                            absence_date: parse_date(&absence.absence_date).unwrap(),
+                            created_at: Some(parse_date_time(&absence.created_at).unwrap()),
+                            absence_type: absence.absence_type,
+                            description: Some(absence.description),
+                            employee_id: absence.employee_id,
+                            hours: absence.hours,
+                            id: absence.id,
+                            is_justified: absence.is_justified,
+                            will_return: absence.will_return,
+                        },
+                    })
                 })
                 .collect()
         })

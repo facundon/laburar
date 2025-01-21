@@ -49,7 +49,6 @@
 		align-items: center;
 		padding-block: 1.5rem;
 		margin-left: 3rem;
-		z-index: 100;
 		background-color: var(--background-main);
 	}
 

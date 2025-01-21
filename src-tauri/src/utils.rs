@@ -2,7 +2,7 @@ use crate::error::Error;
 use chrono::{NaiveDate, NaiveDateTime};
 
 const DATE_FORMAT: &str = "%Y-%m-%d";
-const DATE_TIME_FORMAT: &str = "%Y-%m-%dT%H:%M:%S%.fZ";
+const DATE_TIME_FORMAT: &str = "%Y-%m-%d %H:%M:%S";
 
 fn parse_date_helper<T, F>(date_str: Option<&str>, parser: F) -> Result<Option<T>, Error>
 where
