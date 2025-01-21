@@ -73,7 +73,8 @@
 	th,
 	td {
 		border-bottom: 1px solid #626262;
-		padding: 0.25rem;
+		padding-inline: 1rem;
+		padding-block: 0.25rem;
 	}
 
 	td:first-child,

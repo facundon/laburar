@@ -110,7 +110,8 @@
 	}
 
 	.button.secondary-dark.outlined:hover:not(:disabled) {
-		background-color: var(--secondary-light);
+		background-color: var(--secondary-main);
+		border-color: var(--secondary-main);
 		color: var(--secondary-contrast);
 	}
 
@@ -135,7 +136,7 @@
 	}
 
 	.button.error:hover:not(.outlined):not(:disabled) {
-		background-color: var(--error-light);
+		background-color: var(--error-dark);
 	}
 
 	.button.error.outlined:hover:not(:disabled) {
