@@ -64,6 +64,7 @@
 
 	section {
 		flex-grow: 1;
+		flex-shrink: 0;
 	}
 
 	.container {

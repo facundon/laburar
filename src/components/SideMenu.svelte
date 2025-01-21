@@ -27,7 +27,7 @@
 	}
 </script>
 
-<div class="sidebar">
+<div class="sidebar-wrapper">
 	<nav class="side-menu {isSidebarOpen ? 'open' : 'closed'}">
 		<ul>
 			<li><a href="/" aria-label="Inicio" class:active={isActive('/')}><Home /><span class="menu-text">Inicio</span></a></li>
@@ -65,25 +65,26 @@
 </div>
 
 <style>
-	.sidebar {
+	.sidebar-wrapper {
 		position: sticky;
 		display: flex;
 		gap: 1rem;
 		height: 100vh;
+		min-width: fit-content;
 		top: 0;
+		overflow: hidden;
 	}
 	.side-menu {
-		width: 200px;
+		min-width: 14vw;
+		transition: min-width 0.3s ease;
 		height: 100%;
 		background-color: var(--gray-main);
 		padding: 1rem;
 		color: var(--gray-contrast);
-		transition: width 0.3s ease;
-		overflow: hidden;
 	}
 
 	.side-menu.closed {
-		width: 60px;
+		min-width: 60px;
 	}
 
 	.side-menu ul {
