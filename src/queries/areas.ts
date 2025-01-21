@@ -1,5 +1,5 @@
 import { invoke } from '$invoke'
-import { Area, type AreaDTO } from '$models/area'
+import { Area, type AreaDTO } from '$models/area.svelte'
 
 export async function getArea(id: number) {
 	try {

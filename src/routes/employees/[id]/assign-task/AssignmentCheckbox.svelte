@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Checkbox from '$components/Checkbox.svelte'
-	import type { Assignment } from '$models/assignment'
+	import type { Assignment } from '$models/assignment.svelte'
 
 	interface Props {
 		assignment: Assignment

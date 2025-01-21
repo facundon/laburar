@@ -1,4 +1,4 @@
-import { Assignment, type AssignmentDTO } from '$models/assignment'
+import { Assignment, type AssignmentDTO } from '$models/assignment.svelte'
 
 type UpdateAreaDTO = Omit<AreaDTO, 'created_at' | 'assignments'>
 type CreateAreaDTO = Omit<UpdateAreaDTO, 'id'>
@@ -12,18 +12,18 @@ export type AreaDTO = {
 }
 
 export class Area {
-	id: number
-	name: string
-	description?: string
-	assignments: Assignment[]
-	createdAt: Date
+	id: number = 0
+	name: string = $state('')
+	description?: string = $state('')
+	assignments: Assignment[] = $state([])
+	createdAt: Date = new Date()
 
 	constructor(params?: Partial<Omit<Area, 'toCreateDTO' | 'toUpdateDTO'>>) {
-		this.id = params?.id || 0
-		this.name = params?.name || ''
-		this.description = params?.description || ''
-		this.assignments = params?.assignments || []
-		this.createdAt = params?.createdAt || new Date()
+		if (params?.id !== undefined) this.id = params.id
+		if (params?.name !== undefined) this.name = params.name
+		if (params?.description !== undefined) this.description = params.description
+		if (params?.assignments !== undefined) this.assignments = params.assignments
+		if (params?.createdAt !== undefined) this.createdAt = params.createdAt
 	}
 
 	static fromDTO(dto: AreaDTO): Area {

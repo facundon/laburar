@@ -1,5 +1,5 @@
 import { invoke } from '$invoke'
-import { type AssignmentDTO, Assignment } from '$models/assignment'
+import { type AssignmentDTO, Assignment } from '$models/assignment.svelte'
 
 export async function getAssignmentList() {
 	try {

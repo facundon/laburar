@@ -6,7 +6,7 @@
 	import { Delete, Pencil, ClipboardPlus } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import Table from '$components/Table.svelte'
-	import { AssignmentDifficulties } from '$models/assignment.js'
+	import { AssignmentDifficulties } from '$models/assignment.svelte.js'
 	import { invalidateAll } from '$app/navigation'
 
 	const { data } = $props()

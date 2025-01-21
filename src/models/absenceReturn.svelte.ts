@@ -18,7 +18,7 @@ export class AbsenceReturn {
 	absenceId: number
 	returnedHours: number = $state(1)
 	returnDate: Date = new SvelteDate()
-	notes?: string = $state()
+	notes?: string = $state('')
 	createdAt?: Date
 
 	constructor(params: Partial<Omit<AbsenceReturn, 'toCreateDTO' | 'toUpdateDTO'>> & { absenceId: number }) {

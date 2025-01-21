@@ -9,16 +9,16 @@ export type TaskDTO = {
 }
 
 export class Task {
-	id: number
-	name: string
-	description: string
-	createdAt: Date
+	id: number = 0
+	name: string = $state('')
+	description: string = $state('')
+	createdAt: Date = new Date()
 
 	constructor(params?: Partial<Omit<Task, 'toCreateDTO' | 'toUpdateDTO'>>) {
-		this.id = params?.id || 0
-		this.name = params?.name || ''
-		this.description = params?.description || ''
-		this.createdAt = params?.createdAt || new Date()
+		if (params?.id !== undefined) this.id = params.id
+		if (params?.name !== undefined) this.name = params.name
+		if (params?.description !== undefined) this.description = params.description
+		if (params?.createdAt !== undefined) this.createdAt = params.createdAt
 	}
 
 	static fromDTO(dto: TaskDTO): Task {

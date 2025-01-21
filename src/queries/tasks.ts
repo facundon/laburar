@@ -1,5 +1,5 @@
 import { invoke } from '$invoke'
-import { Task, type TaskDTO } from '$models/task'
+import { Task, type TaskDTO } from '$models/task.svelte'
 
 export async function getTask(id: number) {
 	try {

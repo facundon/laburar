@@ -5,7 +5,7 @@
 	import MainContainer from '$components/MainContainer.svelte'
 	import { Save } from 'lucide-svelte'
 	import Select from '$components/Select.svelte'
-	import { Assignment, AssignmentDifficulties, AssignmentFrequencies } from '$models/assignment'
+	import { Assignment, AssignmentDifficulties, AssignmentFrequencies } from '$models/assignment.svelte.js'
 	import FormGroup from '$components/FormGroup.svelte'
 	import CongratsText from '$components/CongratsText.svelte'
 

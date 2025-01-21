@@ -1,7 +1,7 @@
 <script lang="ts">
 	import FormGroup from '$components/FormGroup.svelte'
 	import TextArea from '$components/TextArea.svelte'
-	import { Area } from '$models/area'
+	import { Area } from '$models/area.svelte'
 
 	interface Props {
 		area: Area

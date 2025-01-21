@@ -4,7 +4,7 @@
 	import Button from '$components/Button.svelte'
 	import { Plus } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
-	import { Area } from '$models/area'
+	import { Area } from '$models/area.svelte'
 	import AreaForm from '$pages/areas/components/AreaForm.svelte'
 
 	let area = $state(new Area())

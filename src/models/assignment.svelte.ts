@@ -15,24 +15,24 @@ export type AssignmentDTO = {
 }
 
 export class Assignment {
-	id: number
-	taskId: number
-	areaId: number
-	difficulty: number
-	frequency: string
-	createdAt: Date
-	taskName?: string
-	areaName?: string
+	id: number = 0
+	taskId: number = 0
+	areaId: number = 0
+	difficulty: number = $state(1)
+	frequency: string = $state('')
+	createdAt: Date = new Date()
+	taskName?: string = ''
+	areaName?: string = ''
 
 	constructor(params?: Partial<Omit<Assignment, 'toCreateDTO' | 'toUpdateDTO' | 'name'>>) {
-		this.id = params?.id || 0
-		this.taskId = params?.taskId || 0
-		this.areaId = params?.areaId || 0
-		this.difficulty = params?.difficulty || 1
-		this.frequency = params?.frequency || ''
-		this.createdAt = params?.createdAt || new Date()
-		this.taskName = params?.taskName
-		this.areaName = params?.areaName
+		if (params?.id !== undefined) this.id = params.id
+		if (params?.taskId !== undefined) this.taskId = params.taskId
+		if (params?.areaId !== undefined) this.areaId = params.areaId
+		if (params?.difficulty !== undefined) this.difficulty = params.difficulty
+		if (params?.frequency !== undefined) this.frequency = params.frequency
+		if (params?.createdAt !== undefined) this.createdAt = params.createdAt
+		if (params?.taskName !== undefined) this.taskName = params.taskName
+		if (params?.areaName !== undefined) this.areaName = params.areaName
 	}
 
 	static fromDTO(dto: AssignmentDTO): Assignment {

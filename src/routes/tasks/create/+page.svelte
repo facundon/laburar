@@ -4,7 +4,7 @@
 	import Button from '$components/Button.svelte'
 	import { Plus } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
-	import { Task } from '$models/task'
+	import { Task } from '$models/task.svelte'
 	import TaskForm from '$pages/tasks/components/TaskForm.svelte'
 
 	let task = $state(new Task())
