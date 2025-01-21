@@ -30,10 +30,14 @@ export const theme = {
 			dark: '#212529',
 			contrast: '#FBFBFF',
 		},
+		background: {
+			main: '#f8f9fa',
+		},
 	},
 }
 
 export const cssVariables = `
+    --background-main: ${theme.colors.background.main};
 		--primary-main: ${theme.colors.primary.main};
 		--primary-light: ${theme.colors.primary.light};
 		--primary-dark: ${theme.colors.primary.dark};

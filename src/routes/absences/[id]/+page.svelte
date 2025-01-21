@@ -27,7 +27,7 @@
 		{/if}
 		<div class="actions">
 			<Button Icon={Pencil} href={ROUTES.absence.edit(absence.id)} outlined>Editar</Button>
-			<Button Icon={Delete} href={ROUTES.absence.list} outlined variant="error">Eliminar</Button>
+			<Button Icon={Delete} outlined variant="error">Eliminar</Button>
 		</div>
 	</MainContainer>
 {/if}

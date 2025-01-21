@@ -2,8 +2,21 @@
 	import { ROUTES } from '$routes'
 	import { Home, Users, BriefcaseBusiness, Component, ClipboardX } from 'lucide-svelte'
 	import { page } from '$app/state'
+	import { onMount } from 'svelte'
 
-	export let isSidebarOpen: boolean
+	let isSidebarOpen = $state(true)
+
+	function toggleSidebar() {
+		isSidebarOpen = !isSidebarOpen
+	}
+
+	onMount(() => {
+		const mediaQuery = window.matchMedia('(max-width: 768px)')
+		isSidebarOpen = !mediaQuery.matches
+		mediaQuery.addEventListener('change', e => {
+			isSidebarOpen = !e.matches
+		})
+	})
 
 	function isActive(route: string) {
 		const activeRoute = page.url.pathname
@@ -14,45 +27,59 @@
 	}
 </script>
 
-<nav class="side-menu {isSidebarOpen ? 'open' : 'closed'}">
-	<ul>
-		<li><a href="/" aria-label="Inicio" class:active={isActive('/')}><Home /><span class="menu-text">Inicio</span></a></li>
-		<li>
-			<a href={ROUTES.employee.list} aria-label="Personal" class:active={isActive(ROUTES.employee.list)}>
-				<Users />
-				<span class="menu-text">Personal</span>
-			</a>
-		</li>
-		<li>
-			<a href={ROUTES.task.list} aria-label="Tareas" class:active={isActive(ROUTES.task.list)}>
-				<BriefcaseBusiness />
-				<span class="menu-text">Tareas</span>
-			</a>
-		</li>
-		<li>
-			<a href={ROUTES.area.list} aria-label="Areas" class:active={isActive(ROUTES.area.list)}>
-				<Component />
-				<span class="menu-text">Areas</span>
-			</a>
-		</li>
-		<li>
-			<a href={ROUTES.absence.list} aria-label="Faltas" class:active={isActive(ROUTES.absence.list)}>
-				<ClipboardX />
-				<span class="menu-text">Faltas</span>
-			</a>
-		</li>
-	</ul>
-</nav>
+<div class="sidebar">
+	<nav class="side-menu {isSidebarOpen ? 'open' : 'closed'}">
+		<ul>
+			<li><a href="/" aria-label="Inicio" class:active={isActive('/')}><Home /><span class="menu-text">Inicio</span></a></li>
+			<li>
+				<a href={ROUTES.employee.list} aria-label="Personal" class:active={isActive(ROUTES.employee.list)}>
+					<Users />
+					<span class="menu-text">Personal</span>
+				</a>
+			</li>
+			<li>
+				<a href={ROUTES.task.list} aria-label="Tareas" class:active={isActive(ROUTES.task.list)}>
+					<BriefcaseBusiness />
+					<span class="menu-text">Tareas</span>
+				</a>
+			</li>
+			<li>
+				<a href={ROUTES.area.list} aria-label="Areas" class:active={isActive(ROUTES.area.list)}>
+					<Component />
+					<span class="menu-text">Areas</span>
+				</a>
+			</li>
+			<li>
+				<a href={ROUTES.absence.list} aria-label="Faltas" class:active={isActive(ROUTES.absence.list)}>
+					<ClipboardX />
+					<span class="menu-text">Faltas</span>
+				</a>
+			</li>
+		</ul>
+	</nav>
+	<button class="hamburger {isSidebarOpen ? 'open' : ''}" onclick={toggleSidebar} aria-label="Abrir menú">
+		<span class="bar"></span>
+		<span class="bar"></span>
+		<span class="bar"></span>
+	</button>
+</div>
 
 <style>
+	.sidebar {
+		position: sticky;
+		display: flex;
+		gap: 1rem;
+		height: 100vh;
+		top: 0;
+	}
 	.side-menu {
 		width: 200px;
+		height: 100%;
 		background-color: var(--gray-main);
 		padding: 1rem;
 		color: var(--gray-contrast);
 		transition: width 0.3s ease;
 		overflow: hidden;
-		position: relative;
 	}
 
 	.side-menu.closed {
@@ -93,5 +120,40 @@
 
 	.side-menu.closed .menu-text {
 		display: none;
+	}
+
+	.hamburger {
+		background: none;
+		border: none;
+		cursor: pointer;
+		z-index: 1000;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		margin-top: 1rem;
+		width: 30px;
+		height: 30px;
+	}
+
+	.bar {
+		display: block;
+		width: 25px;
+		height: 2px;
+		margin: 3px 0;
+		background-color: var(--primary-contrast);
+		transition: all 0.4s ease-in-out;
+	}
+
+	.hamburger.open .bar:nth-child(1) {
+		transform: rotate(45deg) translate(6px, 5px);
+	}
+
+	.hamburger.open .bar:nth-child(2) {
+		opacity: 0;
+	}
+
+	.hamburger.open .bar:nth-child(3) {
+		transform: rotate(-45deg) translate(6px, -5px);
 	}
 </style>

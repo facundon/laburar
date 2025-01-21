@@ -42,10 +42,15 @@
 
 <style>
 	.breadcrumb {
+		font-size: 1.1rem;
+		position: sticky;
+		top: 0;
 		display: flex;
 		align-items: center;
-		font-size: 1.1rem;
-		margin-bottom: 1rem;
+		padding-block: 1.5rem;
+		margin-left: 3rem;
+		z-index: 100;
+		background-color: var(--background-main);
 	}
 
 	.breadcrumb a {

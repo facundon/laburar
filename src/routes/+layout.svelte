@@ -1,35 +1,16 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
 	import { cssVariables } from '$theme'
 	import Breadcrumb from '$components/Breadcrumb.svelte'
 	import SideMenu from '$components/SideMenu.svelte'
 
 	let { children } = $props()
-	let isSidebarOpen = $state(true)
-
-	function toggleSidebar() {
-		isSidebarOpen = !isSidebarOpen
-	}
-
-	onMount(() => {
-		const mediaQuery = window.matchMedia('(max-width: 768px)')
-		isSidebarOpen = !mediaQuery.matches
-		mediaQuery.addEventListener('change', e => {
-			isSidebarOpen = !e.matches
-		})
-	})
 </script>
 
-<main class="layout" style={cssVariables}>
-	<SideMenu {isSidebarOpen} />
-	<section class="content">
-		<button class="hamburger {isSidebarOpen ? 'open' : ''}" onclick={toggleSidebar} aria-label="Abrir menú">
-			<span class="bar"></span>
-			<span class="bar"></span>
-			<span class="bar"></span>
-		</button>
+<main style={cssVariables}>
+	<SideMenu />
+	<section>
+		<Breadcrumb />
 		<div class="container">
-			<Breadcrumb />
 			{@render children()}
 		</div>
 	</section>
@@ -56,7 +37,7 @@
 		padding: 0;
 		font-size: large;
 		background-color: #f8f9fa;
-		color: var(--primary-contrast);
+		color: #333;
 	}
 	:global(.lucide *) {
 		vector-effect: non-scaling-stroke;
@@ -77,58 +58,19 @@
 		padding: 0.5rem;
 	}
 
-	.layout {
+	main {
 		display: flex;
-		height: 100vh;
 	}
 
-	.content {
+	section {
 		flex-grow: 1;
-		padding: 2rem;
-		position: relative;
 	}
 
 	.container {
 		max-width: 1920px;
 		margin: 0 auto;
-		padding-inline: 4rem;
-		padding-block: 2rem;
-	}
-
-	.hamburger {
-		position: absolute;
-		top: 1rem;
-		left: 1rem;
-		background: none;
-		border: none;
-		cursor: pointer;
-		z-index: 1000;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		width: 30px;
-		height: 30px;
-	}
-
-	.bar {
-		display: block;
-		width: 25px;
-		height: 2px;
-		margin: 3px 0;
-		background-color: var(--primary-contrast);
-		transition: all 0.4s ease-in-out;
-	}
-
-	.hamburger.open .bar:nth-child(1) {
-		transform: rotate(45deg) translate(6px, 5px);
-	}
-
-	.hamburger.open .bar:nth-child(2) {
-		opacity: 0;
-	}
-
-	.hamburger.open .bar:nth-child(3) {
-		transform: rotate(-45deg) translate(6px, -5px);
+		padding-inline: 5rem;
+		padding-bottom: 2rem;
+		padding-top: 0.5rem;
 	}
 </style>
