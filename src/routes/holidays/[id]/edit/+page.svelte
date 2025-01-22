@@ -7,22 +7,23 @@
 	import { ROUTES } from '$routes'
 	import { Save } from 'lucide-svelte'
 
-	let holiday = $state(new Holiday())
+	let { data } = $props()
+	let holiday = $state(new Holiday(data.holiday || {}))
 
-	const createHoliday = async () => {
+	const editHoliday = async () => {
 		try {
-			await invoke('create_holiday_command', holiday.toCreateDTO())
-			window.location.href = ROUTES.holiday.list
+			await invoke('update_holiday_command', holiday.toUpdateDTO())
+			window.location.href = ROUTES.holiday.view(holiday.id)
 		} catch (error) {
-			console.error('Failed to create holiday:', error)
+			console.error('Failed to update holiday:', error)
 		}
 	}
 </script>
 
-<MainContainer title="Agregar Vacaciones">
-	<HolidayForm bind:holiday onsubmit={createHoliday}>
+<MainContainer title="Editar Vacaciones de {holiday.employeeName}">
+	<HolidayForm bind:holiday onsubmit={editHoliday} isEditMode>
 		<div class="actions">
-			<Button href={ROUTES.holiday.list} outlined variant="secondary">Cancelar</Button>
+			<Button href={ROUTES.holiday.view(holiday.id)} outlined variant="secondary">Cancelar</Button>
 			<Button type="submit" Icon={Save}>Guardar</Button>
 		</div>
 	</HolidayForm>

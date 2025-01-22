@@ -23,6 +23,8 @@ const config = {
 				'/employees/1/assign-task',
 				'/tasks/1',
 				'/tasks/1/edit',
+				'/holidays/1',
+				'/holidays/1/edit',
 			],
 		},
 		alias: {

@@ -1,10 +1,10 @@
-use crate::db::schema::holiday;
+use crate::db::schema::{employee, holiday};
 use crate::error::Error;
-use chrono::NaiveDate;
+use chrono::{NaiveDate, NaiveDateTime};
 use diesel::{prelude::*, RunQueryDsl, SelectableHelper, SqliteConnection};
 use serde::{Deserialize, Serialize};
 
-#[derive(Queryable, Selectable, Serialize, Deserialize, Debug)]
+#[derive(Queryable, Selectable, Serialize, Deserialize, Clone, Debug)]
 #[diesel(table_name = holiday)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct Holiday {
@@ -14,7 +14,14 @@ pub struct Holiday {
     pub end_date: NaiveDate,
     pub days_off: i32,
     pub notes: Option<String>,
-    pub created_at: Option<chrono::NaiveDateTime>,
+    pub created_at: Option<NaiveDateTime>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct HolidayWithEmployee {
+    #[serde(flatten)]
+    pub holiday: Holiday,
+    pub employee_name: String,
 }
 
 #[derive(Insertable)]
@@ -50,16 +57,41 @@ pub fn create_holiday(
         .map_err(|err| Error::Database(err.to_string()))
 }
 
-pub fn get_holiday(conn: &mut SqliteConnection, id: i32) -> Result<Holiday, Error> {
+pub fn get_holiday(conn: &mut SqliteConnection, id: i32) -> Result<HolidayWithEmployee, Error> {
     holiday::table
-        .find(id)
-        .first(conn)
+        .inner_join(employee::table)
+        .select((
+            holiday::all_columns,
+            employee::first_name,
+            employee::last_name,
+        ))
+        .filter(holiday::id.eq(id))
+        .first::<(Holiday, String, String)>(conn)
+        .map(|(holiday, first_name, last_name)| HolidayWithEmployee {
+            holiday,
+            employee_name: format!("{} {}", first_name, last_name),
+        })
         .map_err(|err| Error::Database(err.to_string()))
 }
 
-pub fn list_holidays(conn: &mut SqliteConnection) -> Result<Vec<Holiday>, Error> {
+pub fn list_holidays(conn: &mut SqliteConnection) -> Result<Vec<HolidayWithEmployee>, Error> {
     holiday::table
-        .load(conn)
+        .inner_join(employee::table)
+        .select((
+            holiday::all_columns,
+            employee::first_name,
+            employee::last_name,
+        ))
+        .load::<(Holiday, String, String)>(conn)
+        .map(|results| {
+            results
+                .into_iter()
+                .map(|(holiday, first_name, last_name)| HolidayWithEmployee {
+                    holiday,
+                    employee_name: format!("{} {}", first_name, last_name),
+                })
+                .collect()
+        })
         .map_err(|err| Error::Database(err.to_string()))
 }
 

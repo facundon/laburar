@@ -1,12 +1,13 @@
 import { formatDate, parseDate } from '$utils'
 import { SvelteDate } from 'svelte/reactivity'
 
-type UpdateHolidayDTO = Omit<HolidayDTO, 'created_at'>
+type UpdateHolidayDTO = Omit<HolidayDTO, 'created_at' | 'employee_name'>
 type CreateHolidayDTO = Omit<UpdateHolidayDTO, 'id'>
 
 export type HolidayDTO = {
 	id: number
 	employee_id: number
+	employee_name: string
 	start_date: string
 	end_date: string
 	days_off: number
@@ -17,6 +18,7 @@ export type HolidayDTO = {
 export class Holiday {
 	id: number = 0
 	employeeId: number = $state(0)
+	employeeName: string = ''
 	startDate: Date = new SvelteDate()
 	endDate: Date = new SvelteDate()
 	daysOff: number = $state(1)
@@ -25,6 +27,7 @@ export class Holiday {
 
 	constructor(params?: Partial<Omit<Holiday, 'toCreateDTO' | 'toUpdateDTO'>>) {
 		if (params?.id !== undefined) this.id = params.id
+		if (params?.employeeName !== undefined) this.employeeName = params.employeeName
 		if (params?.employeeId !== undefined) this.employeeId = params.employeeId
 		if (params?.startDate !== undefined) this.startDate = params.startDate
 		if (params?.endDate !== undefined) this.endDate = params.endDate
@@ -37,6 +40,7 @@ export class Holiday {
 		return new Holiday({
 			id: dto.id,
 			employeeId: dto.employee_id,
+			employeeName: dto.employee_name,
 			startDate: parseDate(dto.start_date, true),
 			endDate: parseDate(dto.end_date, true),
 			daysOff: dto.days_off,

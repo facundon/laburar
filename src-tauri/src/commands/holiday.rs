@@ -1,5 +1,6 @@
 use crate::db::models::holiday::{
     create_holiday, delete_holiday, get_holiday, list_holidays, update_holiday, Holiday,
+    HolidayWithEmployee,
 };
 use crate::db::sqlite::establish_connection;
 use crate::error::Error;
@@ -27,13 +28,13 @@ pub fn create_holiday_command(
 }
 
 #[command(rename_all = "snake_case")]
-pub fn get_holiday_command(id: i32) -> Result<Holiday, Error> {
+pub fn get_holiday_command(id: i32) -> Result<HolidayWithEmployee, Error> {
     let mut conn = establish_connection();
     get_holiday(&mut conn, id)
 }
 
 #[command(rename_all = "snake_case")]
-pub fn list_holidays_command() -> Result<Vec<Holiday>, Error> {
+pub fn list_holidays_command() -> Result<Vec<HolidayWithEmployee>, Error> {
     let mut conn = establish_connection();
     list_holidays(&mut conn)
 }
