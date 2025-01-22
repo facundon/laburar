@@ -20,6 +20,10 @@ use commands::assignment::{
     create_assignment_command, delete_assignment_command, get_assignment_command,
     list_assignments_command, update_assignment_command,
 };
+use commands::company_holiday::{
+    create_company_holiday_command, delete_company_holiday_command, get_company_holiday_command,
+    list_company_holidays_command, update_company_holiday_command,
+};
 use commands::employee::{
     create_employee_command, delete_employee_command, get_employee_command,
     get_employee_with_assignments_command, list_employees_command, update_employee_command,
@@ -27,6 +31,10 @@ use commands::employee::{
 use commands::employee_assignment::{
     create_assignments_to_employee_command, delete_employee_assignment_command,
     list_employee_assignments_command, update_employee_assignment_command,
+};
+use commands::holiday::{
+    create_holiday_command, delete_holiday_command, get_holiday_command, list_holidays_command,
+    update_holiday_command,
 };
 use commands::task::{
     create_task_command, delete_task_command, get_task_command, get_tasks_for_area_command,
@@ -82,7 +90,17 @@ pub fn run() {
             get_absence_return_command,
             list_absence_returns_command,
             update_absence_return_command,
-            list_absences_for_employee_command
+            list_absences_for_employee_command,
+            create_holiday_command,
+            delete_holiday_command,
+            get_holiday_command,
+            list_holidays_command,
+            update_holiday_command,
+            create_company_holiday_command,
+            delete_company_holiday_command,
+            get_company_holiday_command,
+            list_company_holidays_command,
+            update_company_holiday_command,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

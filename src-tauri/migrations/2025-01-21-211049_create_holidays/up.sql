@@ -1,0 +1,18 @@
+-- Your SQL goes here
+CREATE TABLE holiday (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  employee_id INTEGER NOT NULL,
+  start_date DATE NOT NULL,
+  end_date DATE NOT NULL,
+  days_off INTEGER NOT NULL,
+  notes TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (employee_id) REFERENCES employee(id)
+);
+
+CREATE TABLE company_holiday (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  date DATE NOT NULL,
+  description TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

@@ -46,6 +46,15 @@ diesel::table! {
 }
 
 diesel::table! {
+    company_holiday (id) {
+        id -> Integer,
+        date -> Date,
+        description -> Nullable<Text>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
     employee (id) {
         id -> Integer,
         first_name -> Text,
@@ -70,6 +79,18 @@ diesel::table! {
 }
 
 diesel::table! {
+    holiday (id) {
+        id -> Integer,
+        employee_id -> Integer,
+        start_date -> Date,
+        end_date -> Date,
+        days_off -> Integer,
+        notes -> Nullable<Text>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
     task (id) {
         id -> Integer,
         name -> Text,
@@ -84,13 +105,16 @@ diesel::joinable!(assignment -> area (area_id));
 diesel::joinable!(assignment -> task (task_id));
 diesel::joinable!(employee_assignment -> assignment (assignment_id));
 diesel::joinable!(employee_assignment -> employee (employee_id));
+diesel::joinable!(holiday -> employee (employee_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     absence,
     absence_return,
     area,
     assignment,
+    company_holiday,
     employee,
     employee_assignment,
+    holiday,
     task,
 );

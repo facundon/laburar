@@ -9,6 +9,22 @@ const config = {
 	preprocess: vitePreprocess(),
 	kit: {
 		adapter: adapter(),
+		prerender: {
+			entries: [
+				'*',
+				'/absences/1',
+				'/absences/1/edit',
+				'/absences/1/return',
+				'/areas/1',
+				'/areas/1/edit',
+				'/areas/1/assign-task',
+				'/employees/1',
+				'/employees/1/edit',
+				'/employees/1/assign-task',
+				'/tasks/1',
+				'/tasks/1/edit',
+			],
+		},
 		alias: {
 			$models: './src/models',
 			$invoke: './src/invoke',

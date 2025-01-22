@@ -2,6 +2,8 @@ pub mod absence;
 pub mod absence_return;
 pub mod area;
 pub mod assignment;
+pub mod company_holiday;
 pub mod employee;
 pub mod employee_assignment;
+pub mod holiday;
 pub mod task;
