@@ -1,4 +1,4 @@
-import { toTitleCase } from '$utils'
+import { formatDate, formatDateTime, parseDate, toTitleCase } from '$utils'
 import { format } from 'date-fns'
 import { SvelteDate } from 'svelte/reactivity'
 
@@ -54,7 +54,7 @@ export class EmployeeAssignment {
 			isPrimary: dto.is_primary,
 			efficiency: dto.efficiency,
 			assignedDate: dto.assigned_date ? new SvelteDate(dto.assigned_date) : undefined,
-			createdAt: new Date(dto.created_at),
+			createdAt: parseDate(dto.created_at),
 			areaId: dto.area_id,
 			areaName: dto.area_name,
 			taskId: dto.task_id,
@@ -72,7 +72,7 @@ export class EmployeeAssignment {
 			assignment_id: this.assignmentId,
 			is_primary: this.isPrimary,
 			efficiency: this.efficiency,
-			assigned_date: format(this.assignedDate, 'yyyy-MM-dd HH:mm:ss'),
+			assigned_date: formatDateTime(this.assignedDate),
 		}
 	}
 

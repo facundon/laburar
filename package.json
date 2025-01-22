@@ -1,5 +1,5 @@
 {
-	"name": "personal-manager",
+	"name": "laburar",
 	"version": "0.1.0",
 	"description": "",
 	"type": "module",
@@ -10,7 +10,7 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"tauri": "tauri",
-		"build:windows": "yarn tauri build --runner cargo-xwin --target x86_64-pc-windows-msvc"
+		"build:windows": "yarn tauri build --debug --runner cargo-xwin --target x86_64-pc-windows-msvc"
 	},
 	"license": "MIT",
 	"dependencies": {

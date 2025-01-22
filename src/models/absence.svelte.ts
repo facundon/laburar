@@ -1,5 +1,5 @@
 import { AbsenceReturn, type AbsenceReturnDTO } from '$models/absenceReturn.svelte'
-import { format } from 'date-fns'
+import { formatDate, parseDate } from '$utils'
 import { SvelteDate } from 'svelte/reactivity'
 
 type UpdateAbsenceDTO = Omit<AbsenceDTO, 'created_at' | 'returns' | 'is_returned' | 'employee_name'>
@@ -58,8 +58,8 @@ export class Absence {
 			hours: dto.hours,
 			description: dto.description,
 			absenceType: dto.absence_type,
-			absenceDate: new SvelteDate(dto.absence_date),
-			createdAt: dto.created_at ? new Date(dto.created_at) : undefined,
+			absenceDate: parseDate(dto.absence_date, true),
+			createdAt: dto.created_at ? parseDate(dto.created_at) : undefined,
 			returns: dto.returns?.map(AbsenceReturn.fromDTO),
 			isReturned: dto.is_returned,
 			employeeName: dto.employee_name,
@@ -74,7 +74,7 @@ export class Absence {
 			hours: this.hours,
 			description: this.description,
 			absence_type: this.absenceType,
-			absence_date: format(this.absenceDate, 'yyyy-MM-dd'),
+			absence_date: formatDate(this.absenceDate),
 		}
 	}
 

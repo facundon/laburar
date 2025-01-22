@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { cssVariables } from '$theme'
-	import Breadcrumb from '$components/Breadcrumb.svelte'
-	import SideMenu from '$components/SideMenu.svelte'
+	import SideMenu from '$pages/SideMenu.svelte'
+	import Breadcrumb from '$pages/Breadcrumb.svelte'
 
 	let { children } = $props()
 </script>

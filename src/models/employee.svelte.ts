@@ -1,4 +1,5 @@
 import { EmployeeAssignment, type EmployeeAssignmentDTO } from '$models/employeeAssignment.svelte'
+import { formatDate, parseDate } from '$utils'
 import { format } from 'date-fns'
 import { SvelteDate } from 'svelte/reactivity'
 
@@ -48,8 +49,8 @@ export class Employee {
 			lastName: dto.last_name,
 			address: dto.address,
 			phone: dto.phone,
-			startDate: dto.start_date ? new SvelteDate(dto.start_date) : undefined,
-			createdAt: new Date(dto.created_at),
+			startDate: dto.start_date ? parseDate(dto.start_date, true) : undefined,
+			createdAt: parseDate(dto.created_at),
 			assignments: dto.assignments?.map(EmployeeAssignment.fromDTO),
 		})
 	}
@@ -60,7 +61,7 @@ export class Employee {
 			last_name: this.lastName,
 			address: this.address,
 			phone: this.phone,
-			start_date: this.startDate ? format(this.startDate, 'yyyy-MM-dd') : undefined,
+			start_date: this.startDate ? formatDate(this.startDate) : undefined,
 		}
 	}
 

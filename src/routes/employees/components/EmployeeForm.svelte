@@ -10,11 +10,6 @@
 	}
 
 	let { employee = $bindable(), onsubmit = $bindable(), children }: Props = $props()
-
-	function handleDateChange(event: Event) {
-		const startDateInput = event.target as HTMLInputElement
-		employee.startDate = startDateInput.value ? new Date(startDateInput.value) : undefined
-	}
 </script>
 
 <form {onsubmit}>

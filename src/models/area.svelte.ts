@@ -1,4 +1,5 @@
 import { Assignment, type AssignmentDTO } from '$models/assignment.svelte'
+import { parseDate } from '$utils'
 
 type UpdateAreaDTO = Omit<AreaDTO, 'created_at' | 'assignments'>
 type CreateAreaDTO = Omit<UpdateAreaDTO, 'id'>
@@ -32,7 +33,7 @@ export class Area {
 			name: dto.name,
 			description: dto.description,
 			assignments: dto.assignments?.map(Assignment.fromDTO),
-			createdAt: new Date(dto.created_at),
+			createdAt: parseDate(dto.created_at),
 		})
 	}
 

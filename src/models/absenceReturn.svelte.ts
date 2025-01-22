@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import { formatDate, parseDate } from '$utils'
 import { SvelteDate } from 'svelte/reactivity'
 
 type UpdateAbsenceReturnDTO = Omit<AbsenceReturnDTO, 'created_at'>
@@ -19,12 +19,12 @@ export class AbsenceReturn {
 	returnedHours: number = $state(1)
 	returnDate: Date = new SvelteDate()
 	notes?: string = $state('')
-	createdAt?: Date
+	createdAt?: Date = new Date()
 
 	constructor(params: Partial<Omit<AbsenceReturn, 'toCreateDTO' | 'toUpdateDTO'>> & { absenceId: number }) {
 		this.id = params.id || 0
 		this.absenceId = params.absenceId
-		this.createdAt = params.createdAt || new Date()
+		this.createdAt = params.createdAt
 		if (params.returnedHours) this.returnedHours = params.returnedHours
 		if (params.notes !== undefined) this.notes = params.notes
 		if (params.returnDate !== undefined) this.returnDate = params.returnDate
@@ -36,8 +36,8 @@ export class AbsenceReturn {
 			absenceId: dto.absence_id,
 			returnedHours: dto.returned_hours,
 			notes: dto.notes,
-			createdAt: dto.created_at ? new Date(dto.created_at) : undefined,
-			returnDate: new SvelteDate(dto.return_date),
+			createdAt: dto.created_at ? parseDate(dto.created_at) : undefined,
+			returnDate: parseDate(dto.return_date, true),
 		})
 	}
 
@@ -46,7 +46,7 @@ export class AbsenceReturn {
 			absence_id: this.absenceId,
 			returned_hours: this.returnedHours,
 			notes: this.notes,
-			return_date: format(this.returnDate, 'yyyy-MM-dd'),
+			return_date: formatDate(this.returnDate),
 		}
 	}
 

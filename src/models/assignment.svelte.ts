@@ -1,4 +1,4 @@
-import { toTitleCase } from '$utils'
+import { parseDate, toTitleCase } from '$utils'
 
 type UpdateAssignmentDTO = Omit<AssignmentDTO, 'created_at'>
 type CreateAssignmentDTO = Omit<UpdateAssignmentDTO, 'id'>
@@ -42,7 +42,7 @@ export class Assignment {
 			areaId: dto.area_id,
 			difficulty: dto.difficulty,
 			frequency: dto.frequency,
-			createdAt: new Date(dto.created_at),
+			createdAt: parseDate(dto.created_at),
 			taskName: dto.task_name,
 			areaName: dto.area_name,
 		})

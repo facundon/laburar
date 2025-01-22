@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { format } from 'date-fns'
+	import { formatDate, parseDate } from '$utils'
 	import type { HTMLInputAttributes } from 'svelte/elements'
 
 	interface Props extends HTMLInputAttributes {
@@ -10,8 +10,8 @@
 
 	function handleChange(event: Event) {
 		const input = event.target as HTMLInputElement
-		value = input.value ? new Date(input.value) : undefined
+		value = input.value ? parseDate(input.value, true) : undefined
 	}
 </script>
 
-<input {...rest} type="date" value={value ? format(value, 'yyyy-MM-dd') : ''} onchange={handleChange} />
+<input {...rest} type="date" value={value ? formatDate(value) : ''} onchange={handleChange} />

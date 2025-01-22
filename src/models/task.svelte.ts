@@ -1,3 +1,5 @@
+import { parseDate } from '$utils'
+
 type UpdateTaskDTO = Omit<TaskDTO, 'created_at'>
 type CreateTaskDTO = Omit<UpdateTaskDTO, 'id'>
 
@@ -26,7 +28,7 @@ export class Task {
 			id: dto.id,
 			name: dto.name,
 			description: dto.description,
-			createdAt: new Date(dto.created_at),
+			createdAt: parseDate(dto.created_at),
 		})
 	}
 
