@@ -26,4 +26,10 @@ export const ROUTES = {
 		view: (id: number) => `/absences/${id}`,
 		return: (id: number) => `/absences/${id}/return`,
 	},
+	holiday: {
+		list: '/holidays',
+		create: '/holidays/create',
+		edit: (id: number) => `/holidays/${id}/edit`,
+		view: (id: number) => `/holidays/${id}`,
+	},
 } as const

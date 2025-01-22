@@ -8,6 +8,7 @@
 		areas: 'Areas',
 		tasks: 'Tareas',
 		return: 'Devolución',
+		holidays: 'Vacaciones',
 		'assign-task': 'Asignar Tarea',
 		create: 'Crear',
 		edit: 'Editar',
