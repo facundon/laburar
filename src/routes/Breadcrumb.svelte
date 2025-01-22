@@ -9,6 +9,7 @@
 		tasks: 'Tareas',
 		return: 'Devolución',
 		holidays: 'Vacaciones',
+		'company-holidays': 'Feriados',
 		'assign-task': 'Asignar Tarea',
 		create: 'Crear',
 		edit: 'Editar',

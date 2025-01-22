@@ -106,7 +106,6 @@
 		<Modal
 			bind:show={showDeleteEmployeeModal}
 			isDestructive
-			title="Confirmar acción"
 			message={`¿Estás seguro de que deseas eliminar a "${employee.name}"?`}
 			onconfirm={deleteEmployee}
 			onclose={handleCloseDeleteEmployee}
@@ -169,7 +168,6 @@
 		<Modal
 			show={showDeleteAssignmentModal}
 			isDestructive
-			title="Confirmar acción"
 			message={`¿Estás seguro de que deseas eliminar Estás seguro de que deseas eliminar Estás seguro de que deseas eliminar la tarea asignada "${assignmentToDelete?.name}" de ${employee.name}?`}
 			onconfirm={deleteAssignment}
 			onclose={closeDeleteAssignmentModal}

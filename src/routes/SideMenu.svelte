@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ROUTES } from '$routes'
-	import { Home, Users, BriefcaseBusiness, Component, ClipboardX, TentTree } from 'lucide-svelte'
+	import { Home, Users, BriefcaseBusiness, Component, ClipboardX, TentTree, Bird } from 'lucide-svelte'
 	import { page } from '$app/state'
 	import { onMount } from 'svelte'
 
@@ -20,9 +20,7 @@
 
 	function isActive(route: string) {
 		const activeRoute = page.url.pathname
-		if (route === '/') {
-			return activeRoute === route
-		}
+		if (route === '/') return activeRoute === route
 		return activeRoute.startsWith(route)
 	}
 </script>
@@ -59,6 +57,12 @@
 				<a href={ROUTES.holiday.list} aria-label="Vacaciones" class:active={isActive(ROUTES.holiday.list)}>
 					<TentTree />
 					<span class="menu-text">Vacaciones</span>
+				</a>
+			</li>
+			<li>
+				<a href={ROUTES.companyHoliday.list} aria-label="Feriados" class:active={isActive(ROUTES.companyHoliday.list)}>
+					<Bird />
+					<span class="menu-text">Feriados</span>
 				</a>
 			</li>
 		</ul>

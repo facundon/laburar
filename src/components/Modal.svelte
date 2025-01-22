@@ -4,7 +4,7 @@
 
 	interface Props {
 		show: boolean
-		title: string
+		title?: string
 		message?: string
 		onclose: () => void
 		onconfirm: () => void
@@ -12,7 +12,15 @@
 		children?: () => any
 	}
 
-	let { show = $bindable(false), title = '', message = '', onclose, onconfirm, isDestructive = false, children }: Props = $props()
+	let {
+		show = $bindable(false),
+		title = 'Confirmar Acción',
+		message = '',
+		onclose,
+		onconfirm,
+		isDestructive = false,
+		children,
+	}: Props = $props()
 
 	function close() {
 		onclose()

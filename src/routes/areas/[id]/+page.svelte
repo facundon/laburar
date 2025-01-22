@@ -73,7 +73,6 @@
 		</div>
 		<Modal
 			bind:show={showDeleteAreaModal}
-			title="Confirmar acción"
 			isDestructive
 			message={`¿Estás seguro de que deseas eliminar la area "${area.name}"?`}
 			onconfirm={deleteArea}
@@ -113,7 +112,6 @@
 		<Modal
 			show={showDeleteAssignmentModal}
 			isDestructive
-			title="Confirmar acción"
 			message={`¿Estás seguro de que deseas eliminar la tarea "${assignmentToDelete?.name}" del area ${area.name}?`}
 			onconfirm={deleteAssignment}
 			onclose={closeDeleteAssignmentModal}

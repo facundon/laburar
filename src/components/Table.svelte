@@ -25,9 +25,10 @@
 	interface Props<T extends object, P extends Record<string, any>> {
 		columns: ColumnDef<T, P>[]
 		rows: T[]
+		highlightIndex?: number
 	}
 
-	let { columns, rows }: Props<T, P> = $props()
+	let { columns, rows, highlightIndex = -1 }: Props<T, P> = $props()
 </script>
 
 <table>
@@ -44,8 +45,8 @@
 				<td colspan={columns.length} class="missing-row">No hay datos</td>
 			</tr>
 		{/if}
-		{#each rows as row}
-			<tr>
+		{#each rows as row, index}
+			<tr class:highlighted={index < highlightIndex}>
 				{#each columns as column}
 					{@const value = row[column.field]}
 					{@const formatedValue = column.formatValue ? column.formatValue(value) : value}
@@ -121,5 +122,9 @@
 
 	td {
 		color: #333;
+	}
+
+	.highlighted {
+		background-color: #e0e0e0;
 	}
 </style>

@@ -34,7 +34,7 @@
 			{
 				field: 'view',
 				headerName: '',
-				renderCell: onclick => ({ component: Eye, props: { onclick, color: 'var(--secondary-dark)' } }),
+				renderCell: onclick => ({ component: Eye, props: { onclick, color: 'var(--secondary-dark)', style: 'cursor: pointer;' } }),
 				width: 20,
 			},
 		]}

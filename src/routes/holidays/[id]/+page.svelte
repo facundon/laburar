@@ -55,7 +55,6 @@
 		onclose={closeDeleteModal}
 		onconfirm={deleteHoliday}
 		show={showDeleteModal}
-		title="Confirmar acción"
 		message="Esta seguro que desea eliminar las vacaciones del {formatDate(holiday.startDate)} al {formatDate(
 			holiday.endDate,
 		)} de {holiday.employeeName}?"

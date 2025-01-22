@@ -76,7 +76,6 @@
 	<Modal
 		show={showDeleteAbsence}
 		isDestructive
-		title="Confirmar acción"
 		message={`¿Estás seguro de que deseas eliminar la falta del día ${absence?.absenceDate.toLocaleDateString()} de ${absence.employeeName}?`}
 		onconfirm={deleteAbsence}
 		onclose={closeDeleteAbsence}
@@ -98,7 +97,6 @@
 	<Modal
 		show={showDeleteReturn}
 		isDestructive
-		title="Confirmar acción"
 		message={`¿Estás seguro de que deseas eliminar la devolucion del día ${returnToDelete?.returnDate.toLocaleDateString()}?`}
 		onconfirm={deleteReturn}
 		onclose={closeDeleteReturnModal}

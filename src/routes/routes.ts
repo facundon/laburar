@@ -32,4 +32,8 @@ export const ROUTES = {
 		edit: (id: number) => `/holidays/${id}/edit`,
 		view: (id: number) => `/holidays/${id}`,
 	},
+	companyHoliday: {
+		list: '/company-holidays',
+		create: '/company-holidays/create',
+	},
 } as const

@@ -43,7 +43,6 @@
 		</div>
 		<Modal
 			bind:show={showModal}
-			title="Confirmar acción"
 			isDestructive
 			message={`¿Estás seguro de que deseas eliminar la tarea "${task.name}"?`}
 			onconfirm={handleConfirm}
