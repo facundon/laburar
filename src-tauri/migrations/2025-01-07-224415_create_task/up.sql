@@ -55,3 +55,20 @@ INSERT INTO area (name) VALUES
 ('Abastecimiento'),
 ('Comunicación'),
 ('Extracción');
+
+INSERT INTO task (name) VALUES
+('Ingreso de pacientes'),
+('Autorización de ordenes '),
+('Extracción de sangre'),
+('Control de coagulación '),
+('Etiquetado de muestras'),
+('Centrifugación de muestras'),
+('Separación de sueros en areas'),
+('Separacion de sueros en envíos'),
+('Técnica de latex para AR'),
+('Técnica de latex para VDRL'),
+('Técnica de latex para ASO'),
+('Dilución y lectura de ionogramas'),
+('Manejo equipo INCA'),
+('Técnica HAI toxoplasmosis'),
+('Técnica HAI chagas'),
