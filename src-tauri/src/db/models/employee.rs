@@ -174,6 +174,7 @@ pub struct EmployeeForAssignment {
     pub first_name: String,
     pub last_name: String,
     pub efficiency: i32,
+    pub task_difficulty: i32,
     pub is_primary: bool,
     pub start_date: Option<NaiveDate>,
     pub end_date: Option<NaiveDate>,
@@ -187,7 +188,11 @@ pub fn list_competent_employees_for_assignment(
     let today = Utc::now().naive_utc().date();
 
     let mut results: Vec<EmployeeForAssignment> = employee::table
-        .left_join(employee_assignment::table.on(employee::id.eq(employee_assignment::employee_id)))
+        .left_join(
+            employee_assignment::table
+                .on(employee::id.eq(employee_assignment::employee_id))
+                .inner_join(assignment::table),
+        )
         .left_join(holiday::table.on(employee::id.eq(holiday::employee_id)))
         .filter(employee_assignment::assignment_id.eq(assignment_id))
         .filter(
@@ -202,6 +207,7 @@ pub fn list_competent_employees_for_assignment(
             employee::id,
             employee::first_name,
             employee::last_name,
+            assignment::difficulty.nullable(),
             employee_assignment::efficiency.nullable(),
             employee_assignment::is_primary.nullable(),
             holiday::start_date.nullable(),
@@ -212,6 +218,7 @@ pub fn list_competent_employees_for_assignment(
             String,
             String,
             Option<i32>,
+            Option<i32>,
             Option<bool>,
             Option<NaiveDate>,
             Option<NaiveDate>,
@@ -220,13 +227,23 @@ pub fn list_competent_employees_for_assignment(
             results
                 .into_iter()
                 .map(
-                    |(id, first_name, last_name, efficiency, is_primary, start_date, end_date)| {
+                    |(
+                        id,
+                        first_name,
+                        last_name,
+                        task_difficulty,
+                        efficiency,
+                        is_primary,
+                        start_date,
+                        end_date,
+                    )| {
                         EmployeeForAssignment {
                             id,
                             first_name,
                             last_name,
                             start_date,
                             end_date,
+                            task_difficulty: task_difficulty.unwrap_or(0),
                             efficiency: efficiency.unwrap_or(0),
                             is_primary: is_primary.unwrap_or(false),
                             assignments_difficulties: vec![],

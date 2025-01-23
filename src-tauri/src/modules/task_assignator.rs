@@ -1,53 +1,64 @@
-// Función asignar_tareas(empleados):
-
-//         Para cada candidato (empleado disponible):
-//             - Calcular la carga de tareas actuales del candidato:
-//                 Sumar la dificultad de todas las tareas asignadas al candidato.
-
-//             - Calcular el puntaje base del candidato para la tarea:
-//                 Puntaje = (Eficiencia del candidato - Dificultad de la tarea) / (1 + Carga de tareas)
-
-//             - Ajustar puntaje por vacaciones:
-//                 Calcular el tiempo disponible del empleado antes de sus vacaciones.
-//                 Calcular la duración de la tarea (diferencia entre fecha inicio y fecha fin).
-
-//                 Si el tiempo disponible es suficiente para completar la tarea:
-//                     - No aplicar penalización por vacaciones.
-//                 Si el tiempo disponible no es suficiente:
-//                     - Aplicar una penalización proporcional al tiempo que falta:
-//                       Penalización = (Duración de la tarea - Tiempo disponible) / Duración de la tarea
-//                       Restar esta penalización al puntaje.
-
-//                 Si el empleado tiene menos de 5 días para irse de vacaciones:
-//                     - Añadir un pequeño ajuste adicional (por ejemplo, Penalización = 0.3) para reflejar la dificultad logística de asignarle la tarea.
-//                     - Restar este ajuste del puntaje.
-
-//         Ordenar los candidatos por puntaje (de mayor a menor).
-
+use ::serde::{Deserialize, Serialize};
+use chrono::{NaiveDate, Utc};
 use diesel::SqliteConnection;
 
-use crate::db::models::employee::list_competent_employees_for_assignment;
+use crate::{
+    db::models::employee::{list_competent_employees_for_assignment, EmployeeForAssignment},
+    error::Error,
+};
 
-struct EmployeeSimple {
-    id: i32,
-    first_name: String,
-    last_name: String,
+#[derive(Debug, Serialize, Deserialize)]
+pub enum SuggestionResult {
+    Employees(Vec<EmployeeWithScore>),
+    Message(String),
 }
 
-pub enum SuggestionResult<'a> {
-    Employees(Vec<EmployeeSimple>),
-    Message(&'a str),
+#[derive(Serialize, Deserialize, Debug)]
+struct EmployeeWithScore {
+    #[serde(flatten)]
+    pub employee: EmployeeForAssignment,
+    pub score: f32,
 }
 
 pub fn sugest_employees_for_assignation(
     conn: &mut SqliteConnection,
     assignment_id: i32,
-) -> SuggestionResult {
+    assignation_start_date: NaiveDate,
+    assignation_end_date: NaiveDate,
+) -> Result<SuggestionResult, Error> {
     let employees = list_competent_employees_for_assignment(conn, assignment_id).unwrap();
     if employees.len() == 0 {
-        return SuggestionResult::Message("No employees available for this task.");
+        return Err(Error::Assignator(SuggestionResult::Message(
+            "No employees available for this task.".to_string(),
+        )));
     }
     println!("{:#?}", employees);
-    return SuggestionResult::Message("Done");
-    // for employee in employees {}
+
+    let mut employees_with_scores: Vec<EmployeeWithScore> = Vec::new();
+    for employee in employees {
+        let total_task_difficulty = employee.assignments_difficulties.iter().sum::<i32>();
+        let mut score =
+            (employee.efficiency - employee.task_difficulty / (1 + total_task_difficulty)) as f32;
+
+        let assignation_duration =
+            (assignation_end_date - assignation_start_date).num_days() as i32;
+        if assignation_duration < 0 {
+            return Err(Error::Assignator(SuggestionResult::Message(
+                "The assignation duration is invalid.".to_string(),
+            )));
+        }
+
+        let holiday_start_date = employee.start_date;
+        if let Some(holiday_start_date) = holiday_start_date {
+            let days_until_vacation =
+                (holiday_start_date - Utc::now().naive_utc().date()).num_days() as i32;
+            if days_until_vacation < assignation_duration {
+                score -=
+                    ((assignation_duration - days_until_vacation) / assignation_duration) as f32;
+            }
+        }
+        employees_with_scores.push(EmployeeWithScore { employee, score });
+    }
+    employees_with_scores.sort_by(|a, b| a.score.partial_cmp(&b.score).unwrap());
+    Ok(SuggestionResult::Employees(employees_with_scores))
 }
