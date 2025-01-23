@@ -50,6 +50,10 @@
 		area?.assignments.map(assignment => ({
 			...assignment,
 			name: assignment.name,
+			areaName: assignment.areaName,
+			difficulty: assignment.difficulty,
+			frequency: assignment.frequency,
+			taskName: assignment.taskName,
 			delete: { name: assignment.taskName as string, id: assignment.id },
 		})) || [],
 	)
@@ -89,7 +93,7 @@
 						{
 							field: 'difficulty',
 							headerName: 'Dificultad',
-							formatValue: value => AssignmentDifficulties.find(d => d.value === value)?.label || value.toString(),
+							formatValue: value => AssignmentDifficulties.find(d => d.value === value)?.label || String(value),
 						},
 						{ field: 'frequency', headerName: 'Frecuencia' },
 						{
