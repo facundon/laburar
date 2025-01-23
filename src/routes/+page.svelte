@@ -1,5 +1,7 @@
 <script lang="ts">
+	import Button from '$components/Button.svelte'
 	import CongratsText from '$components/CongratsText.svelte'
+	import { invoke } from '$invoke'
 	import Confetti from 'svelte-confetti'
 </script>
 
@@ -8,6 +10,8 @@
 	<div class="full-screen-confetti">
 		<Confetti x={[-3, 5]} y={[0, 0.3]} delay={[100, 1000]} infinite duration={3000} amount={500} fallDistance="100vh" />
 	</div>
+
+	<Button onclick={async () => await invoke('sugest_employees_for_assignation_command', { assignment_id: 2 })}>Computar</Button>
 </main>
 
 <style>

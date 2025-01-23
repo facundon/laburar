@@ -3,11 +3,12 @@
 	import { ROUTES } from '$routes'
 	import Button from '$components/Button.svelte'
 	import Modal from '$components/Modal.svelte'
-	import { Delete, Pencil, ClipboardPlus } from 'lucide-svelte'
+	import { Delete, Pencil, ClipboardPlus, Edit } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import Table from '$components/Table.svelte'
-	import { AssignmentDifficulties } from '$models/assignment.svelte.js'
+	import { Assignment, AssignmentDifficulties } from '$models/assignment.svelte.js'
 	import { invalidateAll } from '$app/navigation'
+	import EditAssignmentForm from '$pages/areas/[id]/EditAssignmentForm.svelte'
 
 	const { data } = $props()
 	let area = $state(data.area)
@@ -17,8 +18,7 @@
 	})
 
 	let showDeleteAreaModal = $state(false)
-	let assignmentToDelete = $state<{ name: string; id: number } | null>(null)
-	let showDeleteAssignmentModal = $derived(assignmentToDelete !== null)
+	let assignmentToDelete = $state<Assignment | null>(null)
 
 	const openDeleteAreaModal = () => (showDeleteAreaModal = true)
 	const closeDeleteAreaModal = () => (showDeleteAreaModal = false)
@@ -33,7 +33,6 @@
 		}
 	}
 
-	const openDeleteAssignmentModal = (assignment: { name: string; id: number }) => (assignmentToDelete = assignment)
 	const closeDeleteAssignmentModal = () => (assignmentToDelete = null)
 	async function deleteAssignment() {
 		try {
@@ -46,15 +45,14 @@
 		}
 	}
 
+	let assignmentToEdit = $state<Assignment | null>(null)
+	const closeEditAssignmentModal = () => (assignmentToEdit = null)
+
 	const areaAssignmentsWithActions = $derived(
 		area?.assignments.map(assignment => ({
-			...assignment,
-			name: assignment.name,
-			areaName: assignment.areaName,
-			difficulty: assignment.difficulty,
-			frequency: assignment.frequency,
-			taskName: assignment.taskName,
-			delete: { name: assignment.taskName as string, id: assignment.id },
+			...assignment.object,
+			delete: () => (assignmentToDelete = assignment),
+			edit: () => (assignmentToEdit = assignment),
 		})) || [],
 	)
 </script>
@@ -97,13 +95,26 @@
 						},
 						{ field: 'frequency', headerName: 'Frecuencia' },
 						{
+							field: 'edit',
+							headerName: '',
+							width: 20,
+							renderCell: onclick => ({
+								component: Edit,
+								props: {
+									onclick,
+									color: 'var(--secondary-dark)',
+									style: 'cursor: pointer;',
+								},
+							}),
+						},
+						{
 							field: 'delete',
 							headerName: '',
 							width: 20,
-							renderCell: value => ({
+							renderCell: onclick => ({
 								component: Delete,
 								props: {
-									onclick: () => openDeleteAssignmentModal(value),
+									onclick,
 									color: 'var(--error-main)',
 									style: 'cursor: pointer;',
 								},
@@ -114,12 +125,15 @@
 			{/if}
 		</MainContainer>
 		<Modal
-			show={showDeleteAssignmentModal}
+			show={!!assignmentToDelete}
 			isDestructive
 			message={`¿Estás seguro de que deseas eliminar la tarea "${assignmentToDelete?.name}" del area ${area.name}?`}
 			onconfirm={deleteAssignment}
 			onclose={closeDeleteAssignmentModal}
 		/>
+		{#if assignmentToEdit}
+			<EditAssignmentForm assignment={assignmentToEdit} onclose={closeEditAssignmentModal} />
+		{/if}
 	{/if}
 {/if}
 

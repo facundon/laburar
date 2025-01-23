@@ -14,6 +14,8 @@ export type AssignmentDTO = {
 	area_name?: string
 }
 
+type AssignmentObject = Partial<Omit<Assignment, 'toCreateDTO' | 'toUpdateDTO' | 'name' | 'object'>>
+
 export class Assignment {
 	id: number = 0
 	taskId: number = 0
@@ -24,7 +26,7 @@ export class Assignment {
 	taskName?: string = ''
 	areaName?: string = ''
 
-	constructor(params?: Partial<Omit<Assignment, 'toCreateDTO' | 'toUpdateDTO' | 'name'>>) {
+	constructor(params?: AssignmentObject) {
 		if (params?.id !== undefined) this.id = params.id
 		if (params?.taskId !== undefined) this.taskId = params.taskId
 		if (params?.areaId !== undefined) this.areaId = params.areaId
@@ -50,6 +52,19 @@ export class Assignment {
 
 	get name() {
 		return `${this.areaName} - ${this.taskName}`
+	}
+
+	get object(): AssignmentObject {
+		return {
+			id: this.id,
+			taskId: this.taskId,
+			areaId: this.areaId,
+			difficulty: this.difficulty,
+			frequency: this.frequency,
+			areaName: this.areaName,
+			taskName: this.taskName,
+			createdAt: this.createdAt,
+		}
 	}
 
 	public toCreateDTO(): CreateAssignmentDTO {

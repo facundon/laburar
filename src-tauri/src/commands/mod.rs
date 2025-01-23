@@ -10,3 +10,4 @@ pub mod employee;
 pub mod employee_assignment;
 pub mod holiday;
 pub mod task;
+pub mod task_assignator;

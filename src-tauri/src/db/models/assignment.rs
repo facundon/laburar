@@ -1,5 +1,5 @@
 use crate::db::models::{area::Area, task::Task};
-use crate::db::schema::{area, assignment, task};
+use crate::db::schema::{area, assignment, employee_assignment, task};
 use crate::error::Error;
 use chrono::NaiveDateTime;
 use diesel::{prelude::*, RunQueryDsl, SqliteConnection};
@@ -113,4 +113,15 @@ pub fn delete_assignment(conn: &mut SqliteConnection, id: i32) -> Result<(), Err
         .execute(conn)
         .map_err(|err| Error::Database(err.to_string()))?;
     Ok(())
+}
+
+pub fn list_assignments_without_employees(
+    conn: &mut SqliteConnection,
+) -> Result<Vec<Assignment>, Error> {
+    assignment::table
+        .left_join(employee_assignment::table)
+        .select(assignment::all_columns)
+        .filter(employee_assignment::employee_id.is_null())
+        .load(conn)
+        .map_err(|err| Error::Database(err.to_string()))
 }

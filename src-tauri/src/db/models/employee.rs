@@ -1,7 +1,8 @@
 use crate::db::models::employee_assignment::{EmployeeAssignment, EmployeeAssignmentWithNames};
-use crate::db::schema::{area, assignment, employee, employee_assignment, task};
+use crate::db::schema::{area, assignment, employee, employee_assignment, holiday, task};
 use crate::error::Error;
-use chrono::{NaiveDate, NaiveDateTime};
+use chrono::{NaiveDate, NaiveDateTime, Utc};
+use diesel::dsl::not;
 use diesel::{prelude::*, RunQueryDsl, SqliteConnection};
 use serde::{Deserialize, Serialize};
 
@@ -165,4 +166,87 @@ pub fn delete_employee(conn: &mut SqliteConnection, id: i32) -> Result<(), Error
         .execute(conn)
         .map_err(|err| Error::Database(err.to_string()))?;
     Ok(())
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct EmployeeForAssignment {
+    pub id: i32,
+    pub first_name: String,
+    pub last_name: String,
+    pub efficiency: i32,
+    pub is_primary: bool,
+    pub start_date: Option<NaiveDate>,
+    pub end_date: Option<NaiveDate>,
+    pub assignments_difficulties: Vec<i32>,
+}
+
+pub fn list_competent_employees_for_assignment(
+    conn: &mut SqliteConnection,
+    assignment_id: i32,
+) -> Result<Vec<EmployeeForAssignment>, Error> {
+    let today = Utc::now().naive_utc().date();
+
+    let mut results: Vec<EmployeeForAssignment> = employee::table
+        .left_join(employee_assignment::table.on(employee::id.eq(employee_assignment::employee_id)))
+        .left_join(holiday::table.on(employee::id.eq(holiday::employee_id)))
+        .filter(employee_assignment::assignment_id.eq(assignment_id))
+        .filter(
+            not(holiday::start_date
+                .le(today)
+                .and(holiday::end_date.ge(today)))
+            .or(holiday::start_date
+                .is_null()
+                .and(holiday::end_date.is_null())),
+        )
+        .select((
+            employee::id,
+            employee::first_name,
+            employee::last_name,
+            employee_assignment::efficiency.nullable(),
+            employee_assignment::is_primary.nullable(),
+            holiday::start_date.nullable(),
+            holiday::end_date.nullable(),
+        ))
+        .load::<(
+            i32,
+            String,
+            String,
+            Option<i32>,
+            Option<bool>,
+            Option<NaiveDate>,
+            Option<NaiveDate>,
+        )>(conn)
+        .map(|results| {
+            results
+                .into_iter()
+                .map(
+                    |(id, first_name, last_name, efficiency, is_primary, start_date, end_date)| {
+                        EmployeeForAssignment {
+                            id,
+                            first_name,
+                            last_name,
+                            start_date,
+                            end_date,
+                            efficiency: efficiency.unwrap_or(0),
+                            is_primary: is_primary.unwrap_or(false),
+                            assignments_difficulties: vec![],
+                        }
+                    },
+                )
+                .collect()
+        })
+        .map_err(|err| Error::Database(err.to_string()))?;
+
+    for employee in &mut results {
+        let assignments_difficulties = assignment::table
+            .inner_join(employee_assignment::table)
+            .filter(employee_assignment::employee_id.eq(employee.id))
+            .select(assignment::difficulty)
+            .load(conn)
+            .map_err(|err| Error::Database(err.to_string()));
+        if let Ok(assignments_difficulties) = assignments_difficulties {
+            employee.assignments_difficulties = assignments_difficulties;
+        }
+    }
+    Ok(results)
 }
