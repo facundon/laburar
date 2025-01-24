@@ -1,8 +1,10 @@
 <script lang="ts">
-	import Button from '$components/Button.svelte'
 	import CongratsText from '$components/CongratsText.svelte'
-	import { invoke } from '$invoke'
+	import SuggestAssignmentList from '$pages/SuggestAssignmentList.svelte'
 	import Confetti from 'svelte-confetti'
+
+	let { data } = $props()
+	let assignments = $derived(data.assignments)
 </script>
 
 <main>
@@ -11,14 +13,7 @@
 		<Confetti x={[-3, 5]} y={[0, 0.3]} delay={[100, 1000]} infinite duration={3000} amount={500} fallDistance="100vh" />
 	</div>
 
-	<Button
-		onclick={async () =>
-			invoke('sugest_employees_for_assignation_command', {
-				assignment_id: 2,
-				assignation_start_date: '2025-01-01',
-				assignation_end_date: '2025-02-02',
-			}).then(console.log)}>Computar</Button
-	>
+	<SuggestAssignmentList {assignments} />
 </main>
 
 <style>
@@ -30,6 +25,7 @@
 
 	main {
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		height: 80vh;

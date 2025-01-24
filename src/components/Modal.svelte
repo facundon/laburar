@@ -6,9 +6,10 @@
 		show: boolean
 		title?: string
 		message?: string
+		isDestructive?: boolean
 		onclose: () => void
 		onconfirm: () => void
-		isDestructive?: boolean
+		onmount?: () => void
 		children?: () => any
 	}
 
@@ -20,6 +21,7 @@
 		onconfirm,
 		isDestructive = false,
 		children,
+		onmount,
 	}: Props = $props()
 
 	function close() {
@@ -29,6 +31,10 @@
 	function confirm() {
 		onconfirm()
 	}
+
+	$effect(() => {
+		if (show) onmount?.()
+	})
 </script>
 
 {#if show}

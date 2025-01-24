@@ -117,11 +117,23 @@ pub fn delete_assignment(conn: &mut SqliteConnection, id: i32) -> Result<(), Err
 
 pub fn list_assignments_without_employees(
     conn: &mut SqliteConnection,
-) -> Result<Vec<Assignment>, Error> {
+) -> Result<Vec<AssignmentWithNames>, Error> {
     assignment::table
         .left_join(employee_assignment::table)
-        .select(assignment::all_columns)
+        .inner_join(task::table)
+        .inner_join(area::table)
+        .select((assignment::all_columns, task::name, area::name))
         .filter(employee_assignment::employee_id.is_null())
-        .load(conn)
+        .load::<(Assignment, String, String)>(conn)
+        .map(|assignments| {
+            assignments
+                .into_iter()
+                .map(|(assignment, task_name, area_name)| AssignmentWithNames {
+                    assignment,
+                    task_name,
+                    area_name,
+                })
+                .collect()
+        })
         .map_err(|err| Error::Database(err.to_string()))
 }

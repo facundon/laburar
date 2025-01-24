@@ -10,12 +10,6 @@ use crate::{
 // #[cfg(test)]
 // mod tests;
 
-#[derive(Debug, Serialize, Deserialize)]
-pub enum SuggestionResult {
-    Employees(Vec<EmployeeWithScore>),
-    Message(String),
-}
-
 #[derive(Serialize, Deserialize, Debug)]
 pub struct EmployeeWithScore {
     #[serde(flatten)]
@@ -28,12 +22,10 @@ pub fn suggest_employees_for_assignation(
     assignment_id: i32,
     assignation_start_date: NaiveDate,
     assignation_end_date: NaiveDate,
-) -> Result<SuggestionResult, Error> {
+) -> Result<Vec<EmployeeWithScore>, Error> {
     let employees = list_competent_employees_for_assignment(conn, assignment_id).unwrap();
     if employees.len() == 0 {
-        return Err(Error::Assignator(SuggestionResult::Message(
-            "No employees available for this task.".to_string(),
-        )));
+        return Ok(Vec::new());
     }
 
     let mut employees_with_scores: Vec<EmployeeWithScore> = Vec::new();
@@ -45,9 +37,7 @@ pub fn suggest_employees_for_assignation(
         let assignation_duration =
             (assignation_end_date - assignation_start_date).num_days() as i32;
         if assignation_duration < 0 {
-            return Err(Error::Assignator(SuggestionResult::Message(
-                "The assignation duration is invalid.".to_string(),
-            )));
+            return Ok(Vec::new());
         }
 
         let holiday_start_date = employee.start_date;
@@ -62,5 +52,5 @@ pub fn suggest_employees_for_assignation(
         employees_with_scores.push(EmployeeWithScore { employee, score });
     }
     employees_with_scores.sort_by(|a, b| a.score.partial_cmp(&b.score).unwrap());
-    Ok(SuggestionResult::Employees(employees_with_scores))
+    Ok(employees_with_scores)
 }
