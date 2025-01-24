@@ -4,7 +4,7 @@ mod error;
 mod modules;
 mod utils;
 
-use commands::task_assignator::sugest_employees_for_assignation_command;
+use commands::task_assignator::suggest_employees_for_assignation_command;
 
 use commands::absence::{
     create_absence_command, delete_absence_command, get_absence_command,
@@ -55,7 +55,7 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            sugest_employees_for_assignation_command,
+            suggest_employees_for_assignation_command,
             create_employee_command,
             delete_employee_command,
             get_employee_command,

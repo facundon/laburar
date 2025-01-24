@@ -11,7 +11,14 @@
 		<Confetti x={[-3, 5]} y={[0, 0.3]} delay={[100, 1000]} infinite duration={3000} amount={500} fallDistance="100vh" />
 	</div>
 
-	<Button onclick={async () => invoke('sugest_employees_for_assignation_command', { assignment_id: 2 }).then(console.log)}>Computar</Button>
+	<Button
+		onclick={async () =>
+			invoke('sugest_employees_for_assignation_command', {
+				assignment_id: 2,
+				assignation_start_date: '2025-01-01',
+				assignation_end_date: '2025-02-02',
+			}).then(console.log)}>Computar</Button
+	>
 </main>
 
 <style>

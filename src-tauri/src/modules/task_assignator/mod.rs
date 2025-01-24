@@ -7,6 +7,9 @@ use crate::{
     error::Error,
 };
 
+// #[cfg(test)]
+// mod tests;
+
 #[derive(Debug, Serialize, Deserialize)]
 pub enum SuggestionResult {
     Employees(Vec<EmployeeWithScore>),
@@ -14,13 +17,13 @@ pub enum SuggestionResult {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-struct EmployeeWithScore {
+pub struct EmployeeWithScore {
     #[serde(flatten)]
     pub employee: EmployeeForAssignment,
     pub score: f32,
 }
 
-pub fn sugest_employees_for_assignation(
+pub fn suggest_employees_for_assignation(
     conn: &mut SqliteConnection,
     assignment_id: i32,
     assignation_start_date: NaiveDate,
@@ -32,7 +35,6 @@ pub fn sugest_employees_for_assignation(
             "No employees available for this task.".to_string(),
         )));
     }
-    println!("{:#?}", employees);
 
     let mut employees_with_scores: Vec<EmployeeWithScore> = Vec::new();
     for employee in employees {
