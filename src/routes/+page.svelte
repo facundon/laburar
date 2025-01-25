@@ -1,19 +1,49 @@
 <script lang="ts">
 	import CongratsText from '$components/CongratsText.svelte'
+	import EmployeesOnHolidayList from '$pages/EmployeesOnHolidayList.svelte'
 	import SuggestAssignmentList from '$pages/SuggestAssignmentList.svelte'
 	import Confetti from 'svelte-confetti'
 
 	let { data } = $props()
-	let assignments = $derived(data.assignments)
+	let employeesOnHoliday = $derived(data.employeesOnHoliday)
+	let assignments = $derived(
+		employeesOnHoliday
+			.filter(e => e.currentlyOnHoliday)
+			.flatMap(e =>
+				e.assignments.flatMap(a => ({
+					...a,
+					areaName: a.areaName,
+					taskName: a.taskName,
+					efficiency: a.efficiency,
+					areaId: a.areaId,
+					employeeId: a.employeeId,
+					isPrimary: a.isPrimary,
+					taskId: a.taskId,
+					assignmentId: a.assignmentId,
+					id: a.id,
+					startDate: e.startDate,
+					endDate: e.endDate,
+					name: a.name,
+					toCreateDTO: a.toCreateDTO,
+					toUpdateDTO: a.toUpdateDTO,
+				})),
+			),
+	)
 </script>
 
 <main>
 	<h1><CongratsText>Bienvenida !!!</CongratsText></h1>
 	<div class="full-screen-confetti">
-		<Confetti x={[-3, 5]} y={[0, 0.3]} delay={[100, 1000]} infinite duration={3000} amount={500} fallDistance="100vh" />
+		<Confetti x={[-3, 5]} y={[0, 0.3]} delay={[100, 1000]} duration={3000} amount={500} fallDistance="50vh" />
 	</div>
-
-	<SuggestAssignmentList {assignments} />
+	<div class="grid-container">
+		<div class="grid-item">
+			<EmployeesOnHolidayList {employeesOnHoliday} />
+		</div>
+		<div class="grid-item">
+			<SuggestAssignmentList {assignments} />
+		</div>
+	</div>
 </main>
 
 <style>
@@ -41,5 +71,27 @@
 		justify-content: center;
 		overflow: hidden;
 		pointer-events: none;
+	}
+
+	.grid-container {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 1rem;
+		width: 100%;
+		padding: 2rem;
+		box-sizing: border-box;
+	}
+
+	.grid-item {
+		background-color: var(--gray-light);
+		padding: 2rem;
+		border-radius: 8px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	@media (max-width: 600px) {
+		.grid-container {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>

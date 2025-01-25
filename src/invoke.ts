@@ -1,6 +1,7 @@
 import { invoke as tauriInvoke, type InvokeArgs } from '@tauri-apps/api/core'
 
 type Command =
+	| 'list_employees_on_holidays_command'
 	| 'list_assignments_without_employees_command'
 	| 'suggest_employees_for_assignation_command'
 	| 'create_employee_command'

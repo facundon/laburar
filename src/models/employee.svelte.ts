@@ -93,8 +93,8 @@ export class SuggestedEmployee {
 	efficiency: number = 0
 	taskDifficulty: number = 0
 	isPrimary: boolean = false
-	startDate: Date = new Date()
-	endDate: Date = new Date()
+	startDate: Date | null = null
+	endDate: Date | null = null
 	assignmentsDifficulties: number[] = []
 	score: number = 0
 
@@ -123,10 +123,48 @@ export class SuggestedEmployee {
 			efficiency: dto.efficiency,
 			taskDifficulty: dto.task_difficulty,
 			isPrimary: dto.is_primary,
-			startDate: parseDate(dto.start_date),
-			endDate: parseDate(dto.end_date),
+			startDate: dto.start_date ? parseDate(dto.start_date) : null,
+			endDate: dto.end_date ? parseDate(dto.end_date) : null,
 			assignmentsDifficulties: dto.assignments_difficulties,
 			score: dto.score,
+		})
+	}
+}
+
+export interface EmployeeOnHolidayDTO extends EmployeeDTO {
+	start_date: string
+	end_date: string
+	days_off: number
+}
+
+export class EmployeeOnHoliday extends Employee {
+	startDate: Date = new Date()
+	endDate: Date = new Date()
+	daysOff: number = 0
+
+	constructor(params?: Partial<Omit<EmployeeOnHoliday, 'name' | 'toCreateDTO' | 'toUpdateDTO' | 'currentlyOnHoliday'>>) {
+		super(params)
+		if (params?.startDate !== undefined) this.startDate = params.startDate
+		if (params?.endDate !== undefined) this.endDate = params.endDate
+		if (params?.daysOff !== undefined) this.daysOff = params.daysOff
+	}
+
+	get currentlyOnHoliday() {
+		return this.endDate >= new Date() && this.startDate <= new Date()
+	}
+
+	static fromDTO(dto: EmployeeOnHolidayDTO): EmployeeOnHoliday {
+		return new EmployeeOnHoliday({
+			id: dto.id,
+			firstName: dto.first_name,
+			lastName: dto.last_name,
+			address: dto.address,
+			phone: dto.phone,
+			startDate: dto.start_date ? parseDate(dto.start_date, true) : undefined,
+			createdAt: parseDate(dto.created_at),
+			assignments: dto.assignments?.map(EmployeeAssignment.fromDTO),
+			endDate: dto.end_date ? parseDate(dto.end_date, true) : undefined,
+			daysOff: dto.days_off,
 		})
 	}
 }

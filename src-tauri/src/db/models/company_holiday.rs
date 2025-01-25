@@ -1,6 +1,6 @@
 use crate::db::schema::company_holiday;
 use crate::error::Error;
-use chrono::{NaiveDate, NaiveDateTime};
+use chrono::{Local, NaiveDate, NaiveDateTime};
 use diesel::{prelude::*, RunQueryDsl, SelectableHelper, SqliteConnection};
 use serde::{Deserialize, Serialize};
 
@@ -44,6 +44,7 @@ pub fn get_company_holiday(conn: &mut SqliteConnection, id: i32) -> Result<Compa
 
 pub fn list_company_holidays(conn: &mut SqliteConnection) -> Result<Vec<CompanyHoliday>, Error> {
     company_holiday::table
+        .filter(company_holiday::date.gt(Local::now().date_naive()))
         .load(conn)
         .map_err(|err| Error::Database(err.to_string()))
 }

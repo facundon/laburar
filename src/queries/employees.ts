@@ -1,5 +1,5 @@
 import { invoke } from '$invoke'
-import { Employee, type EmployeeDTO } from '$models/employee.svelte'
+import { Employee, EmployeeOnHoliday, type EmployeeDTO, type EmployeeOnHolidayDTO } from '$models/employee.svelte'
 
 export async function getEmployee(id: number) {
 	try {
@@ -24,5 +24,14 @@ export async function getEmployeeWithAssignments(id: number) {
 	} catch (error) {
 		console.error('Failed to fetch employee with assignments:', error)
 		return null
+	}
+}
+
+export async function listEmployeesOnHolidays() {
+	try {
+		return invoke('list_employees_on_holidays_command', undefined, (data: EmployeeOnHolidayDTO[]) => data.map(EmployeeOnHoliday.fromDTO))
+	} catch (error) {
+		console.error('Failed to fetch employees on holiday:', error)
+		return []
 	}
 }

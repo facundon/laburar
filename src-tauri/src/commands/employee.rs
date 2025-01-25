@@ -4,7 +4,9 @@ pub use crate::db::models::employee::{
 };
 use crate::{
     db::{
-        models::employee::{Employee, EmployeeWithAssignments},
+        models::employee::{
+            list_employees_on_holidays, Employee, EmployeeOnHoliday, EmployeeWithAssignments,
+        },
         sqlite::establish_connection,
     },
     error::Error,
@@ -80,4 +82,10 @@ pub fn update_employee_command(
 pub fn delete_employee_command(id: i32) -> Result<(), Error> {
     let mut conn = establish_connection();
     delete_employee(&mut conn, id)
+}
+
+#[command(rename_all = "snake_case")]
+pub fn list_employees_on_holidays_command() -> Result<Vec<EmployeeOnHoliday>, Error> {
+    let mut conn = establish_connection();
+    list_employees_on_holidays(&mut conn)
 }

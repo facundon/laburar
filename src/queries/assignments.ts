@@ -40,7 +40,7 @@ export async function suggestEmployeesForAssignment(assignmentId: number, startD
 				assignation_start_date: startDate,
 				assignation_end_date: endDate,
 			},
-			(data: SuggestedEmployeeDTO[]) => data.map(SuggestedEmployee.fromDTO),
+			(data: SuggestedEmployeeDTO[]) => data.slice(0, 3).map(SuggestedEmployee.fromDTO),
 		)
 	} catch (err) {
 		console.error('Failed to get suggestions for assignation', err)

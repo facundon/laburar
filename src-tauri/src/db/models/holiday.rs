@@ -1,6 +1,6 @@
 use crate::db::schema::{employee, holiday};
 use crate::error::Error;
-use chrono::{NaiveDate, NaiveDateTime};
+use chrono::{Local, NaiveDate, NaiveDateTime};
 use diesel::{prelude::*, RunQueryDsl, SelectableHelper, SqliteConnection};
 use serde::{Deserialize, Serialize};
 
@@ -82,6 +82,7 @@ pub fn list_holidays(conn: &mut SqliteConnection) -> Result<Vec<HolidayWithEmplo
             employee::first_name,
             employee::last_name,
         ))
+        .filter(holiday::end_date.gt(Local::now().date_naive()))
         .load::<(Holiday, String, String)>(conn)
         .map(|results| {
             results

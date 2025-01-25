@@ -1,7 +1,9 @@
+use std::collections::HashMap;
+
 use crate::db::models::employee_assignment::{EmployeeAssignment, EmployeeAssignmentWithNames};
 use crate::db::schema::{area, assignment, employee, employee_assignment, holiday, task};
 use crate::error::Error;
-use chrono::{NaiveDate, NaiveDateTime, Utc};
+use chrono::{Local, NaiveDate, NaiveDateTime, Utc};
 use diesel::dsl::not;
 use diesel::{prelude::*, RunQueryDsl, SqliteConnection};
 use serde::{Deserialize, Serialize};
@@ -266,4 +268,108 @@ pub fn list_competent_employees_for_assignment(
         }
     }
     Ok(results)
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct EmployeeOnHoliday {
+    #[serde(flatten)]
+    pub employee: EmployeeWithAssignments,
+    pub start_date: NaiveDate,
+    pub end_date: NaiveDate,
+    pub days_off: i32,
+}
+
+pub fn list_employees_on_holidays(
+    conn: &mut SqliteConnection,
+) -> Result<Vec<EmployeeOnHoliday>, Error> {
+    let today = Local::now().date_naive();
+    let employees_on_holidays = employee::table
+        .inner_join(holiday::table)
+        .left_join(
+            employee_assignment::table
+                .inner_join(
+                    assignment::table
+                        .on(assignment::id.eq(employee_assignment::assignment_id))
+                        .inner_join(task::table.on(task::id.eq(assignment::task_id)))
+                        .inner_join(area::table.on(area::id.eq(assignment::area_id))),
+                )
+                .on(employee::id.eq(employee_assignment::employee_id)),
+        )
+        .filter(
+            holiday::end_date
+                .ge(today)
+                .and(employee_assignment::is_primary.eq(true)),
+        )
+        .select((
+            employee::all_columns,
+            holiday::start_date,
+            holiday::end_date,
+            holiday::days_off,
+            employee_assignment::all_columns.nullable(),
+            area::id.nullable(),
+            area::name.nullable(),
+            task::id.nullable(),
+            task::name.nullable(),
+        ))
+        .load::<(
+            Employee,
+            NaiveDate,
+            NaiveDate,
+            i32,
+            Option<EmployeeAssignment>,
+            Option<i32>,
+            Option<String>,
+            Option<i32>,
+            Option<String>,
+        )>(conn)
+        .map(|result| {
+            let mut employees_map = HashMap::new();
+            for (
+                employee,
+                start_date,
+                end_date,
+                days_off,
+                employee_assignment,
+                area_id,
+                area_name,
+                task_id,
+                task_name,
+            ) in result
+            {
+                let entry = employees_map
+                    .entry(employee.id)
+                    .or_insert_with(|| EmployeeOnHoliday {
+                        employee: EmployeeWithAssignments {
+                            employee: employee.clone(),
+                            assignments: vec![],
+                        },
+                        start_date,
+                        end_date,
+                        days_off,
+                    });
+
+                if let (
+                    Some(employee_assignment),
+                    Some(area_id),
+                    Some(area_name),
+                    Some(task_id),
+                    Some(task_name),
+                ) = (employee_assignment, area_id, area_name, task_id, task_name)
+                {
+                    entry
+                        .employee
+                        .assignments
+                        .push(EmployeeAssignmentWithNames {
+                            employee_assignment,
+                            area_id,
+                            area_name,
+                            task_id,
+                            task_name,
+                        });
+                }
+            }
+            employees_map.into_values().collect::<Vec<_>>()
+        })
+        .map_err(|err| Error::Database(err.to_string()))?;
+    Ok(employees_on_holidays)
 }

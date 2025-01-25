@@ -41,10 +41,12 @@
 	<div class="modal-backdrop" role="button" tabindex="0" onclick={close} onkeydown={e => e.key === 'Enter' && close()}></div>
 	<div class="modal">
 		<h2>{title}</h2>
-		{#if message}
-			<p>{message}</p>
-		{/if}
-		{@render children?.()}
+		<div class="content">
+			{#if message}
+				<p>{message}</p>
+			{/if}
+			{@render children?.()}
+		</div>
 		<div class="actions">
 			<Button onclick={close} variant="secondary-dark" outlined>Cancelar</Button>
 			<Button variant={isDestructive ? 'error' : 'primary'} onclick={confirm} Icon={isDestructive ? Trash2 : Check}>Confirmar</Button>
@@ -53,9 +55,21 @@
 {/if}
 
 <style>
+	h2 {
+		padding-inline: 1.5rem;
+	}
 	p {
+		margin: 0;
 		white-space: pre-wrap;
 		line-height: 2rem;
+	}
+
+	.content {
+		overflow-y: auto;
+		padding-block: 1rem;
+		padding-inline: 1.5rem;
+		height: fit-content;
+		max-height: 60vh;
 	}
 	.modal-backdrop {
 		position: fixed;
@@ -74,12 +88,12 @@
 		transform: translate(-50%, -50%);
 		background: white;
 		color: #333;
-		padding-inline: 1.5rem;
 		padding-bottom: 1rem;
 		border-radius: 8px;
 		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 		z-index: 20;
-		max-width: clamp(20rem, 50vw, 45rem);
+		width: max-content;
+		max-width: clamp(20rem, 60vw, 80rem);
 	}
 
 	.actions {
@@ -87,5 +101,6 @@
 		justify-content: flex-end;
 		gap: 1rem;
 		margin-top: 1rem;
+		padding-inline: 1.5rem;
 	}
 </style>
