@@ -145,6 +145,20 @@ pub fn list_replacements(
         .map_err(|err| Error::Database(err.to_string()))
 }
 
+pub fn list_replacements_for_assignment(
+    conn: &mut SqliteConnection,
+    assignment_id: i32,
+) -> Result<Vec<Replacement>, Error> {
+    replacement::table
+        .filter(
+            replacement::assignment_id
+                .eq(assignment_id)
+                .and(replacement::replacement_end_date.ge(Local::now().naive_local().date())),
+        )
+        .load::<Replacement>(conn)
+        .map_err(|err| Error::Database(err.to_string()))
+}
+
 pub fn update_replacement(
     conn: &mut SqliteConnection,
     id: i32,

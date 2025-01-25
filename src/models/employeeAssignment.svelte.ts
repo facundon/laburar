@@ -1,5 +1,5 @@
-import { formatDate, formatDateTime, parseDate, toTitleCase } from '$utils'
-import { format } from 'date-fns'
+import { Replacement, type ReplacementDTO } from '$models/replacement.svelte'
+import { formatDateTime, parseDate, toTitleCase } from '$utils'
 import { SvelteDate } from 'svelte/reactivity'
 
 type UpdateEmployeeAssignmentDTO = Omit<EmployeeAssignmentDTO, 'created_at' | 'area_id' | 'area_name' | 'task_id' | 'task_name'>
@@ -17,6 +17,7 @@ export type EmployeeAssignmentDTO = {
 	area_name?: string
 	task_id?: number
 	task_name?: string
+	replacements?: ReplacementDTO[]
 }
 
 export class EmployeeAssignment {
@@ -31,6 +32,7 @@ export class EmployeeAssignment {
 	areaName: string = $state('')
 	taskId: number = $state(0)
 	taskName: string = $state('')
+	replacements: Replacement[] = []
 
 	constructor(params?: Partial<Omit<EmployeeAssignment, 'toCreateDTO' | 'toUpdateDTO' | 'name'>>) {
 		if (params?.id !== undefined) this.id = params.id
@@ -44,6 +46,7 @@ export class EmployeeAssignment {
 		if (params?.areaName !== undefined) this.areaName = params.areaName
 		if (params?.taskId !== undefined) this.taskId = params.taskId
 		if (params?.taskName !== undefined) this.taskName = params.taskName
+		if (params?.replacements !== undefined) this.replacements = params.replacements
 	}
 
 	static fromDTO(dto: EmployeeAssignmentDTO): EmployeeAssignment {
@@ -59,6 +62,7 @@ export class EmployeeAssignment {
 			areaName: dto.area_name,
 			taskId: dto.task_id,
 			taskName: dto.task_name,
+			replacements: dto.replacements?.map(Replacement.fromDTO) ?? [],
 		})
 	}
 

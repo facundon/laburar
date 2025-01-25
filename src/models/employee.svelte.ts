@@ -1,6 +1,5 @@
 import { EmployeeAssignment, type EmployeeAssignmentDTO } from '$models/employeeAssignment.svelte'
 import { formatDate, parseDate } from '$utils'
-import { format } from 'date-fns'
 import { SvelteDate } from 'svelte/reactivity'
 
 type UpdateEmployeeDTO = Omit<EmployeeDTO, 'created_at' | 'assignments'>

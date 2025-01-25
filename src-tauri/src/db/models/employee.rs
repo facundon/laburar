@@ -10,6 +10,8 @@ use diesel::dsl::not;
 use diesel::{prelude::*, RunQueryDsl, SqliteConnection};
 use serde::{Deserialize, Serialize};
 
+use super::replacement::list_replacements_for_assignment;
+
 #[derive(Queryable, Selectable, Serialize, Deserialize, Debug, Clone)]
 #[diesel(table_name = employee)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
@@ -121,6 +123,7 @@ pub fn get_employee_with_assignments(
                     {
                         employee_with_assignments.push(EmployeeAssignmentWithNames {
                             employee_assignment,
+                            replacements: None,
                             area_id,
                             area_name,
                             task_id,
@@ -362,11 +365,15 @@ pub fn list_employees_on_holidays(
                     Some(task_name),
                 ) = (employee_assignment, area_id, area_name, task_id, task_name)
                 {
+                    let replacements =
+                        list_replacements_for_assignment(conn, employee_assignment.assignment_id)
+                            .unwrap();
                     entry
                         .employee
                         .assignments
                         .push(EmployeeAssignmentWithNames {
                             employee_assignment,
+                            replacements: Some(replacements),
                             area_id,
                             area_name,
                             task_id,
