@@ -401,6 +401,7 @@ pub fn list_employees_replacing_assignment(
                 .and(replacement::replacement_start_date.le(today))
                 .and(replacement::replacement_end_date.ge(today)),
         )
+        .order_by(replacement::replacement_start_date.asc())
         .select(employee::id)
         .load(conn)
         .map_err(|err| Error::Database(err.to_string()))

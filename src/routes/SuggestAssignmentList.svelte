@@ -31,7 +31,7 @@
 	function getAssignmentsMissingDays(assignment: (EmployeeAssignment & { startDate: Date; endDate: Date }) | null) {
 		if (!assignment) return 0
 		const coveredDays = assignment.replacedDays
-		return differenceInCalendarDays(new Date(assignment?.endDate), max([new Date(), assignment?.startDate])) - coveredDays
+		return differenceInCalendarDays(new Date(assignment?.endDate), max([new Date(), assignment?.startDate])) + 1 - coveredDays
 	}
 
 	let disabledDates = $derived(
@@ -122,7 +122,9 @@
 	}
 
 	function findEmployeeReplacements(employeeId: number) {
-		return assignmentToSuggest?.replacements.filter(a => a.replacementEmployeeId === employeeId)
+		return assignmentToSuggest?.replacements
+			.filter(a => a.replacementEmployeeId === employeeId)
+			.sort((a, b) => a.replacementStartDate.getTime() - b.replacementStartDate.getTime())
 	}
 
 	let currentAssignments = $derived(assignments.filter(a => a.startDate <= new Date()))
@@ -210,7 +212,7 @@
 									{employee.assignmentsDifficulties.length} tareas
 								</dd>
 								{#if employee?.startDate && employee.startDate < assignmentToSuggest!.endDate}
-									{@const daysOut = differenceInCalendarDays(employee.startDate, max([assignmentToSuggest!.startDate, new Date()]))}
+									{@const daysOut = differenceInCalendarDays(employee.startDate, max([assignmentToSuggest!.startDate, new Date()])) + 1}
 									<dt>Días disponibles</dt>
 									<dd>
 										{#if daysOut <= 3}<span>🤷‍♀️</span>{/if}
@@ -302,6 +304,18 @@
 		gap: 1rem;
 		justify-content: center;
 	}
+
+	@keyframes gradientBackground {
+		0% {
+			background-position: 0% 50%;
+		}
+		50% {
+			background-position: 100% 50%;
+		}
+		100% {
+			background-position: 0% 50%;
+		}
+	}
 	.suggestion {
 		cursor: pointer;
 		display: flex;
@@ -319,10 +333,10 @@
 	}
 
 	.suggestion.selected {
+		background: linear-gradient(270deg, #5b3c69, #333);
+		background-size: 400% 400%;
+		animation: gradientBackground 15s ease infinite;
 		background-color: #5b3c69; /* Tomato color */
-	}
-	.suggestion.selected:hover {
-		background-color: #5b3c69;
 	}
 
 	.suggestion:hover {

@@ -7,31 +7,29 @@
 	let { data } = $props()
 	let employeesOnHoliday = $derived(data.employeesOnHoliday)
 	let assignments = $derived(
-		employeesOnHoliday
-			.filter(e => e.currentlyOnHoliday)
-			.flatMap(e =>
-				e.assignments.flatMap(a => ({
-					...a,
-					replacements: a.replacements,
-					areaName: a.areaName,
-					taskName: a.taskName,
-					efficiency: a.efficiency,
-					areaId: a.areaId,
-					employeeId: a.employeeId,
-					isPrimary: a.isPrimary,
-					taskId: a.taskId,
-					assignmentId: a.assignmentId,
-					id: a.id,
-					startDate: e.startDate,
-					endDate: e.endDate,
-					name: a.name,
-					assignedDate: a.assignedDate,
-					createdAt: a.createdAt,
-					toCreateDTO: a.toCreateDTO,
-					toUpdateDTO: a.toUpdateDTO,
-					replacedDays: a.replacedDays,
-				})),
-			),
+		employeesOnHoliday.flatMap(e =>
+			e.assignments.flatMap(a => ({
+				...a,
+				replacements: a.replacements,
+				areaName: a.areaName,
+				taskName: a.taskName,
+				efficiency: a.efficiency,
+				areaId: a.areaId,
+				employeeId: a.employeeId,
+				isPrimary: a.isPrimary,
+				taskId: a.taskId,
+				assignmentId: a.assignmentId,
+				id: a.id,
+				startDate: e.startDate,
+				endDate: e.endDate,
+				name: a.name,
+				assignedDate: a.assignedDate,
+				createdAt: a.createdAt,
+				toCreateDTO: a.toCreateDTO,
+				toUpdateDTO: a.toUpdateDTO,
+				replacedDays: a.replacedDays,
+			})),
+		),
 	)
 </script>
 
