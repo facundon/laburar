@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
+	import { FlaskConical } from 'lucide-svelte'
 	import Confetti from 'svelte-confetti'
 
 	interface Props {
@@ -13,6 +13,7 @@
 
 	let stars = $state<boolean[]>([])
 	let displayConfetti = $state(false)
+	let hoverIndex = $state(-1)
 
 	$effect(() => {
 		stars = Array.from({ length: maxRating }, (_, i) => i < rating)
@@ -23,6 +24,14 @@
 		if (rating === maxRating) displayConfetti = true
 		else displayConfetti = false
 		for (let i = 0; i <= maxRating - 1; i++) stars[i] = i < rating
+	}
+
+	const handleMouseEnter = (index: number) => {
+		hoverIndex = index
+	}
+
+	const handleMouseLeave = () => {
+		hoverIndex = -1
 	}
 </script>
 
@@ -35,8 +44,14 @@
 			disabled={!isInteractive}
 			onclick={() => recompute(index)}
 			onkeydown={e => (e.key === 'Enter' || e.key === ' ') && recompute(index)}
+			onmouseenter={() => handleMouseEnter(index)}
+			onmouseleave={handleMouseLeave}
 		>
-			&#9733;
+			<FlaskConical
+				fill={index <= hoverIndex ? 'var(--primary-main)' : isFilled ? 'var(--primary-main)' : '#fff'}
+				color="#333"
+				strokeWidth={0.5}
+			/>
 		</button>
 	{/each}
 	{#if displayRating}
@@ -54,9 +69,7 @@
 		align-items: baseline;
 	}
 	.star {
-		font-size: 1.4rem;
-		color: var(--primary-main);
-		padding: 0.2rem;
+		padding: 0.1rem;
 		background-color: transparent;
 		border: none;
 		cursor: auto;
@@ -65,15 +78,10 @@
 	.star.interactive {
 		cursor: pointer;
 	}
-	.star.interactive:hover {
-		color: var(--primary-dark);
+	:global(.star.interactive:hover svg) {
+		fill: var(--primary-dark);
 	}
-	.star.empty.interactive:hover {
-		color: var(--primary-light);
-	}
-	.star.empty {
-		color: lightgray;
-	}
+
 	span {
 		margin-left: 0.7rem;
 	}
