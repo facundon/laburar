@@ -13,7 +13,7 @@ pub fn create_replacement_command(
     replacement_employee_id: i32,
     replacement_start_date: NaiveDate,
     replacement_end_date: NaiveDate,
-    employee_assignment_id: i32,
+    assignment_id: i32,
     notes: Option<String>,
 ) -> Result<Replacement, Error> {
     let mut conn = establish_connection();
@@ -23,7 +23,7 @@ pub fn create_replacement_command(
         replacement_employee_id,
         replacement_start_date,
         replacement_end_date,
-        employee_assignment_id,
+        assignment_id,
         notes.as_deref(),
     )
 }
@@ -47,7 +47,7 @@ pub fn update_replacement_command(
     replacement_employee_id: i32,
     replacement_start_date: NaiveDate,
     replacement_end_date: NaiveDate,
-    employee_assignment_id: i32,
+    assignment_id: i32,
     notes: Option<String>,
 ) -> Result<Replacement, Error> {
     let mut conn = establish_connection();
@@ -58,7 +58,7 @@ pub fn update_replacement_command(
         replacement_employee_id,
         replacement_start_date,
         replacement_end_date,
-        employee_assignment_id,
+        assignment_id,
         notes.as_deref(),
     )
 }

@@ -13,7 +13,7 @@ pub struct Replacement {
     pub replacement_employee_id: i32,
     pub replacement_start_date: NaiveDate,
     pub replacement_end_date: NaiveDate,
-    pub employee_assignment_id: i32,
+    pub assignment_id: i32,
     pub notes: Option<String>,
     pub created_at: Option<NaiveDateTime>,
 }
@@ -33,7 +33,7 @@ pub struct NewReplacement<'a> {
     pub replacement_employee_id: i32,
     pub replacement_start_date: NaiveDate,
     pub replacement_end_date: NaiveDate,
-    pub employee_assignment_id: i32,
+    pub assignment_id: i32,
     pub notes: Option<&'a str>,
 }
 
@@ -43,7 +43,7 @@ pub fn create_replacement(
     replacement_employee_id: i32,
     replacement_start_date: NaiveDate,
     replacement_end_date: NaiveDate,
-    employee_assignment_id: i32,
+    assignment_id: i32,
     notes: Option<&str>,
 ) -> Result<Replacement, Error> {
     let new_replacement = NewReplacement {
@@ -51,7 +51,7 @@ pub fn create_replacement(
         replacement_employee_id,
         replacement_start_date,
         replacement_end_date,
-        employee_assignment_id,
+        assignment_id,
         notes,
     };
 
@@ -151,7 +151,7 @@ pub fn update_replacement(
     replacement_employee_id: i32,
     replacement_start_date: NaiveDate,
     replacement_end_date: NaiveDate,
-    employee_assignment_id: i32,
+    assignment_id: i32,
     notes: Option<&str>,
 ) -> Result<Replacement, Error> {
     diesel::update(replacement::table.find(id))
@@ -160,7 +160,7 @@ pub fn update_replacement(
             replacement::replacement_employee_id.eq(replacement_employee_id),
             replacement::replacement_start_date.eq(replacement_start_date),
             replacement::replacement_end_date.eq(replacement_end_date),
-            replacement::employee_assignment_id.eq(employee_assignment_id),
+            replacement::assignment_id.eq(assignment_id),
             replacement::notes.eq(notes),
         ))
         .returning(Replacement::as_returning())

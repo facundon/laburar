@@ -1,11 +1,15 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation'
 	import Button from '$components/Button.svelte'
 	import Modal from '$components/Modal.svelte'
 	import Rating from '$components/Rating.svelte'
+	import { invoke } from '$invoke'
 	import { SuggestedEmployee } from '$models/employee.svelte'
 	import { EmployeeAssignment } from '$models/employeeAssignment.svelte'
+	import { Replacement } from '$models/replacement.svelte'
 	import { suggestEmployeesForAssignment } from '$queries/assignments'
 	import { formatDate } from '$utils'
+	import { differenceInCalendarDays, max } from 'date-fns'
 	import { Gauge, Stars } from 'lucide-svelte'
 
 	const suggestionIcons = new Map([
@@ -22,7 +26,14 @@
 	let assignmentToSuggest = $state<(EmployeeAssignment & { startDate: Date; endDate: Date }) | null>(null)
 
 	let suggestions = $state<SuggestedEmployee[] | null>(null)
-	let replacement = $state<SuggestedEmployee | null>(null)
+	let replacement = $derived(
+		new Replacement({
+			assignmentId: assignmentToSuggest?.assignmentId,
+			originalEmployeeId: assignmentToSuggest?.employeeId,
+			replacementEndDate: assignmentToSuggest?.endDate,
+			replacementStartDate: assignmentToSuggest?.startDate,
+		}),
+	)
 
 	function closeModal() {
 		assignmentToSuggest = null
@@ -40,13 +51,13 @@
 
 	async function handleConfirmSuggestion() {
 		if (!replacement) return
-		// implemnt
-	}
-
-	function getRealStartDate() {
-		const today = new Date()
-		if (!assignmentToSuggest || assignmentToSuggest.startDate <= today) return today
-		return assignmentToSuggest.startDate
+		try {
+			await invoke('create_replacement_command', replacement.toCreateDTO())
+			await invalidateAll()
+			closeModal()
+		} catch (err) {
+			console.error('Error creating replacement', err)
+		}
 	}
 </script>
 
@@ -78,8 +89,9 @@
 			{#if suggestions.length === 0}
 				<p>No hay nadie disponible para cubrir la tarea 🥲</p>
 			{:else}
-				{@const daysToRepalce = Math.ceil(
-					((assignmentToSuggest.endDate?.getTime() ?? 0) - (getRealStartDate().getTime() ?? 0)) / (1000 * 60 * 60 * 24),
+				{@const daysToRepalce = differenceInCalendarDays(
+					new Date(assignmentToSuggest.endDate),
+					max([new Date(), assignmentToSuggest?.startDate]),
 				)}
 				<p class="instruction">
 					Selecciona quien va a ser el reemplazo desde el <span>{formatDate(assignmentToSuggest.startDate)}</span> al
@@ -89,7 +101,10 @@
 			<div class="suggestions-wrapper">
 				{#each suggestions as employee, index}
 					{#snippet Suggestion()}
-						<button class="suggestion {replacement === employee && 'selected'}" onclick={() => (replacement = employee)}>
+						<button
+							class="suggestion {replacement.replacementEmployeeId === employee.id && 'selected'}"
+							onclick={() => (replacement.replacementEmployeeId = employee.id)}
+						>
 							<div class="title">
 								<img src={suggestionIcons.get(index)} alt="Puesto" />
 								<div>
@@ -102,15 +117,13 @@
 								</div>
 							</div>
 							<dl>
-								<dt>Cantidad de tareas</dt>
+								<dt>Actualmente realiza</dt>
 								<dd>
 									{#if employee.assignmentsDifficulties.length >= 3}<span>🔥</span>{/if}
 									{employee.assignmentsDifficulties.length} tareas
 								</dd>
 								{#if employee?.startDate && employee.startDate < assignmentToSuggest!.endDate}
-									{@const daysOut = Math.ceil(
-										((employee.startDate?.getTime() ?? 0) - (assignmentToSuggest!.startDate?.getTime() ?? 0)) / (1000 * 60 * 60 * 24),
-									)}
+									{@const daysOut = differenceInCalendarDays(employee.startDate, assignmentToSuggest!.startDate)}
 									<dt>Días disponibles</dt>
 									<dd>
 										{#if daysOut <= 3}<span>🤷‍♀️</span>{/if}

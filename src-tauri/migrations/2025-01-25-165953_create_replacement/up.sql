@@ -5,10 +5,10 @@ CREATE TABLE replacement (
   replacement_employee_id INTEGER NOT NULL,
   replacement_start_date DATE NOT NULL,
   replacement_end_date DATE NOT NULL,
-  employee_assignment_id INTEGER NOT NULL,
+  assignment_id INTEGER NOT NULL,
   notes TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (original_employee_id) REFERENCES employee(id),
   FOREIGN KEY (replacement_employee_id) REFERENCES employee(id),
-  FOREIGN KEY (employee_assignment_id) REFERENCES employee_assignment(id)
+  FOREIGN KEY (assignment_id) REFERENCES assignment(id)
 );
