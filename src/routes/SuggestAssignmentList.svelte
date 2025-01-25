@@ -3,7 +3,7 @@
 	import Modal from '$components/Modal.svelte'
 	import Rating from '$components/Rating.svelte'
 	import { SuggestedEmployee } from '$models/employee.svelte'
-	import type { EmployeeAssignment } from '$models/employeeAssignment.svelte'
+	import { EmployeeAssignment } from '$models/employeeAssignment.svelte'
 	import { suggestEmployeesForAssignment } from '$queries/assignments'
 	import { formatDate } from '$utils'
 	import { Star, Stars } from 'lucide-svelte'
@@ -22,6 +22,7 @@
 	let assignmentToSuggest = $state<(EmployeeAssignment & { startDate: Date; endDate: Date }) | null>(null)
 
 	let suggestions = $state<SuggestedEmployee[] | null>(null)
+	let replacement = $state<SuggestedEmployee | null>(null)
 
 	function closeModal() {
 		assignmentToSuggest = null
@@ -38,6 +39,7 @@
 	}
 
 	async function handleConfirmSuggestion() {
+		if (!replacement) return
 		// implemnt
 	}
 </script>
@@ -69,11 +71,13 @@
 		{:else}
 			{#if suggestions.length === 0}
 				<p>No hay nadie disponible para cubrir la tarea 🥲</p>
+			{:else}
+				<p class="instruction">Selecciona quien va a ser el reemplazo</p>
 			{/if}
 			<div class="suggestions-wrapper">
 				{#each suggestions as employee, index}
 					{#snippet Suggestion()}
-						<button class="suggestion">
+						<button class="suggestion {replacement === employee && 'selected'}" onclick={() => (replacement = employee)}>
 							<div class="title">
 								<img src={suggestionIcons.get(index)} alt="Puesto" />
 								<div>
@@ -112,10 +116,10 @@
 <style>
 	.suggestions-wrapper {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, 24rem);
-		gap: 2rem;
+		grid-template-columns: repeat(auto-fit, 22rem);
+		gap: 1rem;
 		justify-content: center;
-		min-width: 100%;
+		max-width: 1280px;
 	}
 	.suggestion {
 		cursor: pointer;
@@ -129,8 +133,16 @@
 		box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.6);
 		background-color: var(--gray-main);
 		transition: background-color 0.2s;
-		width: 24rem;
+		width: 22rem;
+		height: calc(23rem / 1.618);
 		position: relative;
+	}
+
+	.suggestion.selected {
+		background-color: #5b3c69; /* Tomato color */
+	}
+	.suggestion.selected:hover {
+		background-color: #5b3c69;
 	}
 
 	.suggestion:hover {
@@ -168,16 +180,20 @@
 		}
 	}
 
+	p.instruction {
+		margin-top: 0;
+		margin-bottom: 2rem;
+	}
 	dl {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
-		gap: 0.6rem;
-		margin-top: 2rem;
-		width: max-content;
+		margin-top: 1.2rem;
+		width: 100%;
 	}
 
 	dl > dt {
 		font-weight: 500;
+		margin-top: 0.3rem;
 		white-space: nowrap;
 		text-align: start;
 		color: var(--secondary-light);

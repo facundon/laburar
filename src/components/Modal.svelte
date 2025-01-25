@@ -93,7 +93,7 @@
 		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 		z-index: 20;
 		width: max-content;
-		max-width: clamp(20rem, 60vw, 80rem);
+		max-width: clamp(40rem, 80vw, 180rem);
 	}
 
 	.actions {
