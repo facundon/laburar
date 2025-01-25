@@ -167,6 +167,7 @@
 							bind:value={replacement.replacementStartDate}
 							max={formatDate(assignmentToSuggest.endDate)}
 							min={formatDate(new Date())}
+							required
 						/>
 					</FormGroup>
 					<FormGroup id="replacementEndDate" label="Fecha de fin">
@@ -175,6 +176,7 @@
 							bind:value={replacement.replacementEndDate}
 							max={formatDate(assignmentToSuggest.endDate)}
 							min={formatDate(replacement.replacementStartDate)}
+							required
 						/>
 					</FormGroup>
 				</div>

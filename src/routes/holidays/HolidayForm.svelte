@@ -4,6 +4,7 @@
 	import FormGroup from '$components/FormGroup.svelte'
 	import TextArea from '$components/TextArea.svelte'
 	import { Holiday } from '$models/holiday.svelte'
+	import { formatDate } from '$utils'
 
 	interface Props {
 		holiday: Holiday
@@ -23,10 +24,10 @@
 	</div>
 	<div class="group">
 		<FormGroup id="startDate" label="Fecha de Inicio">
-			<DateInput id="startDate" bind:value={holiday.startDate} required />
+			<DateInput id="startDate" bind:value={holiday.startDate} required min={formatDate(new Date())} />
 		</FormGroup>
 		<FormGroup id="endDate" label="Fecha de Fin">
-			<DateInput id="endDate" bind:value={holiday.endDate} required />
+			<DateInput id="endDate" bind:value={holiday.endDate} required min={formatDate(holiday.startDate)} />
 		</FormGroup>
 		<!-- <FormGroup id="daysOff" label="Dias Fuera">
 			<input type="number" id="daysOff" bind:value={holiday.daysOff} />

@@ -2,6 +2,7 @@
 	import FormGroup from '$components/FormGroup.svelte'
 	import DateInput from '$components/DateInput.svelte'
 	import type { Employee } from '$models/employee.svelte'
+	import { formatDate } from '$utils'
 
 	interface Props {
 		employee: Employee
@@ -31,7 +32,7 @@
 	</div>
 	<div class="group">
 		<FormGroup label="Fecha de inicio" id="startDate">
-			<DateInput id="startDate" bind:value={employee.startDate} />
+			<DateInput id="startDate" bind:value={employee.startDate} max={formatDate(new Date())} />
 		</FormGroup>
 	</div>
 	{@render children()}
