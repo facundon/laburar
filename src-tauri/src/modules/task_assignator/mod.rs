@@ -3,7 +3,10 @@ use chrono::{NaiveDate, Utc};
 use diesel::SqliteConnection;
 
 use crate::{
-    db::models::employee::{list_competent_employees_for_assignment, EmployeeForAssignment},
+    db::models::employee::{
+        list_competent_employees_for_assignment, list_employees_replacing_assignment,
+        EmployeeForAssignment,
+    },
     error::Error,
 };
 
@@ -23,7 +26,18 @@ pub fn suggest_employees_for_assignation(
     assignation_start_date: NaiveDate,
     assignation_end_date: NaiveDate,
 ) -> Result<Vec<EmployeeWithScore>, Error> {
-    let employees = list_competent_employees_for_assignment(conn, assignment_id).unwrap();
+    let mut employees = list_competent_employees_for_assignment(conn, assignment_id).unwrap();
+    let employees_already_replacing = list_employees_replacing_assignment(conn, assignment_id);
+    if let Ok(employees_already_replacing) = employees_already_replacing {
+        employees = employees
+            .into_iter()
+            .filter(|employee| {
+                !employees_already_replacing
+                    .iter()
+                    .any(|replacing_employee| replacing_employee == &employee.id)
+            })
+            .collect();
+    }
     if employees.len() == 0 {
         return Ok(Vec::new());
     }

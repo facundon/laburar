@@ -1,7 +1,9 @@
 use std::collections::HashMap;
 
 use crate::db::models::employee_assignment::{EmployeeAssignment, EmployeeAssignmentWithNames};
-use crate::db::schema::{area, assignment, employee, employee_assignment, holiday, task};
+use crate::db::schema::{
+    area, assignment, employee, employee_assignment, holiday, replacement, task,
+};
 use crate::error::Error;
 use chrono::{Local, NaiveDate, NaiveDateTime, Utc};
 use diesel::dsl::not;
@@ -376,4 +378,23 @@ pub fn list_employees_on_holidays(
         })
         .map_err(|err| Error::Database(err.to_string()))?;
     Ok(employees_on_holidays)
+}
+
+pub fn list_employees_replacing_assignment(
+    conn: &mut SqliteConnection,
+    assignment_id: i32,
+) -> Result<Vec<i32>, Error> {
+    let today = Utc::now().naive_utc().date();
+
+    employee::table
+        .inner_join(replacement::table.on(employee::id.eq(replacement::replacement_employee_id)))
+        .filter(
+            replacement::assignment_id
+                .eq(assignment_id)
+                .and(replacement::replacement_start_date.le(today))
+                .and(replacement::replacement_end_date.ge(today)),
+        )
+        .select(employee::id)
+        .load(conn)
+        .map_err(|err| Error::Database(err.to_string()))
 }

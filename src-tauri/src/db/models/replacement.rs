@@ -1,6 +1,6 @@
 use crate::db::schema::{employee, replacement};
 use crate::error::Error;
-use chrono::{NaiveDate, NaiveDateTime};
+use chrono::{Local, NaiveDate, NaiveDateTime};
 use diesel::{prelude::*, RunQueryDsl, SelectableHelper, SqliteConnection};
 use serde::{Deserialize, Serialize};
 
@@ -109,6 +109,7 @@ pub fn list_replacements(
                 .eq(replacement::original_employee_id)
                 .and(employee::id.eq(replacement::replacement_employee_id))),
         )
+        .filter(replacement::replacement_end_date.ge(Local::now().naive_local().date()))
         .select((
             replacement::all_columns,
             employee::first_name,
