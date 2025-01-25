@@ -259,7 +259,11 @@ pub fn list_competent_employees_for_assignment(
     for employee in &mut results {
         let assignments_difficulties = assignment::table
             .inner_join(employee_assignment::table)
-            .filter(employee_assignment::employee_id.eq(employee.id))
+            .filter(
+                employee_assignment::employee_id
+                    .eq(employee.id)
+                    .and(employee_assignment::is_primary),
+            )
             .select(assignment::difficulty)
             .load(conn)
             .map_err(|err| Error::Database(err.to_string()));
