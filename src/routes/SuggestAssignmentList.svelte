@@ -6,7 +6,7 @@
 	import { EmployeeAssignment } from '$models/employeeAssignment.svelte'
 	import { suggestEmployeesForAssignment } from '$queries/assignments'
 	import { formatDate } from '$utils'
-	import { Star, Stars } from 'lucide-svelte'
+	import { Gauge, Stars } from 'lucide-svelte'
 
 	const suggestionIcons = new Map([
 		[0, '/icon-first.png'],
@@ -83,11 +83,17 @@
 								<div>
 									<h4>{employee.name}</h4>
 									<Rating rating={employee.efficiency} displayRating={false} />
+									<div class="score">
+										<Gauge size={16} color="var(--error-light)" />
+										<span>{employee.score.toFixed(2)}</span>
+									</div>
 								</div>
 							</div>
 							<dl>
 								<dt>Cantidad de tareas</dt>
-								<dd>{employee.assignmentsDifficulties.length} tareas</dd>
+								<dd>
+									{employee.assignmentsDifficulties.length} tareas {#if employee.assignmentsDifficulties.length >= 3}<span> 🔥 </span>{/if}
+								</dd>
 								{#if employee?.startDate && employee.startDate < assignmentToSuggest!.endDate}
 									{@const daysOut = Math.ceil(
 										((employee.startDate?.getTime() ?? 0) - (assignmentToSuggest!.startDate?.getTime() ?? 0)) / (1000 * 60 * 60 * 24),
@@ -147,6 +153,20 @@
 
 	.suggestion:hover {
 		background-color: var(--gray-light);
+	}
+
+	.score {
+		position: absolute;
+		top: 0.5rem;
+		right: 0.5rem;
+		display: flex;
+		align-items: center;
+		gap: 0.2rem;
+	}
+
+	.score > span {
+		font-size: 0.8rem;
+		color: var(--error-light);
 	}
 
 	.suggestion .title {

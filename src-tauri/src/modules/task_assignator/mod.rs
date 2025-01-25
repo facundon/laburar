@@ -51,6 +51,6 @@ pub fn suggest_employees_for_assignation(
         }
         employees_with_scores.push(EmployeeWithScore { employee, score });
     }
-    employees_with_scores.sort_by(|a, b| a.score.partial_cmp(&b.score).unwrap());
+    employees_with_scores.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap());
     Ok(employees_with_scores)
 }
