@@ -24,16 +24,16 @@ export function parseDate(date: string, isReactive = false): Date {
 	return parse(date, 'yyyy-MM-dd', isReactive ? new SvelteDate() : new Date(), { locale: es })
 }
 
-export function formatDate(date: Date) {
-	return format(date, 'yyyy-MM-dd', { locale: es })
+export function formatDate(date: Date, _format = 'yyyy-MM-dd'): string {
+	return format(date, _format, { locale: es })
 }
 
 export function formatDateTime(date: Date) {
 	return format(date, 'yyyy-MM-dd HH:mm', { locale: es })
 }
 
-export function formatDateToFullDay(date: Date) {
-	const formatedDate = format(date, 'eeee dd MMMM', { locale: es })
+export function formatDateToFullDay(date: Date, short = false) {
+	const formatedDate = format(date, `${short ? 'eee' : 'eeee'} dd ${short ? 'MMM' : 'MMMM'}`, { locale: es })
 	return formatedDate
 		.split(' ')
 		.map((word, index) => {

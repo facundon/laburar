@@ -1,7 +1,7 @@
 <script lang="ts">
 	import MainContainer from '$components/MainContainer.svelte'
 	import type { EmployeeOnHoliday } from '$models/employee.svelte'
-	import { formatDate } from '$utils'
+	import { formatDate, formatDateToFullDay } from '$utils'
 
 	interface Props {
 		employeesOnHoliday: EmployeeOnHoliday[]
@@ -18,13 +18,13 @@
 		{#if currentlyOnHoliday.length > 0}
 			<h3>Ahora</h3>
 			{#each currentlyOnHoliday as employee}
-				<p>{employee.name} (regresa el <span>{formatDate(employee.endDate)}</span>)</p>
+				<p>{employee.name} (regresa el <span>{formatDateToFullDay(employee.endDate)}</span>)</p>
 			{/each}
 		{/if}
 		{#if upcomingHolidays.length > 0}
 			<h3>Próximamente</h3>
 			{#each upcomingHolidays as employee}
-				<p>{employee.name} (sale el <span>{formatDate(employee.startDate)}</span>)</p>
+				<p>{employee.name} (sale el <span>{formatDateToFullDay(employee.startDate)}</span>)</p>
 			{/each}
 		{/if}
 	</div>

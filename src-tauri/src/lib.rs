@@ -32,7 +32,8 @@ use commands::company_holiday::{
 use commands::employee::{
     create_employee_command, delete_employee_command, get_employee_command,
     get_employee_with_assignments_command, list_employees_command,
-    list_employees_on_holidays_command, update_employee_command,
+    list_employees_on_holidays_command, list_employees_replacing_assignment_command,
+    update_employee_command,
 };
 use commands::employee_assignment::{
     create_assignments_to_employee_command, delete_employee_assignment_command,
@@ -119,6 +120,7 @@ pub fn run() {
             get_replacement_command,
             list_replacements_command,
             update_replacement_command,
+            list_employees_replacing_assignment_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -12,6 +12,7 @@
 			.flatMap(e =>
 				e.assignments.flatMap(a => ({
 					...a,
+					replacements: a.replacements,
 					areaName: a.areaName,
 					taskName: a.taskName,
 					efficiency: a.efficiency,
@@ -24,8 +25,11 @@
 					startDate: e.startDate,
 					endDate: e.endDate,
 					name: a.name,
+					assignedDate: a.assignedDate,
+					createdAt: a.createdAt,
 					toCreateDTO: a.toCreateDTO,
 					toUpdateDTO: a.toUpdateDTO,
+					replacedDays: a.replacedDays,
 				})),
 			),
 	)

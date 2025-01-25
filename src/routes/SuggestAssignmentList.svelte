@@ -10,8 +10,8 @@
 	import { EmployeeAssignment } from '$models/employeeAssignment.svelte'
 	import { Replacement } from '$models/replacement.svelte'
 	import { suggestEmployeesForAssignment } from '$queries/assignments'
-	import { formatDate } from '$utils'
-	import { differenceInCalendarDays, max, min } from 'date-fns'
+	import { formatDate, formatDateToFullDay } from '$utils'
+	import { differenceInCalendarDays, eachDayOfInterval, max, min } from 'date-fns'
 	import { Gauge, Stars } from 'lucide-svelte'
 	import Confetti from 'svelte-confetti'
 
@@ -28,15 +28,63 @@
 	let { assignments }: Props = $props()
 	let assignmentToSuggest = $state<(EmployeeAssignment & { startDate: Date; endDate: Date }) | null>(null)
 
+	function getAssignmentsMissingDays(assignment: (EmployeeAssignment & { startDate: Date; endDate: Date }) | null) {
+		if (!assignment) return 0
+		const coveredDays = assignment.replacedDays
+		return differenceInCalendarDays(new Date(assignment?.endDate), max([new Date(), assignment?.startDate])) - coveredDays
+	}
+
+	let disabledDates = $derived(
+		assignmentToSuggest?.replacements.flatMap(r =>
+			eachDayOfInterval({ start: new Date(r.replacementStartDate), end: new Date(r.replacementEndDate) }).map(date => formatDate(date)),
+		),
+	)
+
+	// If this is less than zero, the assignment is already covered
+	let assignmentMissingDays = $derived(getAssignmentsMissingDays(assignmentToSuggest))
+
+	function findFirstAvailableDateRange() {
+		const startDate = max([assignmentToSuggest?.startDate || new Date(), new Date()])
+		const endDate = new Date(assignmentToSuggest?.endDate || new Date())
+		const interval = eachDayOfInterval({ start: startDate, end: endDate })
+
+		for (let i = 0; i < interval.length; i++) {
+			const start = interval[i]
+			if (disabledDates?.includes(formatDate(start))) continue
+
+			for (let j = i; j < interval.length; j++) {
+				const end = interval[j]
+				if (disabledDates?.includes(formatDate(end))) break
+
+				return { start, end }
+			}
+		}
+		return { startDate, endDate }
+	}
+
+	const { startDate, endDate } = findFirstAvailableDateRange()
+
 	let suggestions = $state<SuggestedEmployee[] | null>(null)
 	let replacement = $derived(
 		new Replacement({
 			assignmentId: assignmentToSuggest?.assignmentId,
 			originalEmployeeId: assignmentToSuggest?.employeeId,
-			replacementEndDate: assignmentToSuggest?.endDate,
-			replacementStartDate: assignmentToSuggest?.startDate,
+			replacementEndDate: endDate,
+			replacementStartDate: startDate,
 		}),
 	)
+
+	let error = $state<string | null>('')
+	$effect(() => {
+		if (
+			disabledDates?.includes(formatDate(replacement.replacementStartDate)) ||
+			disabledDates?.includes(formatDate(replacement.replacementEndDate))
+		) {
+			error = 'La fecha seleccionada ya está ocupada'
+			return
+		}
+		error = null
+	})
 
 	function closeModal() {
 		assignmentToSuggest = null
@@ -53,7 +101,7 @@
 	}
 
 	async function handleConfirmSuggestion() {
-		if (!replacement.replacementEmployeeId) return
+		if (!replacement.replacementEmployeeId || error) return
 		try {
 			await invoke('create_replacement_command', replacement.toCreateDTO())
 			await invalidateAll()
@@ -72,21 +120,52 @@
 			replacement.replacementEndDate = assignmentToSuggest.endDate
 		}
 	}
+
+	function findEmployeeReplacements(employeeId: number) {
+		return assignmentToSuggest?.replacements.filter(a => a.replacementEmployeeId === employeeId)
+	}
+
+	let currentAssignments = $derived(assignments.filter(a => a.startDate <= new Date()))
+	let nextAssignments = $derived(assignments.filter(a => a.startDate > new Date()))
 </script>
 
-{#if assignments.length > 0}
-	<div class="wrapper">
-		<h2>Tareas sin Personal Asignado</h2>
-		{#each assignments as assignment}
-			<div class="group">
-				<p>{assignment.name}</p>
-				<Button Icon={Stars} outlined onclick={() => (assignmentToSuggest = assignment)} style="height: fit-content;">Sugerir</Button>
-			</div>
+<div class="wrapper">
+	<h2>Tareas sin Personal Asignado</h2>
+	{#if assignments.length === 0}
+		<p>
+			Todas las tareas estan asignadas 😎
+			<Confetti x={[0.5, 3]} />
+		</p>
+	{/if}
+	{#if currentAssignments.length > 0}
+		<h3>Ahora</h3>
+		{#each currentAssignments as assignment}
+			{#if getAssignmentsMissingDays(assignment) > 0}
+				<div class="group">
+					<p>
+						{assignment.name} (del <span class="date">{formatDateToFullDay(assignment.startDate, true)}</span> al
+						<span class="date">{formatDateToFullDay(assignment.endDate, true)}</span>)
+					</p>
+					<Button Icon={Stars} outlined onclick={() => (assignmentToSuggest = assignment)} style="height: fit-content;">Sugerir</Button>
+				</div>
+			{/if}
 		{/each}
-	</div>
-{:else}
-	{null}
-{/if}
+	{/if}
+	{#if nextAssignments.length > 0}
+		<h3>Próximamente</h3>
+		{#each nextAssignments as assignment}
+			{#if getAssignmentsMissingDays(assignment) > 0}
+				<div class="group">
+					<p>
+						{assignment.name} (del <span class="date">{formatDateToFullDay(assignment.startDate, true)}</span> al
+						<span class="date">{formatDateToFullDay(assignment.endDate, true)}</span>)
+					</p>
+					<Button Icon={Stars} outlined onclick={() => (assignmentToSuggest = assignment)} style="height: fit-content;">Sugerir</Button>
+				</div>
+			{/if}
+		{/each}
+	{/if}
+</div>
 
 {#if assignmentToSuggest}
 	<Modal
@@ -98,21 +177,15 @@
 	>
 		{#if suggestions === null}
 			<p>Cargando...</p>
+		{:else if suggestions.length === 0}
+			<p>No hay nadie disponible para cubrir la tarea 🥲</p>
 		{:else}
-			{#if suggestions.length === 0}
-				<p>No hay nadie disponible para cubrir la tarea 🥲</p>
-			{:else}
-				{@const daysToRepalce = differenceInCalendarDays(
-					new Date(assignmentToSuggest.endDate),
-					max([new Date(), assignmentToSuggest?.startDate]),
-				)}
-				<p class="instruction">
-					Selecciona quien va a ser el reemplazo desde el <span>{formatDate(assignmentToSuggest.startDate)}</span> al
-					<span>{formatDate(assignmentToSuggest.endDate)}</span> <span> ({daysToRepalce} días)</span>
-				</p>
-			{/if}
+			<p class="instruction">
+				A esta tarea le restan cubrir <span>{assignmentMissingDays} días</span>. Selecciona alguien y elige las fechas de inicio y fin.
+			</p>
 			<div class="suggestions-wrapper">
 				{#each suggestions as employee, index}
+					{@const employeeReplacements = findEmployeeReplacements(employee.id)}
 					{#snippet Suggestion()}
 						<button
 							class="suggestion {replacement.replacementEmployeeId === employee.id && 'selected'}"
@@ -137,55 +210,85 @@
 									{employee.assignmentsDifficulties.length} tareas
 								</dd>
 								{#if employee?.startDate && employee.startDate < assignmentToSuggest!.endDate}
-									{@const daysOut = differenceInCalendarDays(employee.startDate, assignmentToSuggest!.startDate)}
+									{@const daysOut = differenceInCalendarDays(employee.startDate, max([assignmentToSuggest!.startDate, new Date()]))}
 									<dt>Días disponibles</dt>
 									<dd>
 										{#if daysOut <= 3}<span>🤷‍♀️</span>{/if}
 										{daysOut} días
 									</dd>
-									{#if employee.startDate}
-										<dt>Próximas vacaciones</dt>
-										<dd>{formatDate(employee.startDate)}</dd>
-									{/if}
-									{#if employee.endDate}
-										<dt>Regresa el</dt>
-										<dd>{formatDate(employee.endDate)}</dd>
-									{/if}
 								{/if}
 							</dl>
+							{#if employee.startDate}
+								<div class="sub-group">
+									<h4>Próximas vacaciones</h4>
+									<p>
+										Del <span class="date">{formatDateToFullDay(employee.startDate, true)}</span> al
+										<span class="date">{formatDateToFullDay(employee.endDate!, true)}</span>
+									</p>
+								</div>
+							{/if}
+							{#if employeeReplacements?.length}
+								<div class="sub-group">
+									<h4>Reemplaza esta tarea</h4>
+									{#each employeeReplacements as replacement}
+										<p>
+											{#if replacement.replacementStartDate.getTime() === replacement.replacementEndDate.getTime()}
+												El día <span class="date">{formatDateToFullDay(replacement.replacementStartDate, true)}</span>
+											{:else}
+												Del <span class="date">{formatDateToFullDay(replacement.replacementStartDate, true)}</span> al
+												<span class="date">{formatDateToFullDay(replacement.replacementEndDate, true)}</span>
+											{/if}
+										</p>
+									{/each}
+								</div>
+							{/if}
 						</button>
 					{/snippet}
 					<Suggestion />
 				{/each}
 			</div>
-
-			{#if replacement.replacementEmployeeId}
-				<div class="date-pick">
-					<FormGroup id="replacementStartDate" label="Fecha de inicio">
-						<DateInput
-							id="replacementStartDate"
-							bind:value={replacement.replacementStartDate}
-							max={formatDate(assignmentToSuggest.endDate)}
-							min={formatDate(new Date())}
-							required
-						/>
-					</FormGroup>
-					<FormGroup id="replacementEndDate" label="Fecha de fin">
-						<DateInput
-							id="replacementEndDate"
-							bind:value={replacement.replacementEndDate}
-							max={formatDate(assignmentToSuggest.endDate)}
-							min={formatDate(replacement.replacementStartDate)}
-							required
-						/>
-					</FormGroup>
-				</div>
-			{/if}
+			<div class="date-pick">
+				<FormGroup id="replacementStartDate" label="Fecha de inicio">
+					<DateInput
+						id="replacementStartDate"
+						bind:value={replacement.replacementStartDate}
+						max={formatDate(assignmentToSuggest.endDate)}
+						min={formatDate(new Date())}
+						{disabledDates}
+						required
+					/>
+				</FormGroup>
+				<FormGroup id="replacementEndDate" label="Fecha de fin">
+					<DateInput
+						id="replacementEndDate"
+						bind:value={replacement.replacementEndDate}
+						max={formatDate(assignmentToSuggest.endDate)}
+						min={formatDate(replacement.replacementStartDate)}
+						{disabledDates}
+						required
+					/>
+				</FormGroup>
+			</div>
+		{/if}
+		{#if error}
+			<p style="color: var(--error-light);">{error}</p>
 		{/if}
 	</Modal>
 {/if}
 
 <style>
+	span.date {
+		color: var(--secondary-light);
+	}
+	.sub-group {
+		margin-top: 0.5rem;
+		width: 100%;
+	}
+	.sub-group > h4 {
+		margin-block: 0;
+		color: var(--primary-main);
+	}
+
 	.date-pick {
 		margin-top: 2rem;
 		width: 100%;
@@ -195,10 +298,9 @@
 	}
 	.suggestions-wrapper {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, 22rem);
+		grid-template-columns: repeat(3, 20rem);
 		gap: 1rem;
 		justify-content: center;
-		max-width: 1280px;
 	}
 	.suggestion {
 		cursor: pointer;
@@ -212,8 +314,7 @@
 		box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.6);
 		background-color: var(--gray-main);
 		transition: background-color 0.2s;
-		width: 22rem;
-		height: calc(23rem / 1.618);
+		width: 20rem;
 		position: relative;
 	}
 
@@ -306,12 +407,13 @@
 	}
 
 	img {
-		object-fit: contain;
+		/* object-fit: contain; */
 		height: 4.5rem;
+		width: 3.8rem;
 		border-radius: 50%;
 	}
 
-	h4 {
+	.title h4 {
 		text-align: start;
 		margin: 0.5rem 0;
 		margin-left: 0.3rem;
@@ -323,13 +425,23 @@
 	.wrapper {
 		color: #fff;
 	}
+	.wrapper > p {
+		text-align: center;
+		margin-block: 3rem;
+	}
+
+	.wrapper > h3 {
+		color: var(--primary-main);
+	}
 	.group > p {
 		font-weight: 500;
+		margin-block: 0;
 	}
 	.group {
 		display: flex;
 		align-items: center;
 		gap: 2rem;
 		justify-content: space-between;
+		margin-bottom: 1rem;
 	}
 </style>

@@ -1,5 +1,6 @@
 import { Replacement, type ReplacementDTO } from '$models/replacement.svelte'
 import { formatDateTime, parseDate, toTitleCase } from '$utils'
+import { differenceInCalendarDays, max } from 'date-fns'
 import { SvelteDate } from 'svelte/reactivity'
 
 type UpdateEmployeeAssignmentDTO = Omit<EmployeeAssignmentDTO, 'created_at' | 'area_id' | 'area_name' | 'task_id' | 'task_name'>
@@ -20,6 +21,8 @@ export type EmployeeAssignmentDTO = {
 	replacements?: ReplacementDTO[]
 }
 
+type EmployeeAssignmentParams = Partial<Omit<EmployeeAssignment, 'toCreateDTO' | 'toUpdateDTO' | 'name' | 'replacedDays'>>
+
 export class EmployeeAssignment {
 	id: number = 0
 	employeeId: number = $state(0)
@@ -34,7 +37,7 @@ export class EmployeeAssignment {
 	taskName: string = $state('')
 	replacements: Replacement[] = []
 
-	constructor(params?: Partial<Omit<EmployeeAssignment, 'toCreateDTO' | 'toUpdateDTO' | 'name'>>) {
+	constructor(params?: EmployeeAssignmentParams) {
 		if (params?.id !== undefined) this.id = params.id
 		if (params?.employeeId !== undefined) this.employeeId = params.employeeId
 		if (params?.assignmentId !== undefined) this.assignmentId = params.assignmentId
@@ -68,6 +71,16 @@ export class EmployeeAssignment {
 
 	get name() {
 		return `${this.areaName} - ${this.taskName}`
+	}
+
+	get replacedDays() {
+		return this.replacements.reduce((total, curr) => {
+			const startDate = new Date(curr.replacementStartDate)
+			const realStartDate = max([startDate, new Date()])
+			const endDate = new Date(curr.replacementEndDate)
+			const realEndDate = max([endDate, new Date()])
+			return total + differenceInCalendarDays(realEndDate, realStartDate) + 1
+		}, 0)
 	}
 
 	public toCreateDTO(): CreateEmployeeAssignmentDTO {
