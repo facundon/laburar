@@ -42,6 +42,12 @@
 		if (!replacement) return
 		// implemnt
 	}
+
+	function getRealStartDate() {
+		const today = new Date()
+		if (!assignmentToSuggest || assignmentToSuggest.startDate <= today) return today
+		return assignmentToSuggest.startDate
+	}
 </script>
 
 {#if assignments.length > 0}
@@ -72,7 +78,13 @@
 			{#if suggestions.length === 0}
 				<p>No hay nadie disponible para cubrir la tarea 🥲</p>
 			{:else}
-				<p class="instruction">Selecciona quien va a ser el reemplazo</p>
+				{@const daysToRepalce = Math.ceil(
+					((assignmentToSuggest.endDate?.getTime() ?? 0) - (getRealStartDate().getTime() ?? 0)) / (1000 * 60 * 60 * 24),
+				)}
+				<p class="instruction">
+					Selecciona quien va a ser el reemplazo desde el <span>{formatDate(assignmentToSuggest.startDate)}</span> al
+					<span>{formatDate(assignmentToSuggest.endDate)}</span> <span> ({daysToRepalce} días)</span>
+				</p>
 			{/if}
 			<div class="suggestions-wrapper">
 				{#each suggestions as employee, index}
@@ -92,12 +104,18 @@
 							<dl>
 								<dt>Cantidad de tareas</dt>
 								<dd>
-									{employee.assignmentsDifficulties.length} tareas {#if employee.assignmentsDifficulties.length >= 3}<span> 🔥 </span>{/if}
+									{#if employee.assignmentsDifficulties.length >= 3}<span>🔥</span>{/if}
+									{employee.assignmentsDifficulties.length} tareas
 								</dd>
 								{#if employee?.startDate && employee.startDate < assignmentToSuggest!.endDate}
 									{@const daysOut = Math.ceil(
 										((employee.startDate?.getTime() ?? 0) - (assignmentToSuggest!.startDate?.getTime() ?? 0)) / (1000 * 60 * 60 * 24),
 									)}
+									<dt>Días disponibles</dt>
+									<dd>
+										{#if daysOut <= 3}<span>🤷‍♀️</span>{/if}
+										{daysOut} días
+									</dd>
 									{#if employee.startDate}
 										<dt>Próximas vacaciones</dt>
 										<dd>{formatDate(employee.startDate)}</dd>
@@ -106,8 +124,6 @@
 										<dt>Regresa el</dt>
 										<dd>{formatDate(employee.endDate)}</dd>
 									{/if}
-									<dt>Días disponibles</dt>
-									<dd>{daysOut} días</dd>
 								{/if}
 							</dl>
 						</button>
@@ -203,6 +219,15 @@
 	p.instruction {
 		margin-top: 0;
 		margin-bottom: 2rem;
+	}
+
+	p.instruction > span {
+		font-weight: 600;
+		color: var(--secondary-dark);
+	}
+
+	p.instruction > span:nth-child(3) {
+		color: var(--primary-dark);
 	}
 	dl {
 		display: grid;
