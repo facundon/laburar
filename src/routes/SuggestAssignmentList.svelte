@@ -11,6 +11,7 @@
 	import { formatDate } from '$utils'
 	import { differenceInCalendarDays, max } from 'date-fns'
 	import { Gauge, Stars } from 'lucide-svelte'
+	import Confetti from 'svelte-confetti'
 
 	const suggestionIcons = new Map([
 		[0, '/icon-first.png'],
@@ -50,7 +51,7 @@
 	}
 
 	async function handleConfirmSuggestion() {
-		if (!replacement) return
+		if (!replacement.replacementEmployeeId) return
 		try {
 			await invoke('create_replacement_command', replacement.toCreateDTO())
 			await invalidateAll()
@@ -114,6 +115,7 @@
 										<Gauge size={16} color="var(--error-light)" />
 										<span>{employee.score.toFixed(2)}</span>
 									</div>
+									{#if index === 0}<Confetti delay={[100, 100]} />{/if}
 								</div>
 							</div>
 							<dl>
