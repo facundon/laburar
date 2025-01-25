@@ -42,6 +42,10 @@ use commands::holiday::{
     create_holiday_command, delete_holiday_command, get_holiday_command, list_holidays_command,
     update_holiday_command,
 };
+use commands::replacement::{
+    create_replacement_command, delete_replacement_command, get_replacement_command,
+    list_replacements_command, update_replacement_command,
+};
 use commands::task::{
     create_task_command, delete_task_command, get_task_command, get_tasks_for_area_command,
     list_tasks_command, update_task_command,
@@ -110,6 +114,11 @@ pub fn run() {
             get_company_holiday_command,
             list_company_holidays_command,
             update_company_holiday_command,
+            create_replacement_command,
+            delete_replacement_command,
+            get_replacement_command,
+            list_replacements_command,
+            update_replacement_command,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

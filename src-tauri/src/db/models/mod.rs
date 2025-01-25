@@ -6,4 +6,5 @@ pub mod company_holiday;
 pub mod employee;
 pub mod employee_assignment;
 pub mod holiday;
+pub mod replacement;
 pub mod task;

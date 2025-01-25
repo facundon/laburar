@@ -91,6 +91,19 @@ diesel::table! {
 }
 
 diesel::table! {
+    replacement (id) {
+        id -> Integer,
+        original_employee_id -> Integer,
+        replacement_employee_id -> Integer,
+        replacement_start_date -> Date,
+        replacement_end_date -> Date,
+        employee_assignment_id -> Integer,
+        notes -> Nullable<Text>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
     task (id) {
         id -> Integer,
         name -> Text,
@@ -106,6 +119,7 @@ diesel::joinable!(assignment -> task (task_id));
 diesel::joinable!(employee_assignment -> assignment (assignment_id));
 diesel::joinable!(employee_assignment -> employee (employee_id));
 diesel::joinable!(holiday -> employee (employee_id));
+diesel::joinable!(replacement -> employee_assignment (employee_assignment_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     absence,
@@ -116,5 +130,6 @@ diesel::allow_tables_to_appear_in_same_query!(
     employee,
     employee_assignment,
     holiday,
+    replacement,
     task,
 );
