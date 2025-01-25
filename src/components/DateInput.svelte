@@ -12,6 +12,8 @@
 		const input = event.target as HTMLInputElement
 		value = input.value ? parseDate(input.value, true) : undefined
 	}
+
+	let stringDate = $derived(value ? formatDate(value) : '')
 </script>
 
-<input {...rest} type="date" value={value ? formatDate(value) : ''} onchange={handleChange} />
+<input {...rest} type="date" value={stringDate} onchange={handleChange} />

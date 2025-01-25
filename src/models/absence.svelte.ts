@@ -29,7 +29,7 @@ export class Absence {
 	description?: string = $state('')
 	absenceType: string = $state('')
 	isReturned: boolean = false
-	absenceDate: Date = new SvelteDate()
+	absenceDate: Date = $state(new SvelteDate())
 	createdAt?: Date
 	employeeName: string = ''
 	returns: AbsenceReturn[] = $state([])

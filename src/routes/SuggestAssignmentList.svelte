@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation'
 	import Button from '$components/Button.svelte'
+	import DateInput from '$components/DateInput.svelte'
+	import FormGroup from '$components/FormGroup.svelte'
 	import Modal from '$components/Modal.svelte'
 	import Rating from '$components/Rating.svelte'
 	import { invoke } from '$invoke'
@@ -9,7 +11,7 @@
 	import { Replacement } from '$models/replacement.svelte'
 	import { suggestEmployeesForAssignment } from '$queries/assignments'
 	import { formatDate } from '$utils'
-	import { differenceInCalendarDays, max } from 'date-fns'
+	import { differenceInCalendarDays, max, min } from 'date-fns'
 	import { Gauge, Stars } from 'lucide-svelte'
 	import Confetti from 'svelte-confetti'
 
@@ -60,6 +62,16 @@
 			console.error('Error creating replacement', err)
 		}
 	}
+
+	function handlePickSuggestedEmployee(employee: SuggestedEmployee) {
+		if (!assignmentToSuggest) return
+		replacement.replacementEmployeeId = employee.id
+		if (employee?.startDate && employee.startDate < assignmentToSuggest.endDate) {
+			replacement.replacementEndDate = min([assignmentToSuggest.endDate, employee.startDate])
+		} else {
+			replacement.replacementEndDate = assignmentToSuggest.endDate
+		}
+	}
 </script>
 
 {#if assignments.length > 0}
@@ -104,7 +116,7 @@
 					{#snippet Suggestion()}
 						<button
 							class="suggestion {replacement.replacementEmployeeId === employee.id && 'selected'}"
-							onclick={() => (replacement.replacementEmployeeId = employee.id)}
+							onclick={() => handlePickSuggestedEmployee(employee)}
 						>
 							<div class="title">
 								<img src={suggestionIcons.get(index)} alt="Puesto" />
@@ -146,11 +158,39 @@
 					<Suggestion />
 				{/each}
 			</div>
+
+			{#if replacement.replacementEmployeeId}
+				<div class="date-pick">
+					<FormGroup id="replacementStartDate" label="Fecha de inicio">
+						<DateInput
+							id="replacementStartDate"
+							bind:value={replacement.replacementStartDate}
+							max={formatDate(assignmentToSuggest.endDate)}
+							min={formatDate(new Date())}
+						/>
+					</FormGroup>
+					<FormGroup id="replacementEndDate" label="Fecha de fin">
+						<DateInput
+							id="replacementEndDate"
+							bind:value={replacement.replacementEndDate}
+							max={formatDate(assignmentToSuggest.endDate)}
+							min={formatDate(replacement.replacementStartDate)}
+						/>
+					</FormGroup>
+				</div>
+			{/if}
 		{/if}
 	</Modal>
 {/if}
 
 <style>
+	.date-pick {
+		margin-top: 2rem;
+		width: 100%;
+		display: flex;
+		gap: 3rem;
+		justify-content: center;
+	}
 	.suggestions-wrapper {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, 22rem);

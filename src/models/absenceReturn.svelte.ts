@@ -17,7 +17,7 @@ export class AbsenceReturn {
 	id: number
 	absenceId: number
 	returnedHours: number = $state(1)
-	returnDate: Date = new SvelteDate()
+	returnDate: Date = $state(new SvelteDate())
 	notes?: string = $state('')
 	createdAt?: Date = new Date()
 

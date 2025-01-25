@@ -19,8 +19,8 @@ export class Replacement {
 	id: number = 0
 	originalEmployeeId: number = $state(0)
 	replacementEmployeeId: number = $state(0)
-	replacementStartDate: Date = new SvelteDate()
-	replacementEndDate: Date = new SvelteDate()
+	replacementStartDate: Date = $state(new SvelteDate())
+	replacementEndDate: Date = $state(new SvelteDate())
 	assignmentId: number = $state(0)
 	notes?: string = $state('')
 	createdAt: Date = new Date()

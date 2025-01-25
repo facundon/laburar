@@ -50,6 +50,7 @@
 			<FlaskConical
 				fill={index <= hoverIndex ? 'var(--primary-main)' : isFilled ? 'var(--primary-main)' : '#fff'}
 				color="#333"
+				size={30}
 				strokeWidth={0.5}
 			/>
 		</button>

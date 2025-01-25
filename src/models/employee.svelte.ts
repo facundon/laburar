@@ -24,7 +24,7 @@ export class Employee {
 	address: string = $state('')
 	createdAt: Date = new Date()
 	phone?: string = $state('')
-	startDate?: Date = new SvelteDate()
+	startDate?: Date = $state(new SvelteDate())
 	assignments: EmployeeAssignment[] = $state([])
 
 	constructor(params?: Partial<Omit<Employee, 'name' | 'toCreateDTO' | 'toUpdateDTO'>>) {

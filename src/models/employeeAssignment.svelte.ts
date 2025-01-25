@@ -25,7 +25,7 @@ export class EmployeeAssignment {
 	assignmentId: number = $state(0)
 	isPrimary: boolean = $state(false)
 	efficiency: number = $state(1)
-	assignedDate: Date = new SvelteDate()
+	assignedDate: Date = $state(new SvelteDate())
 	createdAt: Date = new Date()
 	areaId: number = $state(0)
 	areaName: string = $state('')

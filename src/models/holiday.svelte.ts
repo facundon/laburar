@@ -19,8 +19,8 @@ export class Holiday {
 	id: number = 0
 	employeeId: number = $state(0)
 	employeeName: string = ''
-	startDate: Date = new SvelteDate()
-	endDate: Date = new SvelteDate()
+	startDate: Date = $state(new SvelteDate())
+	endDate: Date = $state(new SvelteDate())
 	daysOff: number = $state(1)
 	notes: string = $state('')
 	createdAt: Date = new Date()

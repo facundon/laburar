@@ -13,7 +13,7 @@ export type CompanyHolidayDTO = {
 
 export class CompanyHoliday {
 	id: number = 0
-	date: Date = new SvelteDate()
+	date: Date = $state(new SvelteDate())
 	description: string = $state('')
 	createdAt: Date = new Date()
 
