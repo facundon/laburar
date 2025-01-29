@@ -75,7 +75,7 @@ pub fn list_employee_assignments(
             }
             assignments_with_names
         })
-        .map_err(|err| Error::Database(err.to_string()))?;
+        .map_err(Error::Database)?;
     Ok(assignments)
 }
 
@@ -95,7 +95,7 @@ pub fn create_assignments_to_employee(
         diesel::insert_into(employee_assignment::table)
             .values(&new_assignment)
             .execute(conn)
-            .map_err(|err| Error::Database(err.to_string()))?;
+            .map_err(Error::Database)?;
     }
     Ok(())
 }
@@ -119,7 +119,7 @@ pub fn update_employee_assignment(
         employee_assignment::efficiency.eq(efficiency),
     ))
     .execute(conn)
-    .map_err(|err| Error::Database(err.to_string()))?;
+    .map_err(Error::Database)?;
     Ok(())
 }
 
@@ -136,6 +136,6 @@ pub fn delete_employee_assignment(
         ),
     )
     .execute(conn)
-    .map_err(|err| Error::Database(err.to_string()))?;
+    .map_err(Error::Database)?;
     Ok(())
 }

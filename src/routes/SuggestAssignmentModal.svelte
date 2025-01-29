@@ -8,12 +8,12 @@
 	import { invoke } from '$invoke'
 	import { SuggestedEmployee } from '$models/employee.svelte'
 	import { suggestEmployeesForAssignment } from '$queries/assignments'
-	import type { EmployeeAssignmentWithDates } from '$pages/SuggestAssignmentList.svelte'
 	import { formatDate, formatDateToFullDay } from '$utils'
 	import { differenceInCalendarDays, eachDayOfInterval, max, min } from 'date-fns'
 	import { Replacement } from '$models/replacement.svelte'
 	import { Gauge } from 'lucide-svelte'
 	import Confetti from 'svelte-confetti'
+	import type { EmployeeAssignmentWithDates } from '$models/employeeAssignment.svelte'
 
 	interface Props {
 		assignment: EmployeeAssignmentWithDates
@@ -50,27 +50,18 @@
 		const endDate = new Date(assignment.endDate)
 		const interval = eachDayOfInterval({ start: startDate, end: endDate })
 
-		if (disabledDates?.length) {
-			for (let i = 0; i < interval.length; i++) {
-				let subInterval = []
-				for (let j = i; j < interval.length; j++) {
-					const end = interval[j]
-					if (disabledDates?.includes(formatDate(end))) break
-					subInterval.push(end)
-				}
-				if (subInterval.length > 0) {
-					return { startDate: subInterval[0], endDate: subInterval[subInterval.length - 1] }
-				}
-				const start = interval[i]
-				if (disabledDates?.includes(formatDate(start))) continue
+		if (!disabledDates?.length) return { startDate, endDate }
 
-				for (let j = i; j < interval.length; j++) {
-					const end = interval[j]
-					if (disabledDates?.includes(formatDate(end))) break
-					return { startDate: start, endDate: end }
-				}
+		for (let i = 0; i < interval.length; i++) {
+			let subInterval = []
+			for (let j = i; j < interval.length; j++) {
+				const end = interval[j]
+				if (disabledDates?.includes(formatDate(end))) break
+				subInterval.push(end)
 			}
+			if (subInterval.length > 0) return { startDate: subInterval.at(0), endDate: subInterval.at(-1) }
 		}
+
 		return { startDate, endDate }
 	}
 

@@ -62,14 +62,14 @@ pub fn create_employee(
         .values(&new_employee)
         .returning(Employee::as_returning())
         .get_result(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn get_employee(conn: &mut SqliteConnection, id: i32) -> Result<Employee, Error> {
     employee::table
         .find(id)
         .first(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn get_employee_with_assignments(
@@ -139,13 +139,11 @@ pub fn get_employee_with_assignments(
                 })
             },
         )
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn list_employees(conn: &mut SqliteConnection) -> Result<Vec<Employee>, Error> {
-    employee::table
-        .load(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+    employee::table.load(conn).map_err(Error::Database)
 }
 
 pub fn update_employee(
@@ -167,13 +165,13 @@ pub fn update_employee(
         ))
         .returning(Employee::as_returning())
         .get_result(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn delete_employee(conn: &mut SqliteConnection, id: i32) -> Result<(), Error> {
     diesel::delete(employee::table.find(id))
         .execute(conn)
-        .map_err(|err| Error::Database(err.to_string()))?;
+        .map_err(Error::Database)?;
     Ok(())
 }
 
@@ -261,7 +259,7 @@ pub fn list_competent_employees_for_assignment(
                 )
                 .collect()
         })
-        .map_err(|err| Error::Database(err.to_string()))?;
+        .map_err(Error::Database)?;
 
     for employee in &mut results {
         let assignments_difficulties = assignment::table
@@ -273,7 +271,7 @@ pub fn list_competent_employees_for_assignment(
             )
             .select(assignment::difficulty)
             .load(conn)
-            .map_err(|err| Error::Database(err.to_string()));
+            .map_err(Error::Database);
         if let Ok(assignments_difficulties) = assignments_difficulties {
             employee.assignments_difficulties = assignments_difficulties;
         }
@@ -385,7 +383,7 @@ pub fn list_employees_on_holidays(
             }
             employees_map.into_values().collect::<Vec<_>>()
         })
-        .map_err(|err| Error::Database(err.to_string()))?;
+        .map_err(Error::Database)?;
     Ok(employees_on_holidays)
 }
 
@@ -406,5 +404,5 @@ pub fn list_employees_replacing_assignment(
         .order_by(replacement::replacement_start_date.asc())
         .select(employee::id)
         .load(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }

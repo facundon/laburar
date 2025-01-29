@@ -32,21 +32,21 @@ pub fn create_company_holiday(
         .values(&new_company_holiday)
         .returning(CompanyHoliday::as_returning())
         .get_result(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn get_company_holiday(conn: &mut SqliteConnection, id: i32) -> Result<CompanyHoliday, Error> {
     company_holiday::table
         .find(id)
         .first(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn list_company_holidays(conn: &mut SqliteConnection) -> Result<Vec<CompanyHoliday>, Error> {
     company_holiday::table
         .filter(company_holiday::date.gt(Local::now().date_naive()))
         .load(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn update_company_holiday(
@@ -62,12 +62,12 @@ pub fn update_company_holiday(
         ))
         .returning(CompanyHoliday::as_returning())
         .get_result(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn delete_company_holiday(conn: &mut SqliteConnection, id: i32) -> Result<(), Error> {
     diesel::delete(company_holiday::table.find(id))
         .execute(conn)
-        .map_err(|err| Error::Database(err.to_string()))?;
+        .map_err(Error::Database)?;
     Ok(())
 }

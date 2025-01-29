@@ -60,7 +60,7 @@ pub fn create_replacement(
         .values(&new_replacement)
         .returning(Replacement::as_returning())
         .get_result(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn get_replacement(
@@ -117,7 +117,7 @@ pub fn get_replacement(
                 ),
             },
         )
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn list_replacements(
@@ -181,7 +181,7 @@ pub fn list_replacements(
                 )
                 .collect()
         })
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn list_replacements_for_assignment(
@@ -195,7 +195,7 @@ pub fn list_replacements_for_assignment(
                 .and(replacement::replacement_end_date.ge(Local::now().naive_local().date())),
         )
         .load::<Replacement>(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn update_replacement(
@@ -219,12 +219,28 @@ pub fn update_replacement(
         ))
         .returning(Replacement::as_returning())
         .get_result(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn delete_replacement(conn: &mut SqliteConnection, id: i32) -> Result<(), Error> {
     diesel::delete(replacement::table.find(id))
         .execute(conn)
-        .map_err(|err| Error::Database(err.to_string()))?;
+        .map_err(Error::Database)?;
+    Ok(())
+}
+
+pub fn delete_employee_replacements(
+    conn: &mut SqliteConnection,
+    employee_id: i32,
+) -> Result<(), Error> {
+    diesel::delete(
+        replacement::table.filter(
+            replacement::original_employee_id
+                .eq(employee_id)
+                .or(replacement::replacement_employee_id.eq(employee_id)),
+        ),
+    )
+    .execute(conn)
+    .map_err(Error::Database)?;
     Ok(())
 }

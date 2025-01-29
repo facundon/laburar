@@ -5,7 +5,7 @@ pub enum Error {
     #[error("Failed to parse date: {0}")]
     DateParse(#[from] chrono::ParseError),
     #[error("Database error: {0}")]
-    Database(String),
+    Database(#[from] diesel::result::Error),
 }
 
 impl serde::Serialize for Error {

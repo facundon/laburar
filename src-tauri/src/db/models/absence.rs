@@ -103,14 +103,11 @@ pub fn create_absence(
         .values(&new_absence)
         .returning(Absence::as_returning())
         .get_result(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn get_absence(conn: &mut SqliteConnection, id: i32) -> Result<Absence, Error> {
-    absence::table
-        .find(id)
-        .first(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+    absence::table.find(id).first(conn).map_err(Error::Database)
 }
 
 pub fn get_absence_with_returns(
@@ -159,7 +156,7 @@ pub fn get_absence_with_returns(
             }
             absence_with_returns
         })
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn list_absences(conn: &mut SqliteConnection) -> Result<Vec<AbsenceWithEmployee>, Error> {
@@ -211,7 +208,7 @@ pub fn list_absences(conn: &mut SqliteConnection) -> Result<Vec<AbsenceWithEmplo
                 })
                 .collect()
         })
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn list_absences_for_employee(
@@ -264,7 +261,7 @@ pub fn list_absences_for_employee(
                 })
                 .collect()
         })
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn update_absence(
@@ -291,12 +288,12 @@ pub fn update_absence(
         .set(&updated_absence)
         .returning(Absence::as_returning())
         .get_result(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn delete_absence(conn: &mut SqliteConnection, id: i32) -> Result<(), Error> {
     diesel::delete(absence::table.find(id))
         .execute(conn)
-        .map_err(|err| Error::Database(err.to_string()))?;
+        .map_err(Error::Database)?;
     Ok(())
 }

@@ -42,20 +42,18 @@ pub fn create_absence_return(
         .values(&new_absence_return)
         .returning(AbsenceReturn::as_returning())
         .get_result(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn get_absence_return(conn: &mut SqliteConnection, id: i32) -> Result<AbsenceReturn, Error> {
     absence_return::table
         .find(id)
         .first(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn list_absence_returns(conn: &mut SqliteConnection) -> Result<Vec<AbsenceReturn>, Error> {
-    absence_return::table
-        .load(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+    absence_return::table.load(conn).map_err(Error::Database)
 }
 
 pub fn update_absence_return(
@@ -76,12 +74,12 @@ pub fn update_absence_return(
         .set(&updated_absence_return)
         .returning(AbsenceReturn::as_returning())
         .get_result(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn delete_absence_return(conn: &mut SqliteConnection, id: i32) -> Result<(), Error> {
     diesel::delete(absence_return::table.find(id))
         .execute(conn)
-        .map_err(|err| Error::Database(err.to_string()))?;
+        .map_err(Error::Database)?;
     Ok(())
 }

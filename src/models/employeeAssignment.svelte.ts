@@ -23,6 +23,8 @@ export type EmployeeAssignmentDTO = {
 
 type EmployeeAssignmentParams = Partial<Omit<EmployeeAssignment, 'toCreateDTO' | 'toUpdateDTO' | 'name' | 'replacedDays'>>
 
+export type EmployeeAssignmentWithDates = EmployeeAssignment & { startDate: Date; endDate: Date }
+
 export class EmployeeAssignment {
 	id: number = 0
 	employeeId: number = $state(0)

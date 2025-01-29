@@ -40,20 +40,15 @@ pub fn create_area(
         .values(&new_area)
         .returning(Area::as_returning())
         .get_result(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn get_area(conn: &mut SqliteConnection, id: i32) -> Result<Area, Error> {
-    area::table
-        .find(id)
-        .first(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+    area::table.find(id).first(conn).map_err(Error::Database)
 }
 
 pub fn list_areas(conn: &mut SqliteConnection) -> Result<Vec<Area>, Error> {
-    area::table
-        .load(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+    area::table.load(conn).map_err(Error::Database)
 }
 
 pub fn get_area_with_assignments(
@@ -90,7 +85,7 @@ pub fn get_area_with_assignments(
             }
             Ok(AreaWithAssignments { area, assignments })
         })
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn update_area(
@@ -103,12 +98,12 @@ pub fn update_area(
         .set((area::name.eq(name), area::description.eq(description)))
         .returning(Area::as_returning())
         .get_result(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn delete_area(conn: &mut SqliteConnection, id: i32) -> Result<(), Error> {
     diesel::delete(area::table.find(id))
         .execute(conn)
-        .map_err(|err| Error::Database(err.to_string()))?;
+        .map_err(Error::Database)?;
     Ok(())
 }

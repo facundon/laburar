@@ -1,14 +1,12 @@
 <script lang="ts">
 	import Button from '$components/Button.svelte'
 	import SummaryContainer from '$components/SummaryContainer.svelte'
-	import { EmployeeAssignment } from '$models/employeeAssignment.svelte'
+	import { type EmployeeAssignmentWithDates } from '$models/employeeAssignment.svelte'
 	import SuggestAssignmentModal from '$pages/SuggestAssignmentModal.svelte'
 	import { formatDateToFullDay } from '$utils'
 	import { differenceInCalendarDays, max } from 'date-fns'
 	import { Stars } from 'lucide-svelte'
 	import Confetti from 'svelte-confetti'
-
-	export type EmployeeAssignmentWithDates = EmployeeAssignment & { startDate: Date; endDate: Date }
 
 	interface Props {
 		assignments: EmployeeAssignmentWithDates[]

@@ -54,7 +54,7 @@ pub fn create_holiday(
         .values(&new_holiday)
         .returning(Holiday::as_returning())
         .get_result(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn get_holiday(conn: &mut SqliteConnection, id: i32) -> Result<HolidayWithEmployee, Error> {
@@ -71,7 +71,7 @@ pub fn get_holiday(conn: &mut SqliteConnection, id: i32) -> Result<HolidayWithEm
             holiday,
             employee_name: format!("{} {}", first_name, last_name),
         })
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn list_holidays(conn: &mut SqliteConnection) -> Result<Vec<HolidayWithEmployee>, Error> {
@@ -93,7 +93,7 @@ pub fn list_holidays(conn: &mut SqliteConnection) -> Result<Vec<HolidayWithEmplo
                 })
                 .collect()
         })
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn update_holiday(
@@ -115,12 +115,12 @@ pub fn update_holiday(
         ))
         .returning(Holiday::as_returning())
         .get_result(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn delete_holiday(conn: &mut SqliteConnection, id: i32) -> Result<(), Error> {
     diesel::delete(holiday::table.find(id))
         .execute(conn)
-        .map_err(|err| Error::Database(err.to_string()))?;
+        .map_err(Error::Database)?;
     Ok(())
 }

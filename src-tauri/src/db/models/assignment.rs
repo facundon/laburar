@@ -55,7 +55,7 @@ pub fn create_assignment(
         .values(&new_assignment)
         .returning(Assignment::as_returning())
         .get_result(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn list_assignments(conn: &mut SqliteConnection) -> Result<Vec<AssignmentWithNames>, Error> {
@@ -74,7 +74,7 @@ pub fn list_assignments(conn: &mut SqliteConnection) -> Result<Vec<AssignmentWit
                 })
                 .collect()
         })
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn get_assignment(conn: &mut SqliteConnection, id: i32) -> Result<AssignmentWithNames, Error> {
@@ -89,7 +89,7 @@ pub fn get_assignment(conn: &mut SqliteConnection, id: i32) -> Result<Assignment
             task_name,
             area_name,
         })
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn update_assignment(
@@ -105,13 +105,13 @@ pub fn update_assignment(
         ))
         .returning(Assignment::as_returning())
         .get_result(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn delete_assignment(conn: &mut SqliteConnection, id: i32) -> Result<(), Error> {
     diesel::delete(assignment::table.find(id))
         .execute(conn)
-        .map_err(|err| Error::Database(err.to_string()))?;
+        .map_err(Error::Database)?;
     Ok(())
 }
 
@@ -135,5 +135,5 @@ pub fn list_assignments_without_employees(
                 })
                 .collect()
         })
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }

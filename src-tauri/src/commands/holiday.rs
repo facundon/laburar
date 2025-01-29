@@ -2,9 +2,11 @@ use crate::db::models::holiday::{
     create_holiday, delete_holiday, get_holiday, list_holidays, update_holiday, Holiday,
     HolidayWithEmployee,
 };
+use crate::db::models::replacement::delete_employee_replacements;
 use crate::db::sqlite::establish_connection;
 use crate::error::Error;
 use crate::utils::parse_date;
+use diesel::Connection;
 use tauri::command;
 
 #[command(rename_all = "snake_case")]
@@ -49,15 +51,18 @@ pub fn update_holiday_command(
     notes: Option<&str>,
 ) -> Result<Holiday, Error> {
     let mut conn = establish_connection();
-    update_holiday(
-        &mut conn,
-        id,
-        employee_id,
-        parse_date(start_date)?,
-        parse_date(end_date)?,
-        days_off,
-        notes,
-    )
+    conn.transaction(|conn| {
+        delete_employee_replacements(conn, employee_id)?;
+        update_holiday(
+            conn,
+            id,
+            employee_id,
+            parse_date(start_date)?,
+            parse_date(end_date)?,
+            days_off,
+            notes,
+        )
+    })
 }
 
 #[command(rename_all = "snake_case")]

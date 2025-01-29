@@ -32,21 +32,18 @@ pub fn create_task(
         .values(&new_task)
         .returning(Task::as_returning())
         .get_result(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn get_task(conn: &mut SqliteConnection, id: i32) -> Result<Task, Error> {
-    task::table
-        .find(id)
-        .first(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+    task::table.find(id).first(conn).map_err(Error::Database)
 }
 
 pub fn list_tasks(conn: &mut SqliteConnection, exclude_ids: Vec<i32>) -> Result<Vec<Task>, Error> {
     task::table
         .filter(task::id.ne_all(&exclude_ids))
         .load(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn update_task(
@@ -59,13 +56,13 @@ pub fn update_task(
         .set((task::name.eq(name), task::description.eq(description)))
         .returning(Task::as_returning())
         .get_result(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
 
 pub fn delete_task(conn: &mut SqliteConnection, id: i32) -> Result<(), Error> {
     diesel::delete(task::table.find(id))
         .execute(conn)
-        .map_err(|err| Error::Database(err.to_string()))?;
+        .map_err(Error::Database)?;
     Ok(())
 }
 
@@ -75,5 +72,5 @@ pub fn get_tasks_for_area(conn: &mut SqliteConnection, area_id: i32) -> Result<V
         .filter(assignment::area_id.eq(area_id))
         .select(task::all_columns)
         .load::<Task>(conn)
-        .map_err(|err| Error::Database(err.to_string()))
+        .map_err(Error::Database)
 }
