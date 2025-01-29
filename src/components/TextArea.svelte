@@ -32,8 +32,8 @@
 	textarea {
 		border-radius: 4px;
 		resize: none;
-		min-height: 1rem;
-		max-height: 150px;
+		min-height: 2.5rem;
+		max-height: 6rem;
 	}
 
 	.textarea-wrapper {
@@ -45,6 +45,6 @@
 		text-align: right;
 		margin-top: 0.5rem;
 		font-size: 0.75rem;
-		color: var(--secondary-light);
+		color: var(--secondary-dark);
 	}
 </style>

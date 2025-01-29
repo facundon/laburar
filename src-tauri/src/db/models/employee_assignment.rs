@@ -58,7 +58,8 @@ pub fn list_employee_assignments(
             area::id,
         ))
         .filter(employee_assignment::employee_id.eq(employee_id))
-        .order_by(employee_assignment::is_primary.asc())
+        .order_by(employee_assignment::is_primary.desc())
+        .then_order_by(employee_assignment::efficiency.desc())
         .load(conn)
         .map(|assignments| {
             let mut assignments_with_names = vec![];

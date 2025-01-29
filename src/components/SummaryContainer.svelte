@@ -16,21 +16,21 @@
 		margin-top: 0.5rem;
 	}
 
-	:global(.wrapper > h3) {
+	.wrapper :global(.wrapper > h3) {
 		color: var(--primary-main);
 	}
 
-	:global(.wrapper > p) {
-		text-align: center;
-		margin-block: 3rem;
-	}
-
-	:global(p) {
+	.wrapper :global(p) {
 		font-weight: 500;
 	}
 
-	:global(p > span) {
+	.wrapper :global(p > span) {
 		font-weight: 600;
 		color: var(--secondary-light);
+	}
+
+	.wrapper :global(.empty) {
+		text-align: center;
+		margin-block: 3rem;
 	}
 </style>

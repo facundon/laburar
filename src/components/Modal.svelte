@@ -43,7 +43,7 @@
 		<h2>{title}</h2>
 		<div class="content">
 			{#if message}
-				<p>{message}</p>
+				<p>{@html message}</p>
 			{/if}
 			{@render children?.()}
 		</div>

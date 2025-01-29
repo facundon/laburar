@@ -1,16 +1,19 @@
 import { formatDate, parseDate } from '$utils'
 import { SvelteDate } from 'svelte/reactivity'
 
-type UpdateReplacementDTO = Omit<ReplacementDTO, 'created_at'>
+type UpdateReplacementDTO = Omit<ReplacementDTO, 'created_at' | 'assignment' | 'original_employee_name' | 'replacement_employee_name'>
 type CreateReplacementDTO = Omit<UpdateReplacementDTO, 'id'>
 
 export type ReplacementDTO = {
 	id: number
 	original_employee_id: number
+	original_employee_name: string
 	replacement_employee_id: number
+	replacement_employee_name: string
 	replacement_start_date: string
 	replacement_end_date: string
 	assignment_id: number
+	assignment: string
 	notes?: string
 	created_at: string
 }
@@ -24,6 +27,9 @@ export class Replacement {
 	assignmentId: number = $state(0)
 	notes?: string = $state('')
 	createdAt: Date = new Date()
+	assignment: string = ''
+	originalEmployeeName: string = ''
+	replacementEmployeeName: string = ''
 
 	constructor(params?: Partial<Omit<Replacement, 'toCreateDTO' | 'toUpdateDTO'>>) {
 		if (params?.id !== undefined) this.id = params.id
@@ -34,6 +40,9 @@ export class Replacement {
 		if (params?.assignmentId !== undefined) this.assignmentId = params.assignmentId
 		if (params?.notes !== undefined) this.notes = params.notes
 		if (params?.createdAt !== undefined) this.createdAt = params.createdAt
+		if (params?.assignment !== undefined) this.assignment = params.assignment
+		if (params?.originalEmployeeName !== undefined) this.originalEmployeeName = params.originalEmployeeName
+		if (params?.replacementEmployeeName !== undefined) this.replacementEmployeeName = params.replacementEmployeeName
 	}
 
 	static fromDTO(dto: ReplacementDTO): Replacement {
@@ -46,6 +55,9 @@ export class Replacement {
 			assignmentId: dto.assignment_id,
 			notes: dto.notes,
 			createdAt: parseDate(dto.created_at),
+			assignment: dto.assignment,
+			originalEmployeeName: dto.original_employee_name,
+			replacementEmployeeName: dto.replacement_employee_name,
 		})
 	}
 

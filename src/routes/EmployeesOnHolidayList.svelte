@@ -14,11 +14,12 @@
 </script>
 
 <SummaryContainer title="Personal de Vacaciones 🏖️">
-	{#if employeesOnHoliday.length === 0}{/if}
-	<p>
-		Nadie de vacaciones 😮‍💨
-		<Confetti x={[0.5, 3]} />
-	</p>
+	{#if employeesOnHoliday.length === 0}
+		<p class="empty">
+			Nadie de vacaciones 😮‍💨
+			<Confetti x={[0.5, 3]} />
+		</p>
+	{/if}
 	{#if currentlyOnHoliday.length > 0}
 		<h3>Ahora</h3>
 		{#each currentlyOnHoliday as employee}
@@ -32,10 +33,3 @@
 		{/each}
 	{/if}
 </SummaryContainer>
-
-<style>
-	p {
-		text-align: center;
-		margin-block: 3rem;
-	}
-</style>

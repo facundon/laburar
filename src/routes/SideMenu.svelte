@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ROUTES } from '$routes'
-	import { Home, Users, BriefcaseBusiness, Component, ClipboardX, TentTree, Bird } from 'lucide-svelte'
+	import { Home, Users, BriefcaseBusiness, Component, ClipboardX, TentTree, Bird, Repeat } from 'lucide-svelte'
 	import { page } from '$app/state'
 	import { onMount } from 'svelte'
 
@@ -63,6 +63,12 @@
 				<a href={ROUTES.companyHoliday.list} aria-label="Feriados" class:active={isActive(ROUTES.companyHoliday.list)}>
 					<Bird />
 					<span class="menu-text">Feriados</span>
+				</a>
+			</li>
+			<li>
+				<a href={ROUTES.replacement.list} aria-label="Reemplazos" class:active={isActive(ROUTES.replacement.list)}>
+					<Repeat />
+					<span class="menu-text">Reemplazos</span>
 				</a>
 			</li>
 		</ul>

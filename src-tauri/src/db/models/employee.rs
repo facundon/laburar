@@ -96,6 +96,8 @@ pub fn get_employee_with_assignments(
             task::id.nullable(),
             task::name.nullable(),
         ))
+        .order_by(employee_assignment::is_primary.desc())
+        .then_order_by(employee_assignment::efficiency.desc())
         .load(conn)
         .and_then(
             |results: Vec<(

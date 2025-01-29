@@ -36,4 +36,7 @@ export const ROUTES = {
 		list: '/company-holidays',
 		create: '/company-holidays/create',
 	},
+	replacement: {
+		list: '/replacements',
+	},
 } as const

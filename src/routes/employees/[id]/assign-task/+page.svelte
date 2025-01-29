@@ -3,7 +3,6 @@
 	import { ROUTES } from '$routes'
 	import Button from '$components/Button.svelte'
 	import MainContainer from '$components/MainContainer.svelte'
-	import Checkbox from '$components/Checkbox.svelte'
 	import { Save } from 'lucide-svelte'
 	import CongratsText from '$components/CongratsText.svelte'
 	import AssignmentCheckbox from '$pages/employees/[id]/assign-task/AssignmentCheckbox.svelte'

@@ -10,13 +10,13 @@
 
 <div class="form-group">
 	<label for={id}>{label}</label>
-	{@render children()}
+	{@render children?.()}
 </div>
 
 <style>
 	.form-group {
 		margin-bottom: 1rem;
-		width: fit-content;
+		width: 100%;
 		flex: 1;
 	}
 
@@ -31,6 +31,7 @@
 		border: 2px solid var(--secondary-dark);
 		border-radius: 4px;
 		width: 100%;
+		box-sizing: border-box;
 	}
 
 	:global(.form-group > .textarea-wrapper, .select-wrapper) {

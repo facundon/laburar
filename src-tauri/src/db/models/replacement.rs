@@ -1,4 +1,4 @@
-use crate::db::schema::{employee, replacement};
+use crate::db::schema::{area, assignment, employee, replacement, task};
 use crate::error::Error;
 use chrono::{Local, NaiveDate, NaiveDateTime};
 use diesel::{prelude::*, RunQueryDsl, SelectableHelper, SqliteConnection};
@@ -24,6 +24,7 @@ pub struct ReplacementWithEmployees {
     pub replacement: Replacement,
     pub original_employee_name: String,
     pub replacement_employee_name: String,
+    pub assignment: String,
 }
 
 #[derive(Insertable)]
@@ -66,21 +67,37 @@ pub fn get_replacement(
     conn: &mut SqliteConnection,
     id: i32,
 ) -> Result<ReplacementWithEmployees, Error> {
+    let (original_employee, replacement_employee) = diesel::alias!(
+        employee as original_employee,
+        employee as replacement_employee
+    );
+
     replacement::table
         .inner_join(
-            employee::table.on(employee::id
-                .eq(replacement::original_employee_id)
-                .and(employee::id.eq(replacement::replacement_employee_id))),
+            original_employee
+                .on(replacement::original_employee_id.eq(original_employee.field(employee::id))),
+        )
+        .inner_join(
+            replacement_employee
+                .on(replacement::replacement_employee_id
+                    .eq(replacement_employee.field(employee::id))),
+        )
+        .inner_join(
+            assignment::table
+                .inner_join(area::table)
+                .inner_join(task::table),
         )
         .select((
             replacement::all_columns,
-            employee::first_name,
-            employee::last_name,
-            employee::first_name,
-            employee::last_name,
+            original_employee.field(employee::first_name),
+            original_employee.field(employee::last_name),
+            replacement_employee.field(employee::first_name),
+            replacement_employee.field(employee::last_name),
+            area::name,
+            task::name,
         ))
         .filter(replacement::id.eq(id))
-        .first::<(Replacement, String, String, String, String)>(conn)
+        .first::<(Replacement, String, String, String, String, String, String)>(conn)
         .map(
             |(
                 replacement,
@@ -88,8 +105,11 @@ pub fn get_replacement(
                 original_last_name,
                 replacement_first_name,
                 replacement_last_name,
+                area_name,
+                task_name,
             )| ReplacementWithEmployees {
                 replacement,
+                assignment: format!("{} - {}", area_name, task_name),
                 original_employee_name: format!("{} {}", original_first_name, original_last_name),
                 replacement_employee_name: format!(
                     "{} {}",
@@ -103,21 +123,37 @@ pub fn get_replacement(
 pub fn list_replacements(
     conn: &mut SqliteConnection,
 ) -> Result<Vec<ReplacementWithEmployees>, Error> {
+    let (original_employee, replacement_employee) = diesel::alias!(
+        employee as original_employee,
+        employee as replacement_employee
+    );
+
     replacement::table
         .inner_join(
-            employee::table.on(employee::id
-                .eq(replacement::original_employee_id)
-                .and(employee::id.eq(replacement::replacement_employee_id))),
+            original_employee
+                .on(replacement::original_employee_id.eq(original_employee.field(employee::id))),
+        )
+        .inner_join(
+            replacement_employee
+                .on(replacement::replacement_employee_id
+                    .eq(replacement_employee.field(employee::id))),
+        )
+        .inner_join(
+            assignment::table
+                .inner_join(area::table)
+                .inner_join(task::table),
         )
         .filter(replacement::replacement_end_date.ge(Local::now().naive_local().date()))
         .select((
             replacement::all_columns,
-            employee::first_name,
-            employee::last_name,
-            employee::first_name,
-            employee::last_name,
+            original_employee.field(employee::first_name),
+            original_employee.field(employee::last_name),
+            replacement_employee.field(employee::first_name),
+            replacement_employee.field(employee::last_name),
+            area::name,
+            task::name,
         ))
-        .load::<(Replacement, String, String, String, String)>(conn)
+        .load::<(Replacement, String, String, String, String, String, String)>(conn)
         .map(|results| {
             results
                 .into_iter()
@@ -128,8 +164,11 @@ pub fn list_replacements(
                         original_last_name,
                         replacement_first_name,
                         replacement_last_name,
+                        area_name,
+                        task_name,
                     )| ReplacementWithEmployees {
                         replacement,
+                        assignment: format!("{} - {}", area_name, task_name),
                         original_employee_name: format!(
                             "{} {}",
                             original_first_name, original_last_name

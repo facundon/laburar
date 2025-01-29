@@ -15,6 +15,7 @@
 		edit: 'Editar',
 		absences: 'Ausencias',
 		view: 'Ver',
+		replacements: 'Reemplazos',
 	}
 
 	const path = $derived(page.url.pathname.split('/').filter(Boolean))
