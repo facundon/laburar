@@ -2,10 +2,12 @@ pub use crate::db::models::employee_assignment::{
     create_assignments_to_employee, delete_employee_assignment, list_employee_assignments,
     update_employee_assignment,
 };
+use crate::db::models::replacement::delete_employee_replacements;
 use crate::db::{
     models::employee_assignment::EmployeeAssignmentWithNames, sqlite::establish_connection,
 };
 use crate::error::Error;
+use diesel::Connection;
 use tauri::command;
 
 #[command(rename_all = "snake_case")]
@@ -48,5 +50,8 @@ pub fn delete_employee_assignment_command(
     assignment_id: i32,
 ) -> Result<(), Error> {
     let mut conn = establish_connection();
-    delete_employee_assignment(&mut conn, employee_id, assignment_id)
+    conn.transaction(|conn| {
+        delete_employee_replacements(conn, employee_id)?;
+        delete_employee_assignment(conn, employee_id, assignment_id)
+    })
 }
