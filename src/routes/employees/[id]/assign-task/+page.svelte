@@ -19,7 +19,8 @@
 		else selectedTasks.add(taskId)
 	}
 
-	async function assignTasks() {
+	async function assignTasks(e: Event) {
+		e.preventDefault()
 		if (!employee) return
 		try {
 			const assignmentIds = Array.from(selectedTasks)
@@ -59,10 +60,12 @@
 
 	.task-list {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-		gap: 10px;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 2rem;
 		max-height: 450px;
+		max-width: min-content;
 		overflow-y: auto;
 		margin-bottom: 2rem;
+		white-space: nowrap;
 	}
 </style>

@@ -14,6 +14,7 @@
 		absences?.map(absence => ({
 			...absence,
 			hours: absence.hours || 0,
+			absenceDate: absence.absenceDate,
 			isJustified: absence.isJustified,
 			willReturn: absence.willReturn,
 			isReturned: absence.isReturned,

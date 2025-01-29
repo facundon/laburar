@@ -9,7 +9,7 @@ CREATE TABLE absence (
   absence_type TEXT NOT NULL,
   absence_date DATE NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (employee_id) REFERENCES employee(id)
+  FOREIGN KEY (employee_id) REFERENCES employee(id) ON DELETE CASCADE
 );
 
 CREATE TABLE absence_return (
@@ -19,5 +19,5 @@ CREATE TABLE absence_return (
   notes TEXT,
   return_date DATE NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (absence_id) REFERENCES absence(id)
+  FOREIGN KEY (absence_id) REFERENCES absence(id) ON DELETE CASCADE
 );

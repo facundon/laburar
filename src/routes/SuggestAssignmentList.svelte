@@ -5,6 +5,7 @@
 	import FormGroup from '$components/FormGroup.svelte'
 	import Modal from '$components/Modal.svelte'
 	import Rating from '$components/Rating.svelte'
+	import SummaryContainer from '$components/SummaryContainer.svelte'
 	import { invoke } from '$invoke'
 	import { SuggestedEmployee } from '$models/employee.svelte'
 	import { EmployeeAssignment } from '$models/employeeAssignment.svelte'
@@ -127,12 +128,11 @@
 			.sort((a, b) => a.replacementStartDate.getTime() - b.replacementStartDate.getTime())
 	}
 
-	let currentAssignments = $derived(assignments.filter(a => a.startDate <= new Date()))
-	let nextAssignments = $derived(assignments.filter(a => a.startDate > new Date()))
+	let currentAssignments = $derived(assignments.filter(a => a.startDate <= new Date() && getAssignmentsMissingDays(a) > 0))
+	let nextAssignments = $derived(assignments.filter(a => a.startDate > new Date() && getAssignmentsMissingDays(a) > 0))
 </script>
 
-<div class="wrapper">
-	<h2>Tareas sin Personal Asignado</h2>
+<SummaryContainer title={'Tareas sin Personal Asignado 🤹'}>
 	{#if assignments.length === 0}
 		<p>
 			Todas las tareas estan asignadas 😎
@@ -142,15 +142,13 @@
 	{#if currentAssignments.length > 0}
 		<h3>Ahora</h3>
 		{#each currentAssignments as assignment}
-			{#if getAssignmentsMissingDays(assignment) > 0}
-				<div class="group">
-					<p>
-						{assignment.name} (del <span class="date">{formatDateToFullDay(assignment.startDate, true)}</span> al
-						<span class="date">{formatDateToFullDay(assignment.endDate, true)}</span>)
-					</p>
-					<Button Icon={Stars} outlined onclick={() => (assignmentToSuggest = assignment)} style="height: fit-content;">Sugerir</Button>
-				</div>
-			{/if}
+			<div class="group">
+				<p>
+					{assignment.name} (del <span class="date">{formatDateToFullDay(assignment.startDate, true)}</span> al
+					<span class="date">{formatDateToFullDay(assignment.endDate, true)}</span>)
+				</p>
+				<Button Icon={Stars} outlined onclick={() => (assignmentToSuggest = assignment)} style="height: fit-content;">Sugerir</Button>
+			</div>
 		{/each}
 	{/if}
 	{#if nextAssignments.length > 0}
@@ -167,7 +165,7 @@
 			{/if}
 		{/each}
 	{/if}
-</div>
+</SummaryContainer>
 
 {#if assignmentToSuggest}
 	<Modal
@@ -185,7 +183,7 @@
 			<p class="instruction">
 				A esta tarea le restan cubrir <span>{assignmentMissingDays} días</span>. Selecciona alguien y elige las fechas de inicio y fin.
 			</p>
-			<div class="suggestions-wrapper">
+			<div class="suggestions-wrapper" style={`grid-template-columns: repeat(${suggestions.length}, 1fr);`}>
 				{#each suggestions as employee, index}
 					{@const employeeReplacements = findEmployeeReplacements(employee.id)}
 					{#snippet Suggestion()}
@@ -300,7 +298,6 @@
 	}
 	.suggestions-wrapper {
 		display: grid;
-		grid-template-columns: repeat(3, 20rem);
 		gap: 1rem;
 		justify-content: center;
 	}
@@ -431,21 +428,6 @@
 		text-align: start;
 		margin: 0.5rem 0;
 		margin-left: 0.3rem;
-	}
-
-	h2 {
-		margin-top: 0.5rem;
-	}
-	.wrapper {
-		color: #fff;
-	}
-	.wrapper > p {
-		text-align: center;
-		margin-block: 3rem;
-	}
-
-	.wrapper > h3 {
-		color: var(--primary-main);
 	}
 	.group > p {
 		font-weight: 500;

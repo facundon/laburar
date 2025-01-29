@@ -21,7 +21,8 @@
 
 <style>
 	.container {
-		max-width: 1366px;
+		max-width: 90%;
+		box-sizing: border-box;
 		margin: 0 auto;
 		padding: 2rem;
 		padding-top: 0.5rem;

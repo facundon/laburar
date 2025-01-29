@@ -1,7 +1,8 @@
 <script lang="ts">
-	import MainContainer from '$components/MainContainer.svelte'
+	import SummaryContainer from '$components/SummaryContainer.svelte'
 	import type { EmployeeOnHoliday } from '$models/employee.svelte'
-	import { formatDate, formatDateToFullDay } from '$utils'
+	import { formatDateToFullDay } from '$utils'
+	import Confetti from 'svelte-confetti'
 
 	interface Props {
 		employeesOnHoliday: EmployeeOnHoliday[]
@@ -12,45 +13,29 @@
 	const upcomingHolidays = employeesOnHoliday.filter(employee => !employee.currentlyOnHoliday)
 </script>
 
-{#if currentlyOnHoliday.length > 0 || upcomingHolidays.length > 0}
-	<div class="wrapper">
-		<h2>Personal de Vacaciones 🏖️</h2>
-		{#if currentlyOnHoliday.length > 0}
-			<h3>Ahora</h3>
-			{#each currentlyOnHoliday as employee}
-				<p>{employee.name} (regresa el <span>{formatDateToFullDay(employee.endDate)}</span>)</p>
-			{/each}
-		{/if}
-		{#if upcomingHolidays.length > 0}
-			<h3>Próximamente</h3>
-			{#each upcomingHolidays as employee}
-				<p>{employee.name} (sale el <span>{formatDateToFullDay(employee.startDate)}</span>)</p>
-			{/each}
-		{/if}
-	</div>
-{:else}
-	{null}
-{/if}
+<SummaryContainer title="Personal de Vacaciones 🏖️">
+	{#if employeesOnHoliday.length === 0}{/if}
+	<p>
+		Nadie de vacaciones 😮‍💨
+		<Confetti x={[0.5, 3]} />
+	</p>
+	{#if currentlyOnHoliday.length > 0}
+		<h3>Ahora</h3>
+		{#each currentlyOnHoliday as employee}
+			<p>{employee.name} (regresa el <span>{formatDateToFullDay(employee.endDate)}</span>)</p>
+		{/each}
+	{/if}
+	{#if upcomingHolidays.length > 0}
+		<h3>Próximamente</h3>
+		{#each upcomingHolidays as employee}
+			<p>{employee.name} (sale el <span>{formatDateToFullDay(employee.startDate)}</span>)</p>
+		{/each}
+	{/if}
+</SummaryContainer>
 
 <style>
-	.wrapper {
-		color: #fff;
-	}
-
-	h2 {
-		margin-top: 0.5rem;
-	}
-
-	h3 {
-		color: var(--primary-main);
-	}
-
 	p {
-		font-weight: 500;
-	}
-
-	p > span {
-		font-weight: 600;
-		color: var(--secondary-light);
+		text-align: center;
+		margin-block: 3rem;
 	}
 </style>

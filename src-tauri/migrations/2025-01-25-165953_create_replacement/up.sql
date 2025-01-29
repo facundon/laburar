@@ -8,7 +8,7 @@ CREATE TABLE replacement (
   assignment_id INTEGER NOT NULL,
   notes TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (original_employee_id) REFERENCES employee(id),
-  FOREIGN KEY (replacement_employee_id) REFERENCES employee(id),
-  FOREIGN KEY (assignment_id) REFERENCES assignment(id)
+  FOREIGN KEY (original_employee_id) REFERENCES employee(id) ON DELETE CASCADE,
+  FOREIGN KEY (replacement_employee_id) REFERENCES employee(id) ON DELETE CASCADE,
+  FOREIGN KEY (assignment_id) REFERENCES assignment(id) ON DELETE CASCADE
 );

@@ -20,8 +20,8 @@ CREATE TABLE assignment (
   difficulty INTEGER NOT NULL DEFAULT 1,
   frequency VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (task_id) REFERENCES task(id),
-  FOREIGN KEY (area_id) REFERENCES area(id),
+  FOREIGN KEY (task_id) REFERENCES task(id) ON DELETE CASCADE,
+  FOREIGN KEY (area_id) REFERENCES area(id) ON DELETE CASCADE,
   UNIQUE (task_id, area_id)
 );
 
@@ -33,8 +33,8 @@ CREATE TABLE employee_assignment (
   efficiency INTEGER NOT NULL DEFAULT 1,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   assigned_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (employee_id) REFERENCES employee(id),
-  FOREIGN KEY (assignment_id) REFERENCES assignment(id),
+  FOREIGN KEY (employee_id) REFERENCES employee(id) ON DELETE CASCADE,
+  FOREIGN KEY (assignment_id) REFERENCES assignment(id) ON DELETE CASCADE,
   UNIQUE (employee_id, assignment_id)
 );
 
@@ -71,4 +71,4 @@ INSERT INTO task (name) VALUES
 ('Dilución y lectura de ionogramas'),
 ('Manejo equipo INCA'),
 ('Técnica HAI toxoplasmosis'),
-('Técnica HAI chagas'),
+('Técnica HAI chagas');
