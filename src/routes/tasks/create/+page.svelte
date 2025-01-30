@@ -9,7 +9,8 @@
 
 	let task = $state(new Task())
 
-	async function createTask() {
+	async function createTask(e: Event) {
+		e.preventDefault()
 		try {
 			await invoke('create_task_command', task.toCreateDTO())
 			window.location.href = ROUTES.task.list

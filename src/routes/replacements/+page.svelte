@@ -57,7 +57,7 @@
 			{
 				field: 'delete',
 				headerName: '',
-				with: 20,
+				width: 20,
 				renderCell: onclick => ({ component: Delete, props: { onclick, style: 'cursor: pointer', color: 'var(--error-main)' } }),
 			},
 		]}

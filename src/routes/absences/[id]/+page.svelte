@@ -47,7 +47,16 @@
 	}
 
 	let absenceReturnsWithActions = $derived(
-		absence?.returns.map(r => ({ ...r, returnedHours: r.returnedHours, notes: r.notes, delete: () => (returnToDelete = r) })),
+		absence?.returns.map(r => ({
+			...r,
+			createdAt: r.createdAt,
+			id: r.id,
+			absenceId: r.absenceId,
+			returnDate: r.returnDate,
+			returnedHours: r.returnedHours,
+			notes: r.notes,
+			delete: () => (returnToDelete = r),
+		})),
 	)
 </script>
 

@@ -9,7 +9,8 @@
 
 	let employee = $state(new Employee())
 
-	async function createEmployee() {
+	async function createEmployee(e: Event) {
+		e.preventDefault()
 		try {
 			await invoke('create_employee_command', employee.toCreateDTO())
 			window.location.href = ROUTES.employee.list

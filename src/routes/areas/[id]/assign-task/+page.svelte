@@ -15,7 +15,8 @@
 
 	let assignment = $state(new Assignment({ areaId: area?.id }))
 
-	async function assignTasks() {
+	async function assignTasks(e: Event) {
+		e.preventDefault()
 		if (!area) return
 		try {
 			await invoke('create_assignment_command', assignment.toCreateDTO())

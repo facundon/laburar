@@ -10,6 +10,7 @@
 	let holiday = $state(new Holiday())
 
 	const createHoliday = async () => {
+		if (!holiday.employeeId) return
 		try {
 			await invoke('create_holiday_command', holiday.toCreateDTO())
 			window.location.href = ROUTES.holiday.list
@@ -23,7 +24,7 @@
 	<HolidayForm bind:holiday onsubmit={createHoliday}>
 		<div class="actions">
 			<Button href={ROUTES.holiday.list} outlined variant="secondary">Cancelar</Button>
-			<Button type="submit" Icon={Save}>Guardar</Button>
+			<Button type="submit" Icon={Save} disabled={!holiday.employeeId}>Guardar</Button>
 		</div>
 	</HolidayForm>
 </MainContainer>

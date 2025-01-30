@@ -135,6 +135,7 @@
 	onclose={closeModal}
 	onconfirm={handleConfirmSuggestion}
 	onmount={getSuggestionsForAssignment}
+	disableCta={!replacement.replacementEmployeeId || !!error}
 >
 	{#if suggestions === null}
 		<p>Cargando...</p>

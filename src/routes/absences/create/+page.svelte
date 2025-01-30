@@ -9,7 +9,8 @@
 
 	let absence = $state(new Absence())
 
-	const createAbsence = async () => {
+	const createAbsence = async (e: Event) => {
+		e.preventDefault()
 		try {
 			await invoke('create_absence_command', absence.toCreateDTO())
 			window.location.href = ROUTES.absence.list

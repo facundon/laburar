@@ -10,7 +10,8 @@
 	let { data } = $props()
 	let holiday = $state(new Holiday(data.holiday || {}))
 
-	const editHoliday = async () => {
+	const editHoliday = async (e: Event) => {
+		e.preventDefault()
 		try {
 			await invoke('update_holiday_command', holiday.toUpdateDTO())
 			window.location.href = ROUTES.holiday.view(holiday.id)

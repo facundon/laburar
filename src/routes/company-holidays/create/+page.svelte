@@ -10,7 +10,8 @@
 
 	let companyHoliday = $state(new CompanyHoliday())
 
-	const createCompanyHoliday = async () => {
+	const createCompanyHoliday = async (e: Event) => {
+		e.preventDefault()
 		try {
 			await invoke('create_company_holiday_command', companyHoliday.toCreateDTO())
 			window.location.href = ROUTES.companyHoliday.list

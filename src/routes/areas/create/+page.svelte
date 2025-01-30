@@ -9,7 +9,8 @@
 
 	let area = $state(new Area())
 
-	async function createArea() {
+	async function createArea(e: Event) {
+		e.preventDefault()
 		try {
 			await invoke('create_area_command', area.toCreateDTO())
 			window.location.href = ROUTES.area.list

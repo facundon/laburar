@@ -7,6 +7,7 @@
 		title?: string
 		message?: string
 		isDestructive?: boolean
+		disableCta?: boolean
 		onclose: () => void
 		onconfirm: () => void
 		onmount?: () => void
@@ -22,6 +23,7 @@
 		isDestructive = false,
 		children,
 		onmount,
+		disableCta = false,
 	}: Props = $props()
 
 	function close() {
@@ -49,7 +51,9 @@
 		</div>
 		<div class="actions">
 			<Button onclick={close} variant="secondary-dark" outlined>Cancelar</Button>
-			<Button variant={isDestructive ? 'error' : 'primary'} onclick={confirm} Icon={isDestructive ? Trash2 : Check}>Confirmar</Button>
+			<Button variant={isDestructive ? 'error' : 'primary'} onclick={confirm} Icon={isDestructive ? Trash2 : Check} disabled={disableCta}
+				>Confirmar</Button
+			>
 		</div>
 	</div>
 {/if}

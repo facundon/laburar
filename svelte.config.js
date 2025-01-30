@@ -8,24 +8,11 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte'
 const config = {
 	preprocess: vitePreprocess(),
 	kit: {
-		adapter: adapter(),
+		adapter: adapter({
+			fallback: '200.html',
+		}),
 		prerender: {
-			entries: [
-				'*',
-				'/absences/1',
-				'/absences/1/edit',
-				'/absences/1/return',
-				'/areas/1',
-				'/areas/1/edit',
-				'/areas/1/assign-task',
-				'/employees/1',
-				'/employees/1/edit',
-				'/employees/1/assign-task',
-				'/tasks/1',
-				'/tasks/1/edit',
-				'/holidays/1',
-				'/holidays/1/edit',
-			],
+			entries: ['*'],
 		},
 		alias: {
 			$models: './src/models',
