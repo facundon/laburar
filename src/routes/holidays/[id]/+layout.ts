@@ -2,6 +2,8 @@ import { breadcrumbData } from '$context'
 import { invoke } from '$invoke'
 import { Holiday } from '$models/holiday.svelte.js'
 
+export const prerender = false
+
 export const load = async ({ params }) => {
 	const holidayId = Number(params.id)
 	try {

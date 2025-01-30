@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ChevronDown } from 'lucide-svelte'
 	import type { HTMLSelectAttributes } from 'svelte/elements'
+	import { onDestroy } from 'svelte'
 
 	let { children, value = $bindable(), ...rest }: HTMLSelectAttributes = $props()
 
@@ -56,18 +57,22 @@
 		isOpen = false
 	}
 
-	$effect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
-			if (wrapper?.contains(event.target as Node)) return
-			isOpen = false
-			search = Object.values(select.options).find(opt => opt.value === select.value)?.text || ''
-		}
+	const handleClickOutside = (event: MouseEvent) => {
+		if (wrapper?.contains(event.target as Node)) return
+		isOpen = false
+		search = Object.values(select.options).find(opt => opt.value === select.value)?.text || ''
+	}
 
+	$effect(() => {
 		if (isOpen) {
 			document.addEventListener('click', handleClickOutside)
 		} else {
 			document.removeEventListener('click', handleClickOutside)
 		}
+	})
+
+	onDestroy(() => {
+		document.removeEventListener('click', handleClickOutside)
 	})
 </script>
 

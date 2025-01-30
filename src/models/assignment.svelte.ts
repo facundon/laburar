@@ -18,8 +18,8 @@ type AssignmentObject = Partial<Omit<Assignment, 'toCreateDTO' | 'toUpdateDTO' |
 
 export class Assignment {
 	id: number = 0
-	taskId: number = 0
-	areaId: number = 0
+	taskId: number = $state(0)
+	areaId: number = $state(0)
 	difficulty: number = $state(1)
 	frequency: string = $state('')
 	createdAt: Date = new Date()
