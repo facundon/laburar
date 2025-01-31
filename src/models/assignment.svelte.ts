@@ -88,6 +88,7 @@ export const AssignmentFrequency = {
 	DIARIA: 'Diaria',
 	SEMANAL_ODD: 'Lun, Mie, Vie',
 	SEMANAL_EVEN: 'Mar, Jue',
+	SEMANAL: 'Semanal',
 	MENSUAL: 'Mensual',
 } as const
 export type AssignmentFrequency = ValueOf<typeof AssignmentFrequency>
