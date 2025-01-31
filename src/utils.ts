@@ -8,7 +8,7 @@ export function toTitleCase(str: string): string {
 }
 
 export function toYesNo(value: boolean | undefined): string {
-	return value ? 'Sí' : 'No'
+	return value ? '✅' : '❌'
 }
 
 export function getWeekends(includeSaturdays: boolean = true): Date[] {

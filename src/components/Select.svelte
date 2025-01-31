@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ChevronDown } from 'lucide-svelte'
+	import { ChevronDown, Eraser } from 'lucide-svelte'
 	import type { HTMLSelectAttributes } from 'svelte/elements'
 	import { onDestroy } from 'svelte'
 
@@ -57,10 +57,16 @@
 		isOpen = false
 	}
 
+	function clearInput(event: MouseEvent) {
+		event.stopPropagation()
+		isOpen = true
+		search = ''
+		filterOptions()
+	}
+
 	const handleClickOutside = (event: MouseEvent) => {
 		if (wrapper?.contains(event.target as Node)) return
 		isOpen = false
-		search = Object.values(select.options).find(opt => opt.value === select.value)?.text || ''
 	}
 
 	$effect(() => {
@@ -87,7 +93,12 @@
 			onkeydown={handleKeydown}
 			placeholder="Buscar..."
 		/>
-		<button class="icon" onclick={handleButtonClick} type="button" tabindex="-1">
+		{#if search}
+			<button class="icon clear" onclick={clearInput} type="button" tabindex="-1">
+				<Eraser color="var(--error-dark)" strokeWidth={1} />
+			</button>
+		{/if}
+		<button class="icon chevron" onclick={handleButtonClick} type="button" tabindex="-1">
 			<ChevronDown color="var(--secondary-dark)" strokeWidth={1} />
 		</button>
 	</div>
@@ -103,6 +114,7 @@
 					role="option"
 					aria-selected={i === highlightedIndex}
 					tabindex="0"
+					onmouseenter={() => (highlightedIndex = i)}
 					onclick={() => {
 						setValue(option)
 					}}
@@ -147,6 +159,8 @@
 		background: white;
 		border: 1px solid #ccc;
 		color: var(--gray-dark);
+		max-height: 20rem;
+		overflow-y: auto;
 	}
 	.dropdown-item {
 		padding: 0.5rem;
@@ -166,10 +180,17 @@
 		border: none;
 		position: absolute;
 		top: 0.5rem;
-		right: 0.5rem;
 		padding-block: 0;
 		margin: 0;
 		cursor: pointer;
+	}
+
+	.chevron {
+		right: 0.5rem;
+	}
+
+	.clear {
+		right: 2.5rem;
 	}
 
 	select {
