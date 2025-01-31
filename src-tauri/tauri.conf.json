@@ -25,8 +25,18 @@
 			"csp": null
 		}
 	},
+	"plugins": {
+		"updater": {
+			"windows": {
+				"installMode": "passive"
+			},
+			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEVDRjlCOEVBRURENDAwMkEKUldRcUFOVHQ2cmo1N0tpSGFNQXhwVWRDSGc1VEJ1MXJ5SmxhYU9HdVVld1Q4dWt1YkFZYW5saVQK",
+			"endpoints": ["https://github.com/facundon/personal-manager/releases/latest/download/latest.json"]
+		}
+	},
 	"bundle": {
 		"active": true,
+		"createUpdaterArtifacts": true,
 		"targets": "nsis",
 		"publisher": "Facundon",
 		"windows": {

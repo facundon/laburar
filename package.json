@@ -16,6 +16,7 @@
 	"dependencies": {
 		"@tauri-apps/api": "^2",
 		"@tauri-apps/plugin-opener": "^2",
+		"@tauri-apps/plugin-updater": "~2",
 		"date-fns": "^4.1.0",
 		"lodash.startcase": "^4.4.0",
 		"lucide-svelte": "^0.469.0"
