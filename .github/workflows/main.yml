@@ -20,6 +20,31 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      
+      # 2. Cache Cargo registry (so downloading crates is faster)
+      - name: Cache Cargo registry
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+
+      # 3. Cache Cargo git dependencies (if any)
+      - name: Cache Cargo git
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/git
+          key: ${{ runner.os }}-cargo-git-${{ hashFiles('**/Cargo.lock') }}
+
+      # 4. Cache compiled Rust artifacts (adjust the path if your Cargo.toml is in a subfolder)
+      - name: Cache Cargo build
+        uses: actions/cache@v3
+        with:
+          # If your Tauri Rust code is in the root, use "target". If it's under "src-tauri", update accordingly.
+          path: |
+            target
+            src-tauri/target
+          key: ${{ runner.os }}-cargo-target-${{ hashFiles('src-tauri/Cargo.lock', 'Cargo.lock') }}
+
       - name: setup node
         uses: actions/setup-node@v4
         with:
