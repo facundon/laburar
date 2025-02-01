@@ -1,11 +1,13 @@
 <script lang="ts">
-	import { check } from '@tauri-apps/plugin-updater'
+	import { check, Update } from '@tauri-apps/plugin-updater'
+	import { DownloadCloud } from 'lucide-svelte'
 	import { onDestroy, onMount } from 'svelte'
 
 	let status = $state<string | null>(null)
 	let total = $state(0)
 	let downloaded = $state(0)
 	let percentage = $derived(((downloaded / total) * 100).toFixed(2))
+	let update = $state<Update | null>(null)
 
 	function formatBytes(bytes: number) {
 		const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
@@ -17,8 +19,13 @@
 	async function checkUpdate() {
 		console.log('checking for updates')
 		const update = await check()
+		console.log({ update })
 		if (!update) return
+		status = 'Se encontró una actualización. Presiona el botón para descargarla.'
+	}
 
+	async function updateApp() {
+		if (!update) return
 		await update.downloadAndInstall(event => {
 			switch (event.event) {
 				case 'Started':
@@ -33,7 +40,6 @@
 					break
 			}
 		})
-		status = null
 	}
 
 	let interval = $state<number | null>(null)
@@ -48,10 +54,21 @@
 
 {#if status}
 	<div class="update-bar">
-		{#if total > 0}
+		{#if status}
 			<p>
 				{status}{' '}
-				<span>{percentage}% ({formatBytes(downloaded)} / {formatBytes(total)})</span>
+				{#if update && total === 0}
+					<DownloadCloud
+						onclick={updateApp}
+						color="var(--success-light)"
+						strokeWidth="1"
+						style="margin-left: 0.5rem; vertical-align: middle; cursor: pointer;"
+						size={'1.2rem'}
+					/>
+				{/if}
+				{#if total > 0}
+					<span>{percentage}% ({formatBytes(downloaded)} / {formatBytes(total)})</span>
+				{/if}
 			</p>
 		{/if}
 		<div class="progress" style="width: {percentage}%"></div>

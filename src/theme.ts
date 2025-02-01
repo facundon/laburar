@@ -13,9 +13,9 @@ export const theme = {
 			contrast: '#333',
 		},
 		success: {
-			main: '#72A98F', // Green
-			light: '#A3D1B8', // Lighter shade of green
-			dark: '#4A7A63', // Darker shade of green
+			main: '#4CAF50', // Green
+			light: '#80E27E', // Lighter shade of green
+			dark: '#087F23', // Darker shade of green
 			contrast: '#FBFBFF',
 		},
 		error: {
