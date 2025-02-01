@@ -2,6 +2,7 @@
 	import { cssVariables } from '$theme'
 	import SideMenu from '$pages/SideMenu.svelte'
 	import Breadcrumb from '$pages/Breadcrumb.svelte'
+	import Updater from '$pages/Updater.svelte'
 
 	let { children } = $props()
 </script>
@@ -9,6 +10,7 @@
 <main style={cssVariables}>
 	<SideMenu />
 	<section>
+		<Updater />
 		<Breadcrumb />
 		<div class="container">
 			{@render children()}
