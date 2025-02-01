@@ -19,7 +19,7 @@
 				"width": 1366,
 				"height": 920,
 				"label": "LaburAR",
-				"fullscreen": true
+				"maximized": true
 			}
 		],
 		"security": {
