@@ -1,6 +1,6 @@
 use crate::db::models::replacement::{
-    create_replacement, delete_replacement, get_replacement, list_replacements, update_replacement,
-    Replacement, ReplacementWithEmployees,
+    create_replacement, delete_finished_replacements, delete_replacement, get_replacement,
+    list_replacements, update_replacement, Replacement, ReplacementWithEmployees,
 };
 use crate::db::sqlite::establish_connection;
 use crate::error::Error;
@@ -67,4 +67,10 @@ pub fn update_replacement_command(
 pub fn delete_replacement_command(id: i32) -> Result<(), Error> {
     let mut conn = establish_connection();
     delete_replacement(&mut conn, id)
+}
+
+#[command(rename_all = "snake_case")]
+pub fn delete_finished_replacements_command() -> Result<(), Error> {
+    let mut conn = establish_connection();
+    delete_finished_replacements(&mut conn)
 }
