@@ -244,3 +244,13 @@ pub fn delete_employee_replacements(
     .map_err(Error::Database)?;
     Ok(())
 }
+
+pub fn delete_finished_replacements(conn: &mut SqliteConnection) -> Result<(), Error> {
+    diesel::delete(
+        replacement::table
+            .filter(replacement::replacement_end_date.lt(Local::now().naive_local().date())),
+    )
+    .execute(conn)
+    .map_err(Error::Database)?;
+    Ok(())
+}
