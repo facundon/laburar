@@ -18,10 +18,10 @@
 
 	async function checkUpdate() {
 		console.log('checking for updates')
-		const update = await check()
-		console.log({ update })
+		const _update = await check()
 		if (!update) return
 		status = 'Se encontró una actualización. Presiona el botón para descargarla.'
+		update = _update 
 	}
 
 	async function updateApp() {
