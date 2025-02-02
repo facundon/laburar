@@ -7,7 +7,7 @@
 	let total = $state(0)
 	let downloaded = $state(0)
 	let percentage = $derived(((downloaded / total) * 100).toFixed(2))
-	let update = $state<Update | null>(null)
+	let updater = $state<Update | null>(null)
 
 	function formatBytes(bytes: number) {
 		const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
@@ -18,19 +18,19 @@
 
 	async function checkUpdate() {
 		console.log('checking for updates')
-		const _update = await check()
+		const update = await check()
 		if (!update) return
 		status = 'Se encontró una actualización. Presiona el botón para descargarla.'
-		update = _update 
+		updater = update
 	}
 
 	async function updateApp() {
-		if (!update) return
-		await update.downloadAndInstall(event => {
+		if (!updater) return
+		await updater.downloadAndInstall(event => {
 			switch (event.event) {
 				case 'Started':
 					total = event.data.contentLength || 0
-					status = `Descargando ${update.version}...`
+					status = `Descargando ${updater?.version}...`
 					break
 				case 'Progress':
 					downloaded += event.data.chunkLength
@@ -57,7 +57,7 @@
 		{#if status}
 			<p>
 				{status}{' '}
-				{#if update && total === 0}
+				{#if updater && total === 0}
 					<DownloadCloud
 						onclick={updateApp}
 						color="var(--success-light)"
