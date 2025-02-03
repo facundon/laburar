@@ -1,30 +1,20 @@
 #!/bin/bash
 
-# Exit immediately if a command exits with a non-zero status
-set -e
+set -e  # Exit on error
 
-# Fetch the latest changes from the remote repository
-git fetch origin
+BRANCH_MAIN="main"
+BRANCH_RELEASE="release"
 
-# Checkout the main branch and pull the latest changes
-git checkout main
-git pull origin main
+# Ensure we're on the main branch
+git checkout $BRANCH_MAIN
+git pull origin $BRANCH_MAIN
 
-# Checkout the release branch and pull the latest changes
-git checkout release
-git pull origin release
+# Merge main into release (fast-forward if possible)
+git checkout $BRANCH_RELEASE
+git pull origin $BRANCH_RELEASE
+git reset --hard $BRANCH_MAIN  # Make release identical to main
 
-# Merge the main branch into the release branch
-git merge main
+# Push release branch
+git push origin $BRANCH_RELEASE --force
 
-# Push the release branch to the remote repository
-git push origin release
-
-# Merge the release branch back into the main branch
-git checkout main
-git merge release
-
-# Push the main branch to the remote repository
-git push origin main
-
-echo "Deployment completed successfully."
+echo "Deployment completed successfully!"
