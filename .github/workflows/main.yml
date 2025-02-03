@@ -20,29 +20,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 2. Cache Cargo registry (so downloading crates is faster)
       - name: Cache Cargo registry
         uses: actions/cache@v3
         with:
           path: ~/.cargo/registry
           key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
 
-      # 3. Cache Cargo git dependencies (if any)
-      - name: Cache Cargo git
-        uses: actions/cache@v3
-        with:
-          path: ~/.cargo/git
-          key: ${{ runner.os }}-cargo-git-${{ hashFiles('**/Cargo.lock') }}
-
-      # 4. Cache compiled Rust artifacts (adjust the path if your Cargo.toml is in a subfolder)
       - name: Cache Cargo build
         uses: actions/cache@v3
         with:
-          # If your Tauri Rust code is in the root, use "target". If it's under "src-tauri", update accordingly.
-          path: |
-            target
-            src-tauri/target
-          key: ${{ runner.os }}-cargo-target-${{ hashFiles('src-tauri/Cargo.lock', 'Cargo.lock') }}
+          path: src-tauri/target
+          key: ${{ runner.os }}-cargo-target-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache Node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Cache Yarn cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.yarn
+          key: ${{ runner.os }}-yarn-cache-${{ hashFiles('**/yarn.lock') }}
 
       - name: setup node
         uses: actions/setup-node@v4
@@ -60,11 +60,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-        # webkitgtk 4.0 is for Tauri v1 - webkitgtk 4.1 is for Tauri v2.
-        # You can remove the one that doesn't apply to your app to speed up the workflow a bit.
 
       - name: install frontend dependencies
-        run: yarn install # change this to npm, pnpm or bun depending on which one you use.
+        run: yarn install
 
       - uses: tauri-apps/tauri-action@v0
         env:
@@ -72,8 +70,8 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
-          tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
-          releaseName: 'App v__VERSION__'
+          tagName: v__VERSION__
+          releaseName: 'LaburAR v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: false
           prerelease: false
