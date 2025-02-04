@@ -15,7 +15,8 @@
 
 	const { data } = $props()
 	let employee = $state(data.employee)
-	const absencesWithActions =
+
+	let absencesWithActions = $derived(
 		data.absences?.map(absence => ({
 			...absence,
 			absenceDate: absence.absenceDate,
@@ -25,7 +26,8 @@
 			willReturn: absence.willReturn,
 			isReturned: absence.isReturned,
 			view: ROUTES.absence.view(absence.id),
-		})) || []
+		})) || [],
+	)
 
 	$effect(() => {
 		if (data?.employee !== employee) employee = data.employee
@@ -63,7 +65,7 @@
 	}
 
 	const closeEditAssignmentModal = () => (assignmentToEdit = null)
-	const employeeAssignmentsWithActions = $derived(
+	let employeeAssignmentsWithActions = $derived(
 		employee?.assignments.map(assignment => ({
 			...assignment,
 			name: assignment.name,
@@ -76,6 +78,9 @@
 			edit: () => (assignmentToEdit = assignment),
 		})) || [],
 	)
+
+	let employeePrimaryAssignments = $derived(employeeAssignmentsWithActions.filter(assignment => assignment.isPrimary))
+	let employeeSecondaryAssignments = $derived(employeeAssignmentsWithActions.filter(assignment => !assignment.isPrimary))
 
 	const getDifferenceInYears = (startDate: Date): number => differenceInYears(new Date(), startDate)
 </script>
@@ -112,69 +117,93 @@
 		/>
 	</MainContainer>
 
-	{#if employee.assignments.length > 0}
-		<MainContainer title="Tareas Asignadas" style="margin-top: 1rem;">
-			{#if employee.assignments.length > 0}
-				<Table
-					rows={employeeAssignmentsWithActions}
-					columns={[
-						{ field: 'name', headerName: 'Nombre' },
-						{
-							field: 'efficiency',
-							headerName: 'Eficiencia',
-							renderCell: value => ({ component: Rating, props: { rating: Number(value) } }),
-						},
-						{ field: 'isPrimary', headerName: 'Es Primaria', formatValue: toYesNo },
-						{
-							field: 'edit',
-							width: 20,
-							headerName: '',
-							renderCell: onclick => ({ component: Edit, props: { onclick, color: 'var(--secondary-dark)', style: 'cursor: pointer;' } }),
-						},
-						{
-							field: 'delete',
-							width: 20,
-							headerName: '',
-							renderCell: onclick => ({ component: Delete, props: { onclick, color: 'var(--error-main)', style: 'cursor: pointer;' } }),
-						},
-					]}
-				/>
-			{/if}
+	{#if employeePrimaryAssignments.length > 0}
+		<MainContainer title="Tareas Primarias Asignadas" style="margin-top: 1rem;">
+			<Table
+				rows={employeePrimaryAssignments}
+				columns={[
+					{ field: 'name', headerName: 'Nombre' },
+					{
+						field: 'efficiency',
+						headerName: 'Eficiencia',
+						renderCell: value => ({ component: Rating, props: { rating: Number(value) } }),
+					},
+					{
+						field: 'edit',
+						width: 20,
+						headerName: '',
+						renderCell: onclick => ({ component: Edit, props: { onclick, color: 'var(--secondary-dark)', style: 'cursor: pointer;' } }),
+					},
+					{
+						field: 'delete',
+						width: 20,
+						headerName: '',
+						renderCell: onclick => ({ component: Delete, props: { onclick, color: 'var(--error-main)', style: 'cursor: pointer;' } }),
+					},
+				]}
+			/>
 		</MainContainer>
-		{#if absencesWithActions.length}
-			<MainContainer title="Ausencias" style="margin-top: 1rem;">
-				<Table
-					rows={absencesWithActions}
-					columns={[
-						{ field: 'absenceDate', headerName: 'Fecha', formatValue: value => value.toLocaleDateString() },
-						{ field: 'hours', headerName: 'Horas' },
-						{ field: 'isJustified', headerName: 'Justificada', formatValue: toYesNo },
-						{ field: 'willReturn', headerName: 'Devolverá', formatValue: toYesNo },
-						{ field: 'isReturned', headerName: 'Devolvió', formatValue: toYesNo },
-						{
-							field: 'view',
-							width: 20,
-							headerName: '',
-							renderCell: href => ({
-								component: Eye,
-								props: { onclick: () => goto(href), color: 'var(--secondary-dark)', style: 'cursor: pointer;' },
-							}),
-						},
-					]}
-				/>
-			</MainContainer>
-		{/if}
+	{/if}
+	{#if employeeSecondaryAssignments.length > 0}
+		<MainContainer title="Tareas de Remplazo" style="margin-top: 1rem;">
+			<Table
+				rows={employeeSecondaryAssignments}
+				columns={[
+					{ field: 'name', headerName: 'Nombre' },
+					{
+						field: 'efficiency',
+						headerName: 'Eficiencia',
+						renderCell: value => ({ component: Rating, props: { rating: Number(value) } }),
+					},
+					{
+						field: 'edit',
+						width: 20,
+						headerName: '',
+						renderCell: onclick => ({ component: Edit, props: { onclick, color: 'var(--secondary-dark)', style: 'cursor: pointer;' } }),
+					},
+					{
+						field: 'delete',
+						width: 20,
+						headerName: '',
+						renderCell: onclick => ({ component: Delete, props: { onclick, color: 'var(--error-main)', style: 'cursor: pointer;' } }),
+					},
+				]}
+			/>
+		</MainContainer>
+	{/if}
+	{#if absencesWithActions.length}
+		<MainContainer title="Ausencias" style="margin-top: 1rem;">
+			<Table
+				rows={absencesWithActions}
+				columns={[
+					{ field: 'absenceDate', headerName: 'Fecha', formatValue: value => value.toLocaleDateString() },
+					{ field: 'hours', headerName: 'Horas' },
+					{ field: 'isJustified', headerName: 'Justificada', formatValue: toYesNo },
+					{ field: 'willReturn', headerName: 'Devolverá', formatValue: toYesNo },
+					{ field: 'isReturned', headerName: 'Devolvió', formatValue: toYesNo },
+					{
+						field: 'view',
+						width: 20,
+						headerName: '',
+						renderCell: href => ({
+							component: Eye,
+							props: { onclick: () => goto(href), color: 'var(--secondary-dark)', style: 'cursor: pointer;' },
+						}),
+					},
+				]}
+			/>
+		</MainContainer>
+	{/if}
 
-		<Modal
-			show={showDeleteAssignmentModal}
-			isDestructive
-			message={`¿Estás seguro de que deseas eliminar Estás seguro de que deseas eliminar Estás seguro de que deseas eliminar la tarea asignada "${assignmentToDelete?.name}" de ${employee.name}?`}
-			onconfirm={deleteAssignment}
-			onclose={closeDeleteAssignmentModal}
-		/>
-		{#if assignmentToEdit !== null}
-			<EditEmployeeAssignmentForm onclose={closeEditAssignmentModal} bind:assignment={assignmentToEdit} {employee} />
-		{/if}
+	<Modal
+		show={showDeleteAssignmentModal}
+		isDestructive
+		message={`¿Estás seguro de que deseas eliminar Estás seguro de que deseas eliminar Estás seguro de que deseas eliminar la tarea asignada "${assignmentToDelete?.name}" de ${employee.name}?`}
+		onconfirm={deleteAssignment}
+		onclose={closeDeleteAssignmentModal}
+	/>
+	{#if assignmentToEdit !== null}
+		<EditEmployeeAssignmentForm onclose={closeEditAssignmentModal} bind:assignment={assignmentToEdit} {employee} />
 	{/if}
 {/if}
 

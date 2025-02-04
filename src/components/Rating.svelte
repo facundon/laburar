@@ -27,7 +27,7 @@
 	}
 
 	const handleMouseEnter = (index: number) => {
-		hoverIndex = index
+		if (isInteractive) hoverIndex = index
 	}
 
 	const handleMouseLeave = () => {
