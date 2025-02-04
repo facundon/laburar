@@ -1,22 +1,37 @@
 <script lang="ts">
-	let { children, title } = $props()
+	interface Props {
+		title: string
+		Action?: () => any
+		children?: () => any
+	}
+
+	let { children, title, Action }: Props = $props()
 </script>
 
 <div class="wrapper">
-	<h2>{title}</h2>
+	<div class="title-wrapper">
+		<h2>{title}</h2>
+		{@render Action?.()}
+	</div>
 	{@render children?.()}
 </div>
 
 <style>
+	.title-wrapper {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 2rem;
+	}
 	.wrapper {
 		color: #fff;
 	}
 
 	h2 {
-		margin-top: 0.5rem;
+		margin-block: 0;
 	}
 
-	.wrapper :global(.wrapper > h3) {
+	.wrapper :global(> h3) {
 		color: var(--primary-main);
 	}
 

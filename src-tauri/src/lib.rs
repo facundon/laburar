@@ -32,8 +32,8 @@ use commands::company_holiday::{
 use commands::employee::{
     create_employee_command, delete_employee_command, get_employee_command,
     get_employee_with_assignments_command, list_employees_command,
-    list_employees_on_holidays_command, list_employees_replacing_assignment_command,
-    update_employee_command,
+    list_employees_future_absences_command, list_employees_on_holidays_command,
+    list_employees_replacing_assignment_command, update_employee_command,
 };
 use commands::employee_assignment::{
     create_assignments_to_employee_command, delete_employee_assignment_command,
@@ -65,6 +65,7 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             suggest_employees_for_assignation_command,
+            list_employees_future_absences_command,
             list_assignments_without_employees_command,
             list_employees_on_holidays_command,
             create_employee_command,

@@ -35,3 +35,14 @@ export async function listEmployeesOnHolidays() {
 		return []
 	}
 }
+
+export async function listEmployeeFutureAbsences() {
+	try {
+		return invoke('list_employees_future_absences_command', undefined, (data: EmployeeOnHolidayDTO[]) =>
+			data.map(EmployeeOnHoliday.fromDTO),
+		)
+	} catch (error) {
+		console.error('Failed to fetch employees on holiday:', error)
+		return []
+	}
+}

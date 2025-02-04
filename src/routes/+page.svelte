@@ -1,13 +1,16 @@
 <script lang="ts">
 	import CongratsText from '$components/CongratsText.svelte'
+	import EmployeesFutureAbsences from '$pages/EmployeesFutureAbsences.svelte'
 	import EmployeesOnHolidayList from '$pages/EmployeesOnHolidayList.svelte'
 	import SuggestAssignmentList from '$pages/SuggestAssignmentList.svelte'
 	import Confetti from 'svelte-confetti'
 
 	let { data } = $props()
 	let employeesOnHoliday = $derived(data.employeesOnHoliday)
-	let assignments = $derived(
-		employeesOnHoliday.flatMap(e =>
+	let employeesFutureAbsences = $derived(data.employeesFutureAbsences)
+
+	let holidayAssignments = $derived(
+		[...employeesOnHoliday, ...employeesFutureAbsences].flatMap(e =>
 			e.assignments.flatMap(a => ({
 				...a,
 				replacements: a.replacements,
@@ -43,7 +46,10 @@
 			<EmployeesOnHolidayList {employeesOnHoliday} />
 		</div>
 		<div class="grid-item">
-			<SuggestAssignmentList {assignments} />
+			<EmployeesFutureAbsences {employeesFutureAbsences} />
+		</div>
+		<div class="grid-item">
+			<SuggestAssignmentList assignments={holidayAssignments} />
 		</div>
 	</div>
 </main>
@@ -76,7 +82,7 @@
 
 	.grid-container {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
 		gap: 1rem;
 		width: 100%;
 		padding: 2rem;

@@ -1,7 +1,10 @@
 <script lang="ts">
+	import Button from '$components/Button.svelte'
 	import SummaryContainer from '$components/SummaryContainer.svelte'
 	import type { EmployeeOnHoliday } from '$models/employee.svelte'
+	import { ROUTES } from '$routes'
 	import { formatDateToFullDay } from '$utils'
+	import { TentTreeIcon } from 'lucide-svelte'
 	import Confetti from 'svelte-confetti'
 
 	interface Props {
@@ -13,7 +16,11 @@
 	const upcomingHolidays = employeesOnHoliday.filter(employee => !employee.currentlyOnHoliday)
 </script>
 
-<SummaryContainer title="Personal de Vacaciones 🏖️">
+{#snippet Action()}
+	<Button variant="secondary" outlined href={ROUTES.holiday.list} Icon={TentTreeIcon}>Ver Vacaciones</Button>
+{/snippet}
+
+<SummaryContainer title="Personal de Vacaciones 🏖️" {Action}>
 	{#if employeesOnHoliday.length === 0}
 		<p class="empty">
 			Nadie de vacaciones 😮‍💨

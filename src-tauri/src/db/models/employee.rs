@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::db::models::employee_assignment::{EmployeeAssignment, EmployeeAssignmentWithNames};
 use crate::db::schema::{
-    area, assignment, employee, employee_assignment, holiday, replacement, task,
+    absence, area, assignment, employee, employee_assignment, holiday, replacement, task,
 };
 use crate::error::Error;
 use chrono::{Local, NaiveDate, NaiveDateTime, Utc};
@@ -286,6 +286,94 @@ pub struct EmployeeOnHoliday {
     pub start_date: NaiveDate,
     pub end_date: NaiveDate,
     pub days_off: i32,
+}
+
+pub fn list_employees_future_absences(
+    conn: &mut SqliteConnection,
+) -> Result<Vec<EmployeeOnHoliday>, Error> {
+    let today = Local::now().date_naive();
+    employee::table
+        .inner_join(absence::table)
+        .left_join(
+            employee_assignment::table
+                .inner_join(
+                    assignment::table
+                        .on(assignment::id.eq(employee_assignment::assignment_id))
+                        .inner_join(task::table.on(task::id.eq(assignment::task_id)))
+                        .inner_join(area::table.on(area::id.eq(assignment::area_id))),
+                )
+                .on(employee::id.eq(employee_assignment::employee_id)),
+        )
+        .filter(absence::absence_date.ge(today))
+        .select((
+            employee::all_columns,
+            absence::absence_date,
+            employee_assignment::all_columns.nullable(),
+            area::id.nullable(),
+            area::name.nullable(),
+            task::id.nullable(),
+            task::name.nullable(),
+        ))
+        .load::<(
+            Employee,
+            NaiveDate,
+            Option<EmployeeAssignment>,
+            Option<i32>,
+            Option<String>,
+            Option<i32>,
+            Option<String>,
+        )>(conn)
+        .map(|result| {
+            let mut employees_map = HashMap::new();
+            for (
+                employee,
+                start_date,
+                employee_assignment,
+                area_id,
+                area_name,
+                task_id,
+                task_name,
+            ) in result
+            {
+                let entry = employees_map
+                    .entry(employee.id)
+                    .or_insert_with(|| EmployeeOnHoliday {
+                        employee: EmployeeWithAssignments {
+                            employee: employee.clone(),
+                            assignments: vec![],
+                        },
+                        start_date,
+                        end_date: start_date,
+                        days_off: 1,
+                    });
+
+                if let (
+                    Some(employee_assignment),
+                    Some(area_id),
+                    Some(area_name),
+                    Some(task_id),
+                    Some(task_name),
+                ) = (employee_assignment, area_id, area_name, task_id, task_name)
+                {
+                    let replacements =
+                        list_replacements_for_assignment(conn, employee_assignment.assignment_id)
+                            .unwrap();
+                    entry
+                        .employee
+                        .assignments
+                        .push(EmployeeAssignmentWithNames {
+                            employee_assignment,
+                            replacements: Some(replacements),
+                            area_id,
+                            area_name,
+                            task_id,
+                            task_name,
+                        });
+                }
+            }
+            employees_map.into_values().collect::<Vec<_>>()
+        })
+        .map_err(Error::Database)
 }
 
 pub fn list_employees_on_holidays(

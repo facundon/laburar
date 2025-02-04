@@ -5,8 +5,9 @@ pub use crate::db::models::employee::{
 use crate::{
     db::{
         models::employee::{
-            list_employees_on_holidays, list_employees_replacing_assignment, Employee,
-            EmployeeOnHoliday, EmployeeWithAssignments,
+            list_employees_future_absences, list_employees_on_holidays,
+            list_employees_replacing_assignment, Employee, EmployeeOnHoliday,
+            EmployeeWithAssignments,
         },
         sqlite::establish_connection,
     },
@@ -95,4 +96,10 @@ pub fn list_employees_on_holidays_command() -> Result<Vec<EmployeeOnHoliday>, Er
 pub fn list_employees_replacing_assignment_command(assignment_id: i32) -> Result<Vec<i32>, Error> {
     let mut conn = establish_connection();
     list_employees_replacing_assignment(&mut conn, assignment_id)
+}
+
+#[command(rename_all = "snake_case")]
+pub fn list_employees_future_absences_command() -> Result<Vec<EmployeeOnHoliday>, Error> {
+    let mut conn = establish_connection();
+    list_employees_future_absences(&mut conn)
 }

@@ -1,5 +1,5 @@
 import { invoke } from '$invoke'
-import { listEmployeesOnHolidays } from '$queries/employees'
+import { listEmployeeFutureAbsences, listEmployeesOnHolidays } from '$queries/employees'
 
 export const load = async () => {
 	try {
@@ -8,5 +8,6 @@ export const load = async () => {
 		console.error(`Error deleting finished replacements: `, err)
 	}
 	const employeesOnHoliday = await listEmployeesOnHolidays()
-	return { employeesOnHoliday }
+	const employeesFutureAbsences = await listEmployeeFutureAbsences()
+	return { employeesOnHoliday, employeesFutureAbsences }
 }
