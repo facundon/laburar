@@ -24,6 +24,7 @@ pub struct EmployeeAssignmentWithNames {
     #[serde(flatten)]
     pub employee_assignment: EmployeeAssignment,
     pub replacements: Option<Vec<Replacement>>,
+    pub assignment_difficulty: i32,
     pub area_id: i32,
     pub area_name: String,
     pub task_id: i32,
@@ -52,6 +53,7 @@ pub fn list_employee_assignments(
         )
         .select((
             employee_assignment::all_columns,
+            assignment::difficulty,
             task::name,
             area::name,
             task::id,
@@ -63,8 +65,17 @@ pub fn list_employee_assignments(
         .load(conn)
         .map(|assignments| {
             let mut assignments_with_names = vec![];
-            for (employee_assignment, task_name, area_name, task_id, area_id) in assignments {
+            for (
+                employee_assignment,
+                assignment_difficulty,
+                task_name,
+                area_name,
+                task_id,
+                area_id,
+            ) in assignments
+            {
                 assignments_with_names.push(EmployeeAssignmentWithNames {
+                    assignment_difficulty,
                     employee_assignment,
                     replacements: None,
                     area_id,

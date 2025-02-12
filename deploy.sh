@@ -14,7 +14,8 @@ jq '.version |= (split(".") | .[1] |= (tonumber + 1 | tostring) | join("."))' sr
 
 # Commit the version bump
 git add src-tauri/tauri.conf.json
-git commit -m "Bump minor version in src-tauri/tauri.conf.json"
+git commit -m "Release Commit"
+git push origin $BRANCH_MAIN
 
 # Merge main into release (fast-forward if possible)
 git checkout $BRANCH_RELEASE
@@ -23,5 +24,7 @@ git reset --hard $BRANCH_MAIN  # Make release identical to main
 
 # Push release branch
 git push origin $BRANCH_RELEASE --force
+
+git checkout $BRANCH_MAIN
 
 echo "Deployment completed successfully!"

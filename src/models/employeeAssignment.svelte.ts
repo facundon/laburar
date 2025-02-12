@@ -1,9 +1,13 @@
+import type { AssignmentDifficulty } from '$models/assignment.svelte'
 import { Replacement, type ReplacementDTO } from '$models/replacement.svelte'
 import { formatDateTime, parseDate, toTitleCase } from '$utils'
 import { differenceInCalendarDays, max } from 'date-fns'
 import { SvelteDate } from 'svelte/reactivity'
 
-type UpdateEmployeeAssignmentDTO = Omit<EmployeeAssignmentDTO, 'created_at' | 'area_id' | 'area_name' | 'task_id' | 'task_name'>
+type UpdateEmployeeAssignmentDTO = Omit<
+	EmployeeAssignmentDTO,
+	'created_at' | 'area_id' | 'area_name' | 'task_id' | 'task_name' | 'difficulty' | 'replacements'
+>
 type CreateEmployeeAssignmentDTO = Omit<UpdateEmployeeAssignmentDTO, 'id'>
 
 export type EmployeeAssignmentDTO = {
@@ -11,6 +15,7 @@ export type EmployeeAssignmentDTO = {
 	employee_id: number
 	assignment_id: number
 	is_primary?: boolean
+	difficulty: number
 	efficiency: number
 	assigned_date?: string
 	created_at: string
@@ -31,6 +36,7 @@ export class EmployeeAssignment {
 	assignmentId: number = $state(0)
 	isPrimary: boolean = $state(false)
 	efficiency: number = $state(1)
+	difficulty: AssignmentDifficulty = $state(1)
 	assignedDate: Date = $state(new SvelteDate())
 	createdAt: Date = new Date()
 	areaId: number = $state(0)
@@ -52,6 +58,7 @@ export class EmployeeAssignment {
 		if (params?.taskId !== undefined) this.taskId = params.taskId
 		if (params?.taskName !== undefined) this.taskName = params.taskName
 		if (params?.replacements !== undefined) this.replacements = params.replacements
+		if (params?.difficulty !== undefined) this.difficulty = params.difficulty
 	}
 
 	static fromDTO(dto: EmployeeAssignmentDTO): EmployeeAssignment {
@@ -68,6 +75,7 @@ export class EmployeeAssignment {
 			taskId: dto.task_id,
 			taskName: dto.task_name,
 			replacements: dto.replacements?.map(Replacement.fromDTO) ?? [],
+			difficulty: dto.difficulty as AssignmentDifficulty,
 		})
 	}
 

@@ -51,7 +51,7 @@
 				fill={index <= hoverIndex ? 'var(--primary-main)' : isFilled ? 'var(--primary-main)' : '#fff'}
 				color="#333"
 				size={30}
-				strokeWidth={0.5}
+				strokeWidth={1}
 			/>
 		</button>
 	{/each}
@@ -70,7 +70,7 @@
 		align-items: baseline;
 	}
 	.star {
-		padding: 0.1rem;
+		padding: 0rem;
 		background-color: transparent;
 		border: none;
 		cursor: auto;

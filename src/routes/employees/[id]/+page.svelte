@@ -4,7 +4,7 @@
 	import { differenceInYears } from 'date-fns'
 	import Button from '$components/Button.svelte'
 	import Modal from '$components/Modal.svelte'
-	import { ClipboardPlus, Delete, Edit, Eye, Pencil } from 'lucide-svelte'
+	import { ClipboardPlus, Delete, Edit, Eye, Flame, Pencil } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import Table from '$components/Table.svelte'
 	import Rating from '$components/Rating.svelte'
@@ -12,6 +12,7 @@
 	import type { EmployeeAssignment } from '$models/employeeAssignment.svelte.js'
 	import { toYesNo } from '$utils'
 	import { goto, invalidate, invalidateAll } from '$app/navigation'
+	import { AssignmentColorMap } from '$models/assignment.svelte'
 
 	const { data } = $props()
 	let employee = $state(data.employee)
@@ -69,6 +70,7 @@
 		employee?.assignments.map(assignment => ({
 			...assignment,
 			name: assignment.name,
+			difficulty: assignment.difficulty,
 			efficiency: assignment.efficiency,
 			isPrimary: assignment.isPrimary,
 			areaName: assignment.areaName,
@@ -122,11 +124,20 @@
 			<Table
 				rows={employeePrimaryAssignments}
 				columns={[
+					{
+						field: 'difficulty',
+						width: 20,
+						headerName: '',
+						renderCell: value => ({
+							component: Flame,
+							props: { color: 'var(--gray-light)', fill: AssignmentColorMap.get(value) },
+						}),
+					},
 					{ field: 'name', headerName: 'Nombre' },
 					{
 						field: 'efficiency',
 						headerName: 'Eficiencia',
-						renderCell: value => ({ component: Rating, props: { rating: Number(value) } }),
+						renderCell: value => ({ component: Rating, props: { rating: Number(value), displayRating: false } }),
 					},
 					{
 						field: 'edit',
@@ -149,11 +160,17 @@
 			<Table
 				rows={employeeSecondaryAssignments}
 				columns={[
+					{
+						field: 'difficulty',
+						width: 20,
+						headerName: '',
+						renderCell: value => ({ component: Flame, props: { color: 'var(--gray-light)', fill: AssignmentColorMap.get(value) } }),
+					},
 					{ field: 'name', headerName: 'Nombre' },
 					{
 						field: 'efficiency',
 						headerName: 'Eficiencia',
-						renderCell: value => ({ component: Rating, props: { rating: Number(value) } }),
+						renderCell: value => ({ component: Rating, props: { rating: Number(value), displayRating: false } }),
 					},
 					{
 						field: 'edit',

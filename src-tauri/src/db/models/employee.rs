@@ -91,18 +91,20 @@ pub fn get_employee_with_assignments(
         .select((
             employee::all_columns,
             employee_assignment::all_columns.nullable(),
+            assignment::difficulty.nullable(),
             area::id.nullable(),
             area::name.nullable(),
             task::id.nullable(),
             task::name.nullable(),
         ))
-        .order_by(employee_assignment::is_primary.desc())
+        .order_by(assignment::difficulty.desc())
         .then_order_by(employee_assignment::efficiency.desc())
         .load(conn)
         .and_then(
             |results: Vec<(
                 Employee,
                 Option<EmployeeAssignment>,
+                Option<i32>,
                 Option<i32>,
                 Option<String>,
                 Option<i32>,
@@ -114,18 +116,35 @@ pub fn get_employee_with_assignments(
                 let employee = results[0].0.clone();
                 let mut employee_with_assignments = vec![];
 
-                for (_, employee_assignment, area_id, area_name, task_id, task_name) in results {
+                for (
+                    _,
+                    employee_assignment,
+                    assignment_difficulty,
+                    area_id,
+                    area_name,
+                    task_id,
+                    task_name,
+                ) in results
+                {
                     if let (
                         Some(employee_assignment),
+                        Some(assignment_difficulty),
                         Some(area_id),
                         Some(area_name),
                         Some(task_id),
                         Some(task_name),
-                    ) = (employee_assignment, area_id, area_name, task_id, task_name)
-                    {
+                    ) = (
+                        employee_assignment,
+                        assignment_difficulty,
+                        area_id,
+                        area_name,
+                        task_id,
+                        task_name,
+                    ) {
                         employee_with_assignments.push(EmployeeAssignmentWithNames {
                             employee_assignment,
                             replacements: None,
+                            assignment_difficulty,
                             area_id,
                             area_name,
                             task_id,
@@ -309,6 +328,7 @@ pub fn list_employees_future_absences(
             employee::all_columns,
             absence::absence_date,
             employee_assignment::all_columns.nullable(),
+            assignment::difficulty.nullable(),
             area::id.nullable(),
             area::name.nullable(),
             task::id.nullable(),
@@ -318,6 +338,7 @@ pub fn list_employees_future_absences(
             Employee,
             NaiveDate,
             Option<EmployeeAssignment>,
+            Option<i32>,
             Option<i32>,
             Option<String>,
             Option<i32>,
@@ -329,6 +350,7 @@ pub fn list_employees_future_absences(
                 employee,
                 start_date,
                 employee_assignment,
+                assignment_difficulty,
                 area_id,
                 area_name,
                 task_id,
@@ -349,12 +371,19 @@ pub fn list_employees_future_absences(
 
                 if let (
                     Some(employee_assignment),
+                    Some(assignment_difficulty),
                     Some(area_id),
                     Some(area_name),
                     Some(task_id),
                     Some(task_name),
-                ) = (employee_assignment, area_id, area_name, task_id, task_name)
-                {
+                ) = (
+                    employee_assignment,
+                    assignment_difficulty,
+                    area_id,
+                    area_name,
+                    task_id,
+                    task_name,
+                ) {
                     let replacements =
                         list_replacements_for_assignment(conn, employee_assignment.assignment_id)
                             .unwrap();
@@ -364,6 +393,7 @@ pub fn list_employees_future_absences(
                         .push(EmployeeAssignmentWithNames {
                             employee_assignment,
                             replacements: Some(replacements),
+                            assignment_difficulty,
                             area_id,
                             area_name,
                             task_id,
@@ -403,6 +433,7 @@ pub fn list_employees_on_holidays(
             holiday::end_date,
             holiday::days_off,
             employee_assignment::all_columns.nullable(),
+            assignment::difficulty.nullable(),
             area::id.nullable(),
             area::name.nullable(),
             task::id.nullable(),
@@ -414,6 +445,7 @@ pub fn list_employees_on_holidays(
             NaiveDate,
             i32,
             Option<EmployeeAssignment>,
+            Option<i32>,
             Option<i32>,
             Option<String>,
             Option<i32>,
@@ -427,6 +459,7 @@ pub fn list_employees_on_holidays(
                 end_date,
                 days_off,
                 employee_assignment,
+                assignment_difficulty,
                 area_id,
                 area_name,
                 task_id,
@@ -447,12 +480,19 @@ pub fn list_employees_on_holidays(
 
                 if let (
                     Some(employee_assignment),
+                    Some(assignment_difficulty),
                     Some(area_id),
                     Some(area_name),
                     Some(task_id),
                     Some(task_name),
-                ) = (employee_assignment, area_id, area_name, task_id, task_name)
-                {
+                ) = (
+                    employee_assignment,
+                    assignment_difficulty,
+                    area_id,
+                    area_name,
+                    task_id,
+                    task_name,
+                ) {
                     let replacements =
                         list_replacements_for_assignment(conn, employee_assignment.assignment_id)
                             .unwrap();
@@ -462,6 +502,7 @@ pub fn list_employees_on_holidays(
                         .push(EmployeeAssignmentWithNames {
                             employee_assignment,
                             replacements: Some(replacements),
+                            assignment_difficulty,
                             area_id,
                             area_name,
                             task_id,
