@@ -8,6 +8,7 @@
 		message?: string
 		isDestructive?: boolean
 		disableCta?: boolean
+		style?: string
 		onclose: () => void
 		onconfirm: () => void
 		onmount?: () => void
@@ -23,6 +24,7 @@
 		isDestructive = false,
 		children,
 		onmount,
+		style,
 		disableCta = false,
 	}: Props = $props()
 
@@ -43,7 +45,7 @@
 	<div class="modal-backdrop" role="button" tabindex="0" onclick={close} onkeydown={e => e.key === 'Enter' && close()}></div>
 	<div class="modal">
 		<h2>{title}</h2>
-		<div class="content">
+		<div class="content" {style}>
 			{#if message}
 				<p>{@html message}</p>
 			{/if}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { ChevronDown, Eraser } from 'lucide-svelte'
 	import type { HTMLSelectAttributes } from 'svelte/elements'
-	import { onDestroy } from 'svelte'
+	import { onDestroy, onMount } from 'svelte'
 
 	let { children, value = $bindable(), ...rest }: HTMLSelectAttributes = $props()
 
@@ -77,6 +77,10 @@
 		}
 	})
 
+	onMount(() => {
+		setValue(select.options[select.selectedIndex])
+	})
+
 	onDestroy(() => {
 		document.removeEventListener('click', handleClickOutside)
 	})
@@ -124,7 +128,7 @@
 						}
 					}}
 				>
-					{option.text}
+					{@html option.innerHTML}
 				</div>
 			{/each}
 		</div>
@@ -153,7 +157,6 @@
 	.dropdown {
 		position: absolute;
 		top: 105%;
-		left: 3px;
 		width: 99%;
 		z-index: 1;
 		background: white;
@@ -165,6 +168,9 @@
 	.dropdown-item {
 		padding: 0.5rem;
 		cursor: pointer;
+		display: flex;
+		gap: 0.25rem;
+		align-items: center;
 	}
 
 	.dropdown-item.disabled {

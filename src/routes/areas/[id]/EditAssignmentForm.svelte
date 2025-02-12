@@ -4,7 +4,8 @@
 	import Modal from '$components/Modal.svelte'
 	import Select from '$components/Select.svelte'
 	import { invoke } from '$invoke'
-	import { Assignment, AssignmentDifficulties, AssignmentFrequencies } from '$models/assignment.svelte'
+	import { Assignment, AssignmentColorMap, AssignmentDifficulties, AssignmentFrequencies } from '$models/assignment.svelte'
+	import { Flame } from 'lucide-svelte'
 
 	interface Props {
 		onclose: () => void
@@ -25,12 +26,15 @@
 	}
 </script>
 
-<Modal show title="Editar {assignment.name}" onconfirm={editAssignment} {onclose}>
+<Modal show title="Editar {assignment.name}" onconfirm={editAssignment} {onclose} style={'overflow-y: unset'}>
 	<div class="group">
 		<FormGroup id="difficulty" label="Dificultad">
 			<Select id="difficulty" bind:value={newAssignment.difficulty} required>
 				{#each AssignmentDifficulties as { label, value }}
-					<option {value}>{label}</option>
+					<option {value}>
+						<Flame color="var(--gray-light)" fill={AssignmentColorMap.get(value)} />
+						{label}
+					</option>
 				{/each}
 			</Select>
 		</FormGroup>
