@@ -83,6 +83,16 @@
 
 	let employeePrimaryAssignments = $derived(employeeAssignmentsWithActions.filter(assignment => assignment.isPrimary))
 	let employeeSecondaryAssignments = $derived(employeeAssignmentsWithActions.filter(assignment => !assignment.isPrimary))
+	// svelte-ignore state_referenced_locally
+	employeePrimaryAssignments.sort((a, b) => {
+		if (a.difficulty === b.difficulty) return b.efficiency - a.efficiency
+		return a.difficulty - b.difficulty
+	})
+	// svelte-ignore state_referenced_locally
+	employeeSecondaryAssignments.sort((a, b) => {
+		if (a.difficulty === b.difficulty) return b.efficiency - a.efficiency
+		return a.difficulty - b.difficulty
+	})
 
 	const getDifferenceInYears = (startDate: Date): number => differenceInYears(new Date(), startDate)
 </script>
