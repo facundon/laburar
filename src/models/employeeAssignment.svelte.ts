@@ -6,7 +6,7 @@ import { SvelteDate } from 'svelte/reactivity'
 
 type UpdateEmployeeAssignmentDTO = Omit<
 	EmployeeAssignmentDTO,
-	'created_at' | 'area_id' | 'area_name' | 'task_id' | 'task_name' | 'difficulty' | 'replacements'
+	'created_at' | 'area_id' | 'area_name' | 'task_id' | 'task_name' | 'assignment_difficulty' | 'replacements'
 >
 type CreateEmployeeAssignmentDTO = Omit<UpdateEmployeeAssignmentDTO, 'id'>
 
@@ -15,7 +15,7 @@ export type EmployeeAssignmentDTO = {
 	employee_id: number
 	assignment_id: number
 	is_primary?: boolean
-	difficulty: number
+	assignment_difficulty: number
 	efficiency: number
 	assigned_date?: string
 	created_at: string
@@ -75,7 +75,7 @@ export class EmployeeAssignment {
 			taskId: dto.task_id,
 			taskName: dto.task_name,
 			replacements: dto.replacements?.map(Replacement.fromDTO) ?? [],
-			difficulty: dto.difficulty as AssignmentDifficulty,
+			difficulty: dto.assignment_difficulty as AssignmentDifficulty,
 		})
 	}
 
