@@ -87,10 +87,11 @@
 	})
 
 	onMount(() => {
-		const initialValue = select.options[select.selectedIndex]
-		console.log(value, options)
-		if (!initialValue) return
-		setValue(initialValue)
+		setTimeout(() => {
+			const initialValue = select.options[select.selectedIndex]
+			if (!initialValue) return
+			setValue(initialValue)
+		}, 10)
 	})
 
 	onDestroy(() => {
