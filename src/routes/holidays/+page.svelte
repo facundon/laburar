@@ -6,7 +6,7 @@
 	import Select from '$components/Select.svelte'
 	import Table from '$components/Table.svelte'
 	import { ROUTES } from '$routes'
-	import { formatDate } from '$utils'
+	import { formatDate, formatDateToFullDay } from '$utils'
 	import { Eye, Plus } from 'lucide-svelte'
 
 	let { data } = $props()
@@ -23,6 +23,31 @@
 			employeeId: holiday.employeeId,
 			view: () => goto(ROUTES.holiday.view(holiday.id)),
 		})),
+	)
+
+	const holidaysOnCourse = $derived(
+		holidaysWithActions.filter(holiday => {
+			const startDate = new Date(holiday.startDate)
+			const endDate = new Date(holiday.endDate)
+			const today = new Date()
+			return startDate <= today && endDate >= today
+		}),
+	)
+
+	const futureHolidays = $derived(
+		holidaysWithActions.filter(holiday => {
+			const startDate = new Date(holiday.startDate)
+			const today = new Date()
+			return startDate > today
+		}),
+	)
+
+	const pastHolidays = $derived(
+		holidaysWithActions.filter(holiday => {
+			const endDate = new Date(holiday.endDate)
+			const today = new Date()
+			return endDate < today
+		}),
 	)
 
 	const changeYear = async (year: number | null) => {
@@ -44,21 +69,67 @@
 			{/each}
 		</Select>
 	</div>
-	<Table
-		rows={holidaysWithActions}
-		columns={[
-			{ field: 'employeeName', headerName: 'Personal' },
-			{ field: 'startDate', headerName: 'Inicio', formatValue: date => formatDate(date) },
-			{ field: 'endDate', headerName: 'Fin', formatValue: date => formatDate(date) },
-			{ field: 'notes', headerName: 'Notas', formatValue: notes => notes || '-', width: 300 },
-			{
-				field: 'view',
-				headerName: '',
-				renderCell: onclick => ({ component: Eye, props: { onclick, color: 'var(--secondary-dark)', style: 'cursor: pointer;' } }),
-				width: 20,
-			},
-		]}
-	/>
+
+	{#if holidaysWithActions.length === 0}
+		<p class="empty-message">No hay vacaciones registradas 🤷‍♀️</p>
+	{/if}
+
+	{#if holidaysOnCourse.length > 0}
+		<h3>En Curso</h3>
+		<Table
+			rows={holidaysOnCourse}
+			columns={[
+				{ field: 'employeeName', headerName: 'Personal' },
+				{ field: 'startDate', headerName: 'Inicio', formatValue: date => formatDateToFullDay(date, true) },
+				{ field: 'endDate', headerName: 'Fin', formatValue: date => formatDateToFullDay(date, true) },
+				{ field: 'notes', headerName: 'Notas', formatValue: notes => notes || '-', width: 300 },
+				{
+					field: 'view',
+					headerName: '',
+					renderCell: onclick => ({ component: Eye, props: { onclick, color: 'var(--secondary-dark)', style: 'cursor: pointer;' } }),
+					width: 20,
+				},
+			]}
+		/>
+	{/if}
+
+	{#if futureHolidays.length > 0}
+		<h3>Próximamente</h3>
+		<Table
+			rows={futureHolidays}
+			columns={[
+				{ field: 'employeeName', headerName: 'Personal' },
+				{ field: 'startDate', headerName: 'Inicio', formatValue: date => formatDateToFullDay(date, true) },
+				{ field: 'endDate', headerName: 'Fin', formatValue: date => formatDateToFullDay(date, true) },
+				{ field: 'notes', headerName: 'Notas', formatValue: notes => notes || '-', width: 300 },
+				{
+					field: 'view',
+					headerName: '',
+					renderCell: onclick => ({ component: Eye, props: { onclick, color: 'var(--secondary-dark)', style: 'cursor: pointer;' } }),
+					width: 20,
+				},
+			]}
+		/>
+	{/if}
+
+	{#if pastHolidays.length > 0}
+		<h3>Pasadas</h3>
+		<Table
+			rows={pastHolidays}
+			columns={[
+				{ field: 'employeeName', headerName: 'Personal' },
+				{ field: 'startDate', headerName: 'Inicio', formatValue: date => formatDateToFullDay(date, true) },
+				{ field: 'endDate', headerName: 'Fin', formatValue: date => formatDateToFullDay(date, true) },
+				{ field: 'notes', headerName: 'Notas', formatValue: notes => notes || '-', width: 300 },
+				{
+					field: 'view',
+					headerName: '',
+					renderCell: onclick => ({ component: Eye, props: { onclick, color: 'var(--secondary-dark)', style: 'cursor: pointer;' } }),
+					width: 20,
+				},
+			]}
+		/>
+	{/if}
 </MainContainer>
 
 <style>
@@ -66,5 +137,10 @@
 		display: flex;
 		gap: 1rem;
 		align-items: center;
+	}
+
+	.empty-message {
+		text-align: center;
+		margin-top: 2rem;
 	}
 </style>
