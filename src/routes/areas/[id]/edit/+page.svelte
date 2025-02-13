@@ -5,6 +5,7 @@
 	import { Save } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import AreaForm from '$pages/areas/components/AreaForm.svelte'
+	import { goto } from '$app/navigation'
 
 	const { data } = $props()
 	let area = $state(data.area)
@@ -14,7 +15,7 @@
 		if (!area) return
 		try {
 			await invoke('update_area_command', area.toUpdateDTO())
-			window.location.href = ROUTES.area.view(area.id)
+			goto(ROUTES.area.view(area.id))
 		} catch (error) {
 			console.error('Failed to update area:', error)
 		}

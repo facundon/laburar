@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation'
 	import Button from '$components/Button.svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import { invoke } from '$invoke'
@@ -9,11 +10,12 @@
 
 	let holiday = $state(new Holiday())
 
-	const createHoliday = async () => {
+	const createHoliday = async (e: Event) => {
+		e.preventDefault()
 		if (!holiday.employeeId) return
 		try {
 			await invoke('create_holiday_command', holiday.toCreateDTO())
-			window.location.href = ROUTES.holiday.list
+			goto(ROUTES.holiday.list)
 		} catch (error) {
 			console.error('Failed to create holiday:', error)
 		}

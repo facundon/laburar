@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation'
 	import Button from '$components/Button.svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import { invoke } from '$invoke'
@@ -13,7 +14,7 @@
 		e.preventDefault()
 		try {
 			await invoke('create_absence_command', absence.toCreateDTO())
-			window.location.href = ROUTES.absence.list
+			goto(ROUTES.absence.list)
 		} catch (error) {
 			console.error('Failed to create absence:', error)
 		}

@@ -8,6 +8,7 @@
 	import { Assignment, AssignmentDifficulties, AssignmentFrequencies } from '$models/assignment.svelte.js'
 	import FormGroup from '$components/FormGroup.svelte'
 	import CongratsText from '$components/CongratsText.svelte'
+	import { goto } from '$app/navigation'
 
 	let { data } = $props()
 	const area = data.area
@@ -20,7 +21,7 @@
 		if (!area) return
 		try {
 			await invoke('create_assignment_command', assignment.toCreateDTO())
-			window.location.href = ROUTES.area.view(area.id)
+			goto(ROUTES.area.view(area.id))
 		} catch (error) {
 			console.error('Failed to assign task:', error)
 		}

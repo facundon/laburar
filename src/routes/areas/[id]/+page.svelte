@@ -7,7 +7,7 @@
 	import MainContainer from '$components/MainContainer.svelte'
 	import Table from '$components/Table.svelte'
 	import { Assignment, AssignmentDifficulties } from '$models/assignment.svelte.js'
-	import { invalidateAll } from '$app/navigation'
+	import { goto, invalidateAll } from '$app/navigation'
 	import EditAssignmentForm from '$pages/areas/[id]/EditAssignmentForm.svelte'
 
 	const { data } = $props()
@@ -27,7 +27,7 @@
 			if (!area) return
 			await invoke('delete_area_command', { id: area.id })
 			closeDeleteAreaModal()
-			window.location.href = ROUTES.area.list
+			goto(ROUTES.area.list)
 		} catch (error) {
 			console.error('Failed to delete area:', error)
 		}

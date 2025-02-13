@@ -7,6 +7,7 @@
 	import CongratsText from '$components/CongratsText.svelte'
 	import AssignmentCheckbox from '$pages/employees/[id]/assign-task/AssignmentCheckbox.svelte'
 	import { SvelteSet } from 'svelte/reactivity'
+	import { goto } from '$app/navigation'
 
 	let { data } = $props()
 	const employee = data.employee
@@ -24,7 +25,7 @@
 		try {
 			const assignmentIds = Array.from(selectedTasks)
 			await invoke('create_assignments_to_employee_command', { employee_id: employee.id, assignment_ids: assignmentIds })
-			window.location.href = ROUTES.employee.view(employee.id)
+			goto(ROUTES.employee.view(employee.id))
 		} catch (error) {
 			console.error('Failed to assign task:', error)
 		}

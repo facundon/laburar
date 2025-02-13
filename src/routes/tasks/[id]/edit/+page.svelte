@@ -5,6 +5,7 @@
 	import { Save } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import TaskForm from '$pages/tasks/components/TaskForm.svelte'
+	import { goto } from '$app/navigation'
 
 	const { data } = $props()
 	let task = $state(data.task)
@@ -14,7 +15,7 @@
 		if (!task) return
 		try {
 			await invoke('update_task_command', task.toUpdateDTO())
-			window.location.href = ROUTES.task.view(task.id)
+			goto(ROUTES.task.view(task.id))
 		} catch (error) {
 			console.error('Failed to update task:', error)
 		}

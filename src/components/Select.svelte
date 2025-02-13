@@ -1,9 +1,14 @@
-<script lang="ts">
+<script lang="ts" generics="T extends string | number ">
 	import { ChevronDown, Eraser } from 'lucide-svelte'
 	import type { HTMLSelectAttributes } from 'svelte/elements'
 	import { onDestroy, onMount } from 'svelte'
 
-	let { children, value = $bindable(), ...rest }: HTMLSelectAttributes = $props()
+	interface Props<T> extends Omit<HTMLSelectAttributes, 'onchange' | 'value'> {
+		value?: T | null
+		onchange?: (value: T | null) => void
+	}
+
+	let { children, value = $bindable(), onchange, ...rest }: Props<T> = $props()
 
 	let searchInput: HTMLInputElement
 	let wrapper: HTMLDivElement
@@ -52,9 +57,10 @@
 
 	function setValue(option: HTMLOptionElement) {
 		const newValue = parseNumber(option.value)
-		value = newValue
+		value = newValue as T
 		search = option.text
 		isOpen = false
+		onchange?.(newValue as T)
 	}
 
 	function clearInput(event: MouseEvent) {
@@ -78,7 +84,9 @@
 	})
 
 	onMount(() => {
-		setValue(select.options[select.selectedIndex])
+		const initialValue = select.options[select.selectedIndex]
+		if (!initialValue) return
+		setValue(initialValue)
 	})
 
 	onDestroy(() => {
@@ -143,6 +151,7 @@
 	.select-wrapper {
 		width: fit-content;
 		position: relative;
+		width: var(--width);
 	}
 	.input-wrapper {
 		display: flex;
@@ -157,7 +166,7 @@
 	.dropdown {
 		position: absolute;
 		top: 105%;
-		width: 99%;
+		width: 100%;
 		z-index: 1;
 		background: white;
 		border: 1px solid #ccc;

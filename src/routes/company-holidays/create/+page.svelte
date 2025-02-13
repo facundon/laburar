@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation'
 	import Button from '$components/Button.svelte'
 	import DateInput from '$components/DateInput.svelte'
 	import FormGroup from '$components/FormGroup.svelte'
@@ -14,7 +15,7 @@
 		e.preventDefault()
 		try {
 			await invoke('create_company_holiday_command', companyHoliday.toCreateDTO())
-			window.location.href = ROUTES.companyHoliday.list
+			goto(ROUTES.companyHoliday.list)
 		} catch (error) {
 			console.error('Failed to create company holiday:', error)
 		}

@@ -5,6 +5,7 @@
 	import { Save } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import EmployeeForm from '$pages/employees/components/EmployeeForm.svelte'
+	import { goto } from '$app/navigation'
 
 	const { data } = $props()
 	let employee = $state(data.employee)
@@ -14,7 +15,7 @@
 		if (!employee) return
 		try {
 			await invoke('update_employee_command', employee.toUpdateDTO())
-			window.location.href = ROUTES.employee.view(employee.id)
+			goto(ROUTES.employee.view(employee.id))
 		} catch (error) {
 			console.error('Failed to update employee:', error)
 		}

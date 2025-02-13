@@ -47,7 +47,7 @@
 			await invoke('delete_employee_command', { id: employee.id })
 			handleCloseDeleteEmployee()
 			await invalidate(ROUTES.employee.list)
-			window.location.href = ROUTES.employee.list
+			goto(ROUTES.employee.list)
 		} catch (error) {
 			console.error('Failed to delete employee:', error)
 		}

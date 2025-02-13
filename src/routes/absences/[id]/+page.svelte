@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { invalidateAll } from '$app/navigation'
+	import { goto, invalidateAll } from '$app/navigation'
 	import Button from '$components/Button.svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import Modal from '$components/Modal.svelte'
@@ -40,7 +40,7 @@
 		if (!absence) return
 		try {
 			await invoke('delete_absence_command', { id: absence.id })
-			window.location.href = ROUTES.absence.list
+			goto(ROUTES.absence.list)
 		} catch (err) {
 			console.error('Failed to delete absence:', err)
 		}

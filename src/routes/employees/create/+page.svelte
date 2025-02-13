@@ -6,6 +6,7 @@
 	import MainContainer from '$components/MainContainer.svelte'
 	import { Plus } from 'lucide-svelte'
 	import EmployeeForm from '$pages/employees/components/EmployeeForm.svelte'
+	import { goto } from '$app/navigation'
 
 	let employee = $state(new Employee())
 
@@ -13,7 +14,7 @@
 		e.preventDefault()
 		try {
 			await invoke('create_employee_command', employee.toCreateDTO())
-			window.location.href = ROUTES.employee.list
+			goto(ROUTES.employee.list)
 		} catch (error) {
 			console.error('Failed to create employee:', error)
 		}

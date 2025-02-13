@@ -6,6 +6,7 @@
 	import MainContainer from '$components/MainContainer.svelte'
 	import { Area } from '$models/area.svelte'
 	import AreaForm from '$pages/areas/components/AreaForm.svelte'
+	import { goto } from '$app/navigation'
 
 	let area = $state(new Area())
 
@@ -13,7 +14,7 @@
 		e.preventDefault()
 		try {
 			await invoke('create_area_command', area.toCreateDTO())
-			window.location.href = ROUTES.area.list
+			goto(ROUTES.area.list)
 		} catch (error) {
 			console.error('Failed to create area:', error)
 		}

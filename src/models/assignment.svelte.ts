@@ -104,9 +104,9 @@ export const AssignmentDifficulty = {
 export type AssignmentDifficulty = ValueOf<typeof AssignmentDifficulty>
 export const AssignmentDifficulties = Object.entries(AssignmentDifficulty).map(([label, value]) => ({ label: toTitleCase(label), value }))
 export const AssignmentColorMap = new Map<AssignmentDifficulty, string>([
-	[AssignmentDifficulty.TRIVIAL, '#00BFFF'],
-	[AssignmentDifficulty.FACIL, '#32CD32'],
+	[AssignmentDifficulty.TRIVIAL, '#72C3E6'],
+	[AssignmentDifficulty.FACIL, '#4CAF50'],
 	[AssignmentDifficulty.MEDIA, '#FFD700'],
-	[AssignmentDifficulty.COMPLICADO, '#FFA500'],
-	[AssignmentDifficulty.DIFICIL, '#FF0000'],
+	[AssignmentDifficulty.COMPLICADO, '#D32F2F'],
+	[AssignmentDifficulty.DIFICIL, '#424242'],
 ])

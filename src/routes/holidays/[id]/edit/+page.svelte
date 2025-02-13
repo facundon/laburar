@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation'
 	import Button from '$components/Button.svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import { invoke } from '$invoke'
@@ -14,7 +15,7 @@
 		e.preventDefault()
 		try {
 			await invoke('update_holiday_command', holiday.toUpdateDTO())
-			window.location.href = ROUTES.holiday.view(holiday.id)
+			goto(ROUTES.holiday.view(holiday.id))
 		} catch (error) {
 			console.error('Failed to update holiday:', error)
 		}

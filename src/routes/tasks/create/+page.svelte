@@ -6,6 +6,7 @@
 	import MainContainer from '$components/MainContainer.svelte'
 	import { Task } from '$models/task.svelte'
 	import TaskForm from '$pages/tasks/components/TaskForm.svelte'
+	import { goto } from '$app/navigation'
 
 	let task = $state(new Task())
 
@@ -13,7 +14,7 @@
 		e.preventDefault()
 		try {
 			await invoke('create_task_command', task.toCreateDTO())
-			window.location.href = ROUTES.task.list
+			goto(ROUTES.task.list)
 		} catch (error) {
 			console.error('Failed to create task:', error)
 		}

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { invalidate } from '$app/navigation'
+	import { goto, invalidate } from '$app/navigation'
 	import Button from '$components/Button.svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import Modal from '$components/Modal.svelte'
@@ -21,7 +21,7 @@
 		try {
 			await invoke('delete_holiday_command', { id: holiday.id })
 			invalidate(ROUTES.holiday.list)
-			window.location.href = ROUTES.holiday.list
+			goto(ROUTES.holiday.list)
 		} catch (err) {
 			console.error('Failed to delete holiday:', err)
 			closeDeleteModal()
@@ -46,7 +46,7 @@
 			</dl>
 		</div>
 		<div class="actions">
-			<Button Icon={Pencil} onclick={() => (window.location.href = ROUTES.holiday.edit(holiday.id))}>Editar</Button>
+			<Button Icon={Pencil} onclick={() => goto(ROUTES.holiday.edit(holiday.id))}>Editar</Button>
 			<Button outlined variant="error" Icon={Delete} onclick={openDeleteModal}>Eliminar</Button>
 		</div>
 	</MainContainer>

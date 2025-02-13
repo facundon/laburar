@@ -5,6 +5,7 @@
 	import { Save } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import AbsenceForm from '$pages/absences/components/AbsenceForm.svelte'
+	import { goto } from '$app/navigation'
 
 	const { data } = $props()
 	let absence = $state(data.absence)
@@ -14,7 +15,7 @@
 		if (!absence) return
 		try {
 			await invoke('update_absence_command', absence.toUpdateDTO())
-			window.location.href = ROUTES.absence.view(absence.id)
+			goto(ROUTES.absence.view(absence.id))
 		} catch (error) {
 			console.error('Failed to update absence:', error)
 		}

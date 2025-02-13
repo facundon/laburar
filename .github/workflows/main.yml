@@ -73,8 +73,7 @@ jobs:
           tagName: v__VERSION__
           releaseName: 'LaburAR v__VERSION__'
           releaseBody: |
-            Se agregaron colores a la dificultar de las tareas
-            Se arreglo el dropdown dentro del modal
+            Se arreglo la escala de colores en la dificultad de las tareas
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}

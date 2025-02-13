@@ -36,9 +36,9 @@ pub fn get_holiday_command(id: i32) -> Result<HolidayWithEmployee, Error> {
 }
 
 #[command(rename_all = "snake_case")]
-pub fn list_holidays_command() -> Result<Vec<HolidayWithEmployee>, Error> {
+pub fn list_holidays_command(year: Option<i32>) -> Result<Vec<HolidayWithEmployee>, Error> {
     let mut conn = establish_connection();
-    list_holidays(&mut conn)
+    list_holidays(&mut conn, year)
 }
 
 #[command(rename_all = "snake_case")]

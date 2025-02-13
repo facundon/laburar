@@ -5,6 +5,7 @@
 	import Modal from '$components/Modal.svelte'
 	import { Delete, Pencil } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
+	import { goto } from '$app/navigation'
 
 	const { data } = $props()
 	const task = data.task
@@ -15,7 +16,7 @@
 		try {
 			if (!task) return
 			await invoke('delete_task_command', { id: task.id })
-			window.location.href = ROUTES.task.list
+			goto(ROUTES.task.list)
 		} catch (error) {
 			console.error('Failed to delete task:', error)
 		}

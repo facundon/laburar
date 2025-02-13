@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { invalidate } from '$app/navigation'
+	import { goto, invalidate } from '$app/navigation'
 	import Button from '$components/Button.svelte'
 	import FormGroup from '$components/FormGroup.svelte'
 	import MainContainer from '$components/MainContainer.svelte'
@@ -22,7 +22,7 @@
 			if (!absence) return
 			await invoke('create_absence_return_command', absenceReturn.toCreateDTO())
 			invalidate(ROUTES.absence.list)
-			window.location.href = ROUTES.absence.view(absence.id)
+			goto(ROUTES.absence.view(absence.id))
 		} catch (err) {
 			console.error('Failed to create absence return:', err)
 		}
