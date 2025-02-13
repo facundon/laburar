@@ -73,10 +73,9 @@ jobs:
           tagName: v__VERSION__
           releaseName: 'LaburAR v__VERSION__'
           releaseBody: |
-            Se arreglo la escala de colores en la dificultad de las tareas
-            Se agrego visualización de vacaciones por año
-            Se dividio la tabla de vacaciones en 3: En curso, próximas y pasadas
-            Se mejoro la navegación de la aplicación
+            Se arreglo la navegacion al actualizar algunos datos
+            Se arreglo el deshabilitar el dropdown en ciertos casos
+            No se muestran dias negativos cuando sugiere reemplazos
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
