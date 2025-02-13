@@ -15,7 +15,7 @@
 		if (!holiday.employeeId) return
 		try {
 			await invoke('create_holiday_command', holiday.toCreateDTO())
-			goto(ROUTES.holiday.list)
+			goto(ROUTES.holiday.list, { invalidateAll: true })
 		} catch (error) {
 			console.error('Failed to create holiday:', error)
 		}

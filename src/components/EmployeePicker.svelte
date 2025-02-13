@@ -7,7 +7,7 @@
 
 	let employees = $state<Employee[]>([])
 
-	let { value = $bindable(), ...rest }: HTMLSelectAttributes = $props()
+	let { value = $bindable(), onchange, ...rest }: HTMLSelectAttributes = $props()
 
 	onMount(async () => {
 		employees = await getEmployeeList()

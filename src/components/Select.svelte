@@ -8,7 +8,7 @@
 		onchange?: (value: T | null) => void
 	}
 
-	let { children, value = $bindable(), onchange, ...rest }: Props<T> = $props()
+	let { children, value = $bindable(), onchange, disabled = false, ...rest }: Props<T> = $props()
 
 	let searchInput: HTMLInputElement
 	let wrapper: HTMLDivElement
@@ -19,11 +19,13 @@
 	let highlightedIndex = $state(-1)
 
 	function handleButtonClick(e: Event) {
+		if (disabled) return
 		isOpen = !isOpen
 		if (isOpen) searchInput?.focus()
 	}
 
 	function handleInputFocus(e: Event) {
+		if (disabled) return
 		isOpen = true
 		filterOptions()
 	}
@@ -64,6 +66,7 @@
 	}
 
 	function clearInput(event: MouseEvent) {
+		if (disabled) return
 		event.stopPropagation()
 		isOpen = true
 		search = ''
@@ -85,6 +88,7 @@
 
 	onMount(() => {
 		const initialValue = select.options[select.selectedIndex]
+		console.log(value, options)
 		if (!initialValue) return
 		setValue(initialValue)
 	})
@@ -94,7 +98,7 @@
 	})
 </script>
 
-<div class="select-wrapper" bind:this={wrapper}>
+<div class="select-wrapper {disabled ? 'disabled' : ''}" bind:this={wrapper}>
 	<div class="input-wrapper">
 		<input
 			class="search-input"
@@ -104,13 +108,14 @@
 			onfocus={handleInputFocus}
 			onkeydown={handleKeydown}
 			placeholder="Buscar..."
+			{disabled}
 		/>
-		{#if search}
+		{#if search && !disabled}
 			<button class="icon clear" onclick={clearInput} type="button" tabindex="-1">
 				<Eraser color="var(--error-dark)" strokeWidth={1} />
 			</button>
 		{/if}
-		<button class="icon chevron" onclick={handleButtonClick} type="button" tabindex="-1">
+		<button class="icon chevron" onclick={handleButtonClick} type="button" tabindex="-1" {disabled}>
 			<ChevronDown color="var(--secondary-dark)" strokeWidth={1} />
 		</button>
 	</div>
@@ -142,7 +147,7 @@
 		</div>
 	{/if}
 
-	<select {...rest} bind:this={select} bind:value>
+	<select {...rest} bind:this={select} bind:value {disabled}>
 		{@render children?.()}
 	</select>
 </div>
@@ -210,5 +215,10 @@
 
 	select {
 		display: none;
+	}
+
+	.select-wrapper.disabled .search-input,
+	.select-wrapper.disabled .icon {
+		cursor: not-allowed;
 	}
 </style>

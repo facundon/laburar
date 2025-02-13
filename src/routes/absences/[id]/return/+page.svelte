@@ -22,7 +22,7 @@
 			if (!absence) return
 			await invoke('create_absence_return_command', absenceReturn.toCreateDTO())
 			invalidate(ROUTES.absence.list)
-			goto(ROUTES.absence.view(absence.id))
+			goto(ROUTES.absence.view(absence.id), { invalidateAll: true })
 		} catch (err) {
 			console.error('Failed to create absence return:', err)
 		}

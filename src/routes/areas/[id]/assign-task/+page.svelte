@@ -21,7 +21,7 @@
 		if (!area) return
 		try {
 			await invoke('create_assignment_command', assignment.toCreateDTO())
-			goto(ROUTES.area.view(area.id))
+			goto(ROUTES.area.view(area.id), { invalidateAll: true })
 		} catch (error) {
 			console.error('Failed to assign task:', error)
 		}

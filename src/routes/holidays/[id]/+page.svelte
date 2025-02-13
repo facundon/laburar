@@ -21,7 +21,8 @@
 		try {
 			await invoke('delete_holiday_command', { id: holiday.id })
 			invalidate(ROUTES.holiday.list)
-			goto(ROUTES.holiday.list)
+			closeDeleteModal()
+			window.location.href = ROUTES.holiday.list
 		} catch (err) {
 			console.error('Failed to delete holiday:', err)
 			closeDeleteModal()

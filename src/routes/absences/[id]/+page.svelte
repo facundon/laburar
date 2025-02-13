@@ -40,7 +40,7 @@
 		if (!absence) return
 		try {
 			await invoke('delete_absence_command', { id: absence.id })
-			goto(ROUTES.absence.list)
+			ROUTES.absence.list
 		} catch (err) {
 			console.error('Failed to delete absence:', err)
 		}

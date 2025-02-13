@@ -171,7 +171,7 @@
 								{#if employee.assignmentsDifficulties.length >= 3}<span>🔥</span>{/if}
 								{employee.assignmentsDifficulties.length} tareas
 							</dd>
-							{#if employee?.startDate && employee.startDate < assignment!.endDate}
+							{#if employee?.startDate && employee.startDate < assignment!.startDate}
 								{@const daysOut = differenceInCalendarDays(employee.startDate, max([assignment!.startDate, new Date()])) + 1}
 								<dt>Días disponibles</dt>
 								<dd>

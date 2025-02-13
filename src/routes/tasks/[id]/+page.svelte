@@ -16,7 +16,7 @@
 		try {
 			if (!task) return
 			await invoke('delete_task_command', { id: task.id })
-			goto(ROUTES.task.list)
+			goto(ROUTES.task.list, { invalidateAll: true })
 		} catch (error) {
 			console.error('Failed to delete task:', error)
 		}

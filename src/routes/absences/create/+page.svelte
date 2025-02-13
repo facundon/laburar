@@ -14,7 +14,7 @@
 		e.preventDefault()
 		try {
 			await invoke('create_absence_command', absence.toCreateDTO())
-			goto(ROUTES.absence.list)
+			goto(ROUTES.absence.list, { invalidateAll: true })
 		} catch (error) {
 			console.error('Failed to create absence:', error)
 		}

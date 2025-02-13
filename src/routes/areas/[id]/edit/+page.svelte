@@ -15,7 +15,7 @@
 		if (!area) return
 		try {
 			await invoke('update_area_command', area.toUpdateDTO())
-			goto(ROUTES.area.view(area.id))
+			goto(ROUTES.area.view(area.id), { invalidateAll: true })
 		} catch (error) {
 			console.error('Failed to update area:', error)
 		}

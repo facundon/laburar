@@ -15,7 +15,7 @@
 		e.preventDefault()
 		try {
 			await invoke('create_company_holiday_command', companyHoliday.toCreateDTO())
-			goto(ROUTES.companyHoliday.list)
+			goto(ROUTES.companyHoliday.list, { invalidateAll: true })
 		} catch (error) {
 			console.error('Failed to create company holiday:', error)
 		}

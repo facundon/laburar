@@ -27,7 +27,7 @@
 			if (!area) return
 			await invoke('delete_area_command', { id: area.id })
 			closeDeleteAreaModal()
-			goto(ROUTES.area.list)
+			window.location.href = ROUTES.area.list
 		} catch (error) {
 			console.error('Failed to delete area:', error)
 		}

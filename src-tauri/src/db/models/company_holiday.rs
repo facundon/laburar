@@ -45,6 +45,7 @@ pub fn get_company_holiday(conn: &mut SqliteConnection, id: i32) -> Result<Compa
 pub fn list_company_holidays(conn: &mut SqliteConnection) -> Result<Vec<CompanyHoliday>, Error> {
     company_holiday::table
         .filter(company_holiday::date.gt(Local::now().date_naive()))
+        .order_by(company_holiday::date.asc())
         .load(conn)
         .map_err(Error::Database)
 }

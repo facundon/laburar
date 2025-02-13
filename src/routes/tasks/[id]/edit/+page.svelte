@@ -15,7 +15,7 @@
 		if (!task) return
 		try {
 			await invoke('update_task_command', task.toUpdateDTO())
-			goto(ROUTES.task.view(task.id))
+			goto(ROUTES.task.view(task.id), { invalidateAll: true })
 		} catch (error) {
 			console.error('Failed to update task:', error)
 		}

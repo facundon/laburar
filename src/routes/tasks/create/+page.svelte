@@ -14,7 +14,7 @@
 		e.preventDefault()
 		try {
 			await invoke('create_task_command', task.toCreateDTO())
-			goto(ROUTES.task.list)
+			goto(ROUTES.task.list, { invalidateAll: true })
 		} catch (error) {
 			console.error('Failed to create task:', error)
 		}

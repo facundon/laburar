@@ -15,7 +15,7 @@
 		if (!absence) return
 		try {
 			await invoke('update_absence_command', absence.toUpdateDTO())
-			goto(ROUTES.absence.view(absence.id))
+			goto(ROUTES.absence.view(absence.id), { invalidateAll: true })
 		} catch (error) {
 			console.error('Failed to update absence:', error)
 		}

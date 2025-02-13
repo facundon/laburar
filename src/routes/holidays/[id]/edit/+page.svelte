@@ -15,7 +15,7 @@
 		e.preventDefault()
 		try {
 			await invoke('update_holiday_command', holiday.toUpdateDTO())
-			goto(ROUTES.holiday.view(holiday.id))
+			goto(ROUTES.holiday.view(holiday.id), { invalidateAll: true })
 		} catch (error) {
 			console.error('Failed to update holiday:', error)
 		}

@@ -14,7 +14,7 @@
 		e.preventDefault()
 		try {
 			await invoke('create_area_command', area.toCreateDTO())
-			goto(ROUTES.area.list)
+			goto(ROUTES.area.list, { invalidateAll: true })
 		} catch (error) {
 			console.error('Failed to create area:', error)
 		}
