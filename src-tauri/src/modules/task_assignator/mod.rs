@@ -23,7 +23,13 @@ pub fn suggest_employees_for_assignation(
     assignation_start_date: NaiveDate,
     assignation_end_date: NaiveDate,
 ) -> Result<Vec<EmployeeWithScore>, Error> {
-    let employees = list_competent_employees_for_assignment(conn, assignment_id).unwrap();
+    let employees = list_competent_employees_for_assignment(
+        conn,
+        assignment_id,
+        assignation_start_date,
+        assignation_end_date,
+    )
+    .unwrap();
     if employees.len() == 0 {
         return Ok(Vec::new());
     }

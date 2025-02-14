@@ -11,7 +11,7 @@
 	}
 
 	onMount(() => {
-		const mediaQuery = window.matchMedia('(max-width: 768px)')
+		const mediaQuery = window.matchMedia('(max-width: 1600px)')
 		isSidebarOpen = !mediaQuery.matches
 		mediaQuery.addEventListener('change', e => {
 			isSidebarOpen = !e.matches

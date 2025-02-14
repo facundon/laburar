@@ -211,9 +211,9 @@ pub struct EmployeeForAssignment {
 pub fn list_competent_employees_for_assignment(
     conn: &mut SqliteConnection,
     assignment_id: i32,
+    assignation_start_date: NaiveDate,
+    assignation_end_date: NaiveDate,
 ) -> Result<Vec<EmployeeForAssignment>, Error> {
-    let today = Utc::now().naive_utc().date();
-
     let mut results: Vec<EmployeeForAssignment> = employee::table
         .left_join(
             employee_assignment::table
@@ -221,14 +221,18 @@ pub fn list_competent_employees_for_assignment(
                 .inner_join(assignment::table),
         )
         .left_join(holiday::table.on(employee::id.eq(holiday::employee_id)))
-        .filter(employee_assignment::assignment_id.eq(assignment_id))
         .filter(
-            not(holiday::start_date
-                .le(today)
-                .and(holiday::end_date.ge(today)))
-            .or(holiday::start_date
+            employee_assignment::assignment_id
+                .eq(assignment_id)
+                .and(employee_assignment::is_primary.eq(false)),
+        )
+        .filter(
+            holiday::start_date
                 .is_null()
-                .and(holiday::end_date.is_null())),
+                .or(holiday::end_date.is_null())
+                .or(not(holiday::start_date
+                    .lt(assignation_start_date)
+                    .and(holiday::end_date.gt(assignation_end_date)))),
         )
         .select((
             employee::id,
@@ -282,6 +286,18 @@ pub fn list_competent_employees_for_assignment(
         .map_err(Error::Database)?;
 
     for employee in &mut results {
+        if let Some(end_date) = employee.end_date {
+            let pivot = if assignation_start_date > chrono::Local::now().date_naive() {
+                assignation_start_date
+            } else {
+                chrono::Local::now().date_naive()
+            };
+            if end_date < pivot {
+                employee.end_date = None;
+                employee.start_date = None;
+            }
+        }
+
         let assignments_difficulties = assignment::table
             .inner_join(employee_assignment::table)
             .filter(
