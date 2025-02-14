@@ -18,7 +18,7 @@
 </script>
 
 {#snippet Action()}
-	<Button variant="secondary" outlined href={ROUTES.holiday.list} Icon={ClipboardX}>Ver Ausencias</Button>
+	<Button variant="secondary" outlined href={ROUTES.absence.list} Icon={ClipboardX}>Ver Ausencias</Button>
 {/snippet}
 <SummaryContainer title="Personal Ausente 😤" {Action}>
 	{#if employeesFutureAbsences.length === 0}

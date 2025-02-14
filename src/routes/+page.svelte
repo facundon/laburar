@@ -2,12 +2,14 @@
 	import CongratsText from '$components/CongratsText.svelte'
 	import EmployeesFutureAbsences from '$pages/EmployeesFutureAbsences.svelte'
 	import EmployeesOnHolidayList from '$pages/EmployeesOnHolidayList.svelte'
+	import ReplacementsSummary from '$pages/ReplacementsSummary.svelte'
 	import SuggestAssignmentList from '$pages/SuggestAssignmentList.svelte'
 	import Confetti from 'svelte-confetti'
 
 	let { data } = $props()
 	let employeesOnHoliday = $derived(data.employeesOnHoliday)
 	let employeesFutureAbsences = $derived(data.employeesFutureAbsences)
+	let replacements = $derived(data.replacements)
 
 	let holidayAssignments = $derived(
 		[...employeesOnHoliday, ...employeesFutureAbsences].flatMap(e =>
@@ -50,6 +52,9 @@
 		</div>
 		<div class="grid-item">
 			<SuggestAssignmentList assignments={holidayAssignments} />
+		</div>
+		<div class="grid-item">
+			<ReplacementsSummary {replacements} />
 		</div>
 	</div>
 </main>

@@ -3,9 +3,10 @@
 	import SummaryContainer from '$components/SummaryContainer.svelte'
 	import { type EmployeeAssignmentWithDates } from '$models/employeeAssignment.svelte'
 	import SuggestAssignmentModal from '$pages/SuggestAssignmentModal.svelte'
+	import { ROUTES } from '$routes'
 	import { formatDateToFullDay } from '$utils'
 	import { differenceInCalendarDays, max } from 'date-fns'
-	import { Stars } from 'lucide-svelte'
+	import { Stars, Component } from 'lucide-svelte'
 	import Confetti from 'svelte-confetti'
 
 	interface Props {
@@ -33,7 +34,11 @@
 	let nextAssignments = $derived(assignments.filter(a => a.startDate > new Date() && getAssignmentsMissingDays(a) > 0))
 </script>
 
-<SummaryContainer title={'Tareas sin Personal Asignado 🤹'}>
+{#snippet Action()}
+	<Button Icon={Component} outlined variant="secondary" href={ROUTES.area.list}>Ver Tareas</Button>
+{/snippet}
+
+<SummaryContainer title={'Tareas sin Personal Asignado 🤹'} {Action}>
 	{#if currentAssignments.length === 0 && nextAssignments.length === 0}
 		<p class="empty">
 			Todas las tareas estan asignadas 😎

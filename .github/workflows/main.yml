@@ -73,9 +73,8 @@ jobs:
           tagName: v__VERSION__
           releaseName: 'LaburAR v__VERSION__'
           releaseBody: |
-            Se arreglo la navegacion al actualizar algunos datos
-            Se arreglo el deshabilitar el dropdown en ciertos casos
-            No se muestran dias negativos cuando sugiere reemplazos
+            Se agrego filtro de personal en reemplazos
+            Se agrego vista de 'Reemplazando hoy' en la pantalla principal
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
