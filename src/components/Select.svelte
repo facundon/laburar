@@ -86,6 +86,11 @@
 		}
 	})
 
+	$effect(() => {
+		if (value) return
+		search = ''
+	})
+
 	onMount(() => {
 		setTimeout(() => {
 			const initialValue = select.options[select.selectedIndex]

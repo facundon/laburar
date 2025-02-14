@@ -122,13 +122,14 @@ pub fn get_replacement(
 
 pub fn list_replacements(
     conn: &mut SqliteConnection,
+    employee_id: Option<i32>,
 ) -> Result<Vec<ReplacementWithEmployees>, Error> {
     let (original_employee, replacement_employee) = diesel::alias!(
         employee as original_employee,
         employee as replacement_employee
     );
 
-    replacement::table
+    let mut query = replacement::table
         .inner_join(
             original_employee
                 .on(replacement::original_employee_id.eq(original_employee.field(employee::id))),
@@ -153,6 +154,13 @@ pub fn list_replacements(
             area::name,
             task::name,
         ))
+        .into_boxed();
+
+    if let Some(employee_id) = employee_id {
+        query = query.filter(replacement::replacement_employee_id.eq(employee_id));
+    }
+
+    query
         .load::<(Replacement, String, String, String, String, String, String)>(conn)
         .map(|results| {
             results

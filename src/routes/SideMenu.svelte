@@ -4,7 +4,7 @@
 	import { page } from '$app/state'
 	import { onMount } from 'svelte'
 
-	let isSidebarOpen = $state(true)
+	let isSidebarOpen = $state(false)
 
 	function toggleSidebar() {
 		isSidebarOpen = !isSidebarOpen

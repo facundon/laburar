@@ -5,9 +5,14 @@
 	import { onMount } from 'svelte'
 	import type { HTMLSelectAttributes } from 'svelte/elements'
 
+	interface Props extends Omit<HTMLSelectAttributes, 'onchange' | 'value'> {
+		value?: string | null
+		onchange?: (value: string | null) => void
+	}
+
 	let employees = $state<Employee[]>([])
 
-	let { value = $bindable(), onchange, ...rest }: HTMLSelectAttributes = $props()
+	let { value = $bindable(), ...rest }: Props = $props()
 
 	onMount(async () => {
 		employees = await getEmployeeList()

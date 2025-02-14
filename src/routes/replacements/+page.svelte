@@ -1,5 +1,8 @@
 <script lang="ts">
-	import { invalidateAll } from '$app/navigation'
+	import { goto, invalidateAll } from '$app/navigation'
+	import { page } from '$app/state'
+	import Button from '$components/Button.svelte'
+	import EmployeePicker from '$components/EmployeePicker.svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import Modal from '$components/Modal.svelte'
 	import Table from '$components/Table.svelte'
@@ -12,6 +15,8 @@
 	let replacements = $derived(data.replacements)
 
 	let replacementToDelete = $state<Replacement | null>(null)
+
+	let employeeToFilter = $state<string | null>(null)
 
 	let repalcementsWithActions = $derived(
 		replacements.map(rep => ({
@@ -43,9 +48,23 @@
 			console.error(`Error deleting replacement: ${err}`)
 		}
 	}
+
+	function handleChangeEmployee(employeeId: string | null) {
+		if (employeeId) page.url.searchParams.set('employee_id', employeeId)
+		else {
+			page.url.searchParams.delete('employee_id')
+			employeeToFilter = null
+		}
+		goto(page.url.href, { invalidateAll: true, keepFocus: true })
+	}
 </script>
 
 <MainContainer title="Reemplazos">
+	<div class="picker">
+		<h4>Personal Reemplazando</h4>
+		<EmployeePicker bind:value={employeeToFilter} onchange={handleChangeEmployee} --width="100%" />
+		<Button style="flex-shrink: 0" variant="secondary" outlined onclick={() => handleChangeEmployee(null)}>Limpiar Filtros</Button>
+	</div>
 	<Table
 		rows={repalcementsWithActions}
 		columns={[
@@ -84,6 +103,18 @@
 {/if}
 
 <style>
+	.picker {
+		display: flex;
+		gap: 1rem;
+		align-items: center;
+		margin-bottom: 1rem;
+	}
+
+	.picker h4 {
+		margin: 0;
+		flex-shrink: 0;
+	}
+
 	p {
 		white-space: pre-wrap;
 	}
