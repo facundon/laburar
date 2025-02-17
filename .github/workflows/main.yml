@@ -73,8 +73,7 @@ jobs:
           tagName: v__VERSION__
           releaseName: 'LaburAR v__VERSION__'
           releaseBody: |
-            Se agrego filtro de personal en reemplazos
-            Se agrego vista de 'Reemplazando hoy' en la pantalla principal
+            Se agrego lista de areas y tareas sin vincular
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
