@@ -51,6 +51,15 @@ pub fn list_areas(conn: &mut SqliteConnection) -> Result<Vec<Area>, Error> {
     area::table.load(conn).map_err(Error::Database)
 }
 
+pub fn list_areas_without_tasks(conn: &mut SqliteConnection) -> Result<Vec<Area>, Error> {
+    area::table
+        .left_join(assignment::table.inner_join(task::table))
+        .select(area::all_columns)
+        .filter(task::id.is_null())
+        .load(conn)
+        .map_err(Error::Database)
+}
+
 pub fn get_area_with_assignments(
     conn: &mut SqliteConnection,
     area_id: i32,

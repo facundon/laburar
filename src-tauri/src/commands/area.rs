@@ -1,6 +1,6 @@
 pub use crate::db::models::area::{
-    create_area, delete_area, get_area, get_area_with_assignments, list_areas, update_area, Area,
-    AreaWithAssignments,
+    create_area, delete_area, get_area, get_area_with_assignments, list_areas,
+    list_areas_without_tasks, update_area, Area, AreaWithAssignments,
 };
 use crate::db::sqlite::establish_connection;
 use crate::error::Error;
@@ -28,6 +28,12 @@ pub fn get_area_with_assignments_command(id: i32) -> Result<AreaWithAssignments,
 pub fn list_areas_command() -> Result<Vec<Area>, Error> {
     let mut conn = establish_connection();
     list_areas(&mut conn)
+}
+
+#[command(rename_all = "snake_case")]
+pub fn list_areas_without_tasks_command() -> Result<Vec<Area>, Error> {
+    let mut conn = establish_connection();
+    list_areas_without_tasks(&mut conn)
 }
 
 #[command(rename_all = "snake_case")]

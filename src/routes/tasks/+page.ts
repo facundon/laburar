@@ -1,6 +1,6 @@
-import { getTaskList } from '$queries/tasks'
+import { getTaskList, listTasksWithoutArea } from '$queries/tasks'
 
 export const load = async () => {
-	const tasks = await getTaskList()
-	return { tasks }
+	const [tasks, tasksWithoutArea] = await Promise.all([getTaskList(), listTasksWithoutArea()])
+	return { tasks, tasksWithoutArea }
 }

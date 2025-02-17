@@ -9,6 +9,7 @@ export async function getTask(id: number) {
 		return null
 	}
 }
+
 export async function getTaskList(excludeIds: number[] = []) {
 	try {
 		return invoke('list_tasks_command', { exclude_ids: excludeIds }, (data: TaskDTO[]) => data.map(Task.fromDTO))
@@ -17,11 +18,21 @@ export async function getTaskList(excludeIds: number[] = []) {
 		return []
 	}
 }
+
 export async function getTasksForArea(areaId: number) {
 	try {
 		return invoke('get_tasks_for_area_command', { area_id: areaId }, (data: TaskDTO[]) => data.map(Task.fromDTO))
 	} catch (error) {
 		console.error('Failed to fetch tasks for area:', error)
+		return []
+	}
+}
+
+export async function listTasksWithoutArea() {
+	try {
+		return invoke('list_tasks_without_area_command', undefined, (data: TaskDTO[]) => data.map(Task.fromDTO))
+	} catch (error) {
+		console.error('Failed to fetch tasks without area:', error)
 		return []
 	}
 }

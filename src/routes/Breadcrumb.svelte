@@ -45,6 +45,7 @@
 
 <style>
 	.breadcrumb {
+		z-index: 1;
 		font-size: 1.1rem;
 		position: sticky;
 		top: 0;

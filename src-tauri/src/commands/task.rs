@@ -1,3 +1,4 @@
+use crate::db::models::task::list_tasks_without_area;
 pub use crate::db::models::task::{
     create_task, delete_task, get_task, get_tasks_for_area, list_tasks, update_task,
 };
@@ -21,6 +22,12 @@ pub fn get_task_command(id: i32) -> Result<Task, Error> {
 pub fn list_tasks_command(exclude_ids: Vec<i32>) -> Result<Vec<Task>, Error> {
     let mut conn = establish_connection();
     list_tasks(&mut conn, exclude_ids)
+}
+
+#[command(rename_all = "snake_case")]
+pub fn list_tasks_without_area_command() -> Result<Vec<Task>, Error> {
+    let mut conn = establish_connection();
+    list_tasks_without_area(&mut conn)
 }
 
 #[command(rename_all = "snake_case")]

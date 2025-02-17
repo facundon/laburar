@@ -1,4 +1,4 @@
-use crate::db::schema::{assignment, task};
+use crate::db::schema::{area, assignment, task};
 use crate::error::Error;
 use chrono::NaiveDateTime;
 use diesel::{prelude::*, RunQueryDsl, SelectableHelper, SqliteConnection};
@@ -42,6 +42,15 @@ pub fn get_task(conn: &mut SqliteConnection, id: i32) -> Result<Task, Error> {
 pub fn list_tasks(conn: &mut SqliteConnection, exclude_ids: Vec<i32>) -> Result<Vec<Task>, Error> {
     task::table
         .filter(task::id.ne_all(&exclude_ids))
+        .load(conn)
+        .map_err(Error::Database)
+}
+
+pub fn list_tasks_without_area(conn: &mut SqliteConnection) -> Result<Vec<Task>, Error> {
+    task::table
+        .left_join(assignment::table.inner_join(area::table))
+        .select(task::all_columns)
+        .filter(area::id.is_null())
         .load(conn)
         .map_err(Error::Database)
 }

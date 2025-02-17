@@ -19,7 +19,7 @@ use commands::absence_return::{
 };
 use commands::area::{
     create_area_command, delete_area_command, get_area_command, get_area_with_assignments_command,
-    list_areas_command, update_area_command,
+    list_areas_command, list_areas_without_tasks_command, update_area_command,
 };
 use commands::assignment::{
     create_assignment_command, delete_assignment_command, get_assignment_command,
@@ -49,7 +49,7 @@ use commands::replacement::{
 };
 use commands::task::{
     create_task_command, delete_task_command, get_task_command, get_tasks_for_area_command,
-    list_tasks_command, update_task_command,
+    list_tasks_command, list_tasks_without_area_command, update_task_command,
 };
 use db::sqlite::run_migrations;
 
@@ -64,6 +64,8 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            list_tasks_without_area_command,
+            list_areas_without_tasks_command,
             suggest_employees_for_assignation_command,
             list_employees_future_absences_command,
             list_assignments_without_employees_command,

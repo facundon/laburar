@@ -8,7 +8,7 @@
 	import Table from '$components/Table.svelte'
 	import { invoke } from '$invoke'
 	import { Replacement } from '$models/replacement.svelte.js'
-	import { formatDate, formatDateToFullDay } from '$utils'
+	import { formatDateToFullDay } from '$utils'
 	import { Delete } from 'lucide-svelte'
 
 	let { data } = $props()
@@ -70,8 +70,8 @@
 		columns={[
 			{ field: 'originalEmployeeName', headerName: 'Personal' },
 			{ field: 'replacementEmployeeName', headerName: 'Reemplazo' },
-			{ field: 'replacementStartDate', headerName: 'Inicio', formatValue: date => formatDate(date) },
-			{ field: 'replacementEndDate', headerName: 'Fin', formatValue: date => formatDate(date) },
+			{ field: 'replacementStartDate', headerName: 'Inicio', formatValue: date => formatDateToFullDay(date, true) },
+			{ field: 'replacementEndDate', headerName: 'Fin', formatValue: date => formatDateToFullDay(date, true) },
 			{ field: 'assignment', headerName: 'Asignación' },
 			{
 				field: 'delete',
