@@ -73,7 +73,9 @@ jobs:
           tagName: v__VERSION__
           releaseName: 'LaburAR v__VERSION__'
           releaseBody: |
-            Se agrego lista de areas y tareas sin vincular
+            Ahora se considera los reemplazos actuales a la hora de crear nuevos reemplazos
+            Se agrego visualizacion de reemplazos actuales en cuadro de seleccion de nuevo reemplazo
+            Se agrego filtro de reemplazos futuros o pasados
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
