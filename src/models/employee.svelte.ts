@@ -82,6 +82,7 @@ export interface SuggestedEmployeeDTO {
 	start_date: string
 	end_date: string
 	assignments_difficulties: number[]
+	replacements_difficulties: number[]
 	score: number
 }
 
@@ -94,6 +95,7 @@ export class SuggestedEmployee {
 	isPrimary: boolean = false
 	startDate: Date | null = null
 	endDate: Date | null = null
+	replacementsDifficulties: number[] = []
 	assignmentsDifficulties: number[] = []
 	score: number = 0
 
@@ -106,6 +108,7 @@ export class SuggestedEmployee {
 		if (params?.isPrimary !== undefined) this.isPrimary = params.isPrimary
 		if (params?.startDate !== undefined) this.startDate = params.startDate
 		if (params?.endDate !== undefined) this.endDate = params.endDate
+		if (params?.replacementsDifficulties !== undefined) this.replacementsDifficulties = params.replacementsDifficulties
 		if (params?.assignmentsDifficulties !== undefined) this.assignmentsDifficulties = params.assignmentsDifficulties
 		if (params?.score !== undefined) this.score = params.score
 	}
@@ -124,6 +127,7 @@ export class SuggestedEmployee {
 			isPrimary: dto.is_primary,
 			startDate: dto.start_date ? parseDate(dto.start_date) : null,
 			endDate: dto.end_date ? parseDate(dto.end_date) : null,
+			replacementsDifficulties: dto.replacements_difficulties,
 			assignmentsDifficulties: dto.assignments_difficulties,
 			score: dto.score,
 		})

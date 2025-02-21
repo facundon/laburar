@@ -36,7 +36,8 @@ pub fn suggest_employees_for_assignation(
 
     let mut employees_with_scores: Vec<EmployeeWithScore> = Vec::new();
     for employee in employees {
-        let total_task_difficulty = employee.assignments_difficulties.iter().sum::<i32>();
+        let total_task_difficulty = employee.assignments_difficulties.iter().sum::<i32>()
+            + employee.replacements_difficulties.iter().sum::<i32>();
         let mut score: f32 =
             employee.efficiency as f32 + (1.0 / (1 + total_task_difficulty) as f32);
 

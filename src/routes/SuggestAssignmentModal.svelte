@@ -171,6 +171,13 @@
 								{#if employee.assignmentsDifficulties.length >= 3}<span>🔥</span>{/if}
 								{employee.assignmentsDifficulties.length} tareas
 							</dd>
+							{#if employee.replacementsDifficulties.length > 0}
+								<dt>Actualmente reemplaza</dt>
+								<dd>
+									{#if employee.replacementsDifficulties.length >= 3}<span>🔥</span>{/if}
+									{employee.assignmentsDifficulties.length} tareas
+								</dd>
+							{/if}
 							{#if employee?.startDate && employee.startDate < assignment!.startDate}
 								{@const daysOut = differenceInCalendarDays(employee.startDate, max([assignment!.startDate, new Date()])) + 1}
 								<dt>Días disponibles</dt>
@@ -286,15 +293,16 @@
 		box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.6);
 		background-color: var(--gray-main);
 		transition: background-color 0.2s;
-		width: 20rem;
+		width: 25rem;
 		position: relative;
 	}
 
 	.suggestion.selected {
-		background: linear-gradient(270deg, #5b3c69, #333);
-		background-size: 400% 400%;
-		animation: gradientBackground 15s ease infinite;
-		background-color: #5b3c69; /* Tomato color */
+		background-color: #41234f;
+	}
+
+	.suggestion.selected:hover {
+		background-color: #41234f;
 	}
 
 	.suggestion:hover {

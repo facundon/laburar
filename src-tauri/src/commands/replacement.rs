@@ -37,9 +37,10 @@ pub fn get_replacement_command(id: i32) -> Result<ReplacementWithEmployees, Erro
 #[command(rename_all = "snake_case")]
 pub fn list_replacements_command(
     employee_id: Option<i32>,
+    show_old_only: Option<bool>,
 ) -> Result<Vec<ReplacementWithEmployees>, Error> {
     let mut conn = establish_connection();
-    list_replacements(&mut conn, employee_id)
+    list_replacements(&mut conn, employee_id, show_old_only)
 }
 
 #[command(rename_all = "snake_case")]

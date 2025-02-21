@@ -123,11 +123,13 @@ pub fn get_replacement(
 pub fn list_replacements(
     conn: &mut SqliteConnection,
     employee_id: Option<i32>,
+    show_old_only: Option<bool>,
 ) -> Result<Vec<ReplacementWithEmployees>, Error> {
     let (original_employee, replacement_employee) = diesel::alias!(
         employee as original_employee,
         employee as replacement_employee
     );
+    let today = Local::now().naive_local().date();
 
     let mut query = replacement::table
         .inner_join(
@@ -144,7 +146,6 @@ pub fn list_replacements(
                 .inner_join(area::table)
                 .inner_join(task::table),
         )
-        .filter(replacement::replacement_end_date.ge(Local::now().naive_local().date()))
         .select((
             replacement::all_columns,
             original_employee.field(employee::first_name),
@@ -158,6 +159,11 @@ pub fn list_replacements(
 
     if let Some(employee_id) = employee_id {
         query = query.filter(replacement::replacement_employee_id.eq(employee_id));
+    }
+    if show_old_only.unwrap_or(false) {
+        query = query.filter(replacement::replacement_end_date.lt(today));
+    } else {
+        query = query.filter(replacement::replacement_end_date.ge(today));
     }
 
     query

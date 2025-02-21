@@ -2,6 +2,7 @@
 	import { goto, invalidateAll } from '$app/navigation'
 	import { page } from '$app/state'
 	import Button from '$components/Button.svelte'
+	import Checkbox from '$components/Checkbox.svelte'
 	import EmployeePicker from '$components/EmployeePicker.svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import Modal from '$components/Modal.svelte'
@@ -15,6 +16,7 @@
 	let replacements = $derived(data.replacements)
 
 	let replacementToDelete = $state<Replacement | null>(null)
+	let showOldOnly = $state<boolean>(false)
 
 	let employeeToFilter = $state<string | null>(null)
 
@@ -57,12 +59,23 @@
 		}
 		goto(page.url.href, { invalidateAll: true, keepFocus: true })
 	}
+
+	function handleShowOldOnly() {
+		showOldOnly ? page.url.searchParams.set('show_old_only', 'true') : page.url.searchParams.delete('show_old_only')
+		goto(page.url.href, { invalidateAll: true, keepFocus: true })
+	}
 </script>
 
 <MainContainer title="Reemplazos">
 	<div class="picker">
 		<h4>Personal Reemplazando</h4>
 		<EmployeePicker bind:value={employeeToFilter} onchange={handleChangeEmployee} --width="100%" />
+		<Checkbox
+			style="flex-shrink: 0; margin-bottom: 0"
+			label="Solo mostrar antiguos"
+			bind:checked={showOldOnly}
+			onchange={handleShowOldOnly}
+		/>
 		<Button style="flex-shrink: 0" variant="secondary" outlined onclick={() => handleChangeEmployee(null)}>Limpiar Filtros</Button>
 	</div>
 	<Table

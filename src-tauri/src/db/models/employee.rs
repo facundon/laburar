@@ -206,6 +206,7 @@ pub struct EmployeeForAssignment {
     pub start_date: Option<NaiveDate>,
     pub end_date: Option<NaiveDate>,
     pub assignments_difficulties: Vec<i32>,
+    pub replacements_difficulties: Vec<i32>,
 }
 
 pub fn list_competent_employees_for_assignment(
@@ -278,6 +279,7 @@ pub fn list_competent_employees_for_assignment(
                             efficiency: efficiency.unwrap_or(0),
                             is_primary: is_primary.unwrap_or(false),
                             assignments_difficulties: vec![],
+                            replacements_difficulties: vec![],
                         }
                     },
                 )
@@ -310,6 +312,21 @@ pub fn list_competent_employees_for_assignment(
             .map_err(Error::Database);
         if let Ok(assignments_difficulties) = assignments_difficulties {
             employee.assignments_difficulties = assignments_difficulties;
+        }
+
+        let current_replacements = replacement::table
+            .inner_join(assignment::table)
+            .filter(
+                replacement::replacement_employee_id
+                    .eq(employee.id)
+                    .and(replacement::replacement_start_date.le(assignation_end_date))
+                    .and(replacement::replacement_end_date.ge(assignation_start_date)),
+            )
+            .select(assignment::difficulty)
+            .load::<i32>(conn)
+            .map_err(Error::Database);
+        if let Ok(current_replacements) = current_replacements {
+            employee.replacements_difficulties = current_replacements;
         }
     }
     Ok(results)
