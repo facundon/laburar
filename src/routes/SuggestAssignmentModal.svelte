@@ -166,16 +166,16 @@
 							</div>
 						</div>
 						<dl>
-							<dt>Actualmente realiza</dt>
+							<dt>Realizando</dt>
 							<dd>
 								{#if employee.assignmentsDifficulties.length >= 3}<span>🔥</span>{/if}
 								{employee.assignmentsDifficulties.length} tareas
 							</dd>
 							{#if employee.replacementsDifficulties.length > 0}
-								<dt>Actualmente reemplaza</dt>
+								<dt>Reemplazando</dt>
 								<dd>
 									{#if employee.replacementsDifficulties.length >= 3}<span>🔥</span>{/if}
-									{employee.assignmentsDifficulties.length} tareas
+									{employee.replacementsDifficulties.length} tareas
 								</dd>
 							{/if}
 							{#if employee?.startDate && employee.startDate < assignment!.startDate}
@@ -293,7 +293,7 @@
 		box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.6);
 		background-color: var(--gray-main);
 		transition: background-color 0.2s;
-		width: 25rem;
+		width: 20rem;
 		position: relative;
 	}
 
