@@ -222,11 +222,7 @@ pub fn list_competent_employees_for_assignment(
                 .inner_join(assignment::table),
         )
         .left_join(holiday::table.on(employee::id.eq(holiday::employee_id)))
-        .filter(
-            employee_assignment::assignment_id
-                .eq(assignment_id)
-                .and(employee_assignment::is_primary.eq(false)),
-        )
+        .filter(employee_assignment::assignment_id.eq(assignment_id))
         .filter(
             holiday::start_date
                 .is_null()

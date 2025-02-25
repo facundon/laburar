@@ -53,7 +53,10 @@ pub fn get_absence_return(conn: &mut SqliteConnection, id: i32) -> Result<Absenc
 }
 
 pub fn list_absence_returns(conn: &mut SqliteConnection) -> Result<Vec<AbsenceReturn>, Error> {
-    absence_return::table.load(conn).map_err(Error::Database)
+    absence_return::table
+        .order_by(absence_return::return_date.desc())
+        .load(conn)
+        .map_err(Error::Database)
 }
 
 pub fn update_absence_return(

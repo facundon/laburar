@@ -146,6 +146,7 @@ pub fn get_absence_with_returns(
                     absence_with_returns.returns.push(absence_return);
                 }
             }
+            absence_with_returns.returns.sort_by_key(|r| r.return_date);
             let total_returned_hours: i32 = absence_with_returns
                 .returns
                 .iter()
@@ -180,6 +181,7 @@ pub fn list_absences(conn: &mut SqliteConnection) -> Result<Vec<AbsenceWithEmplo
         FROM absence
         INNER JOIN employee ON absence.employee_id = employee.id
         LEFT JOIN absence_return ON absence.id = absence_return.absence_id
+        ORDER BY absence.absence_date DESC
         GROUP BY absence.id, employee.first_name, employee.last_name
     "#;
 
@@ -219,6 +221,7 @@ pub fn list_absences_for_employee(
         .left_join(absence_return::table)
         .left_join(employee::table)
         .filter(absence::employee_id.eq(employee_id))
+        .order_by(absence::absence_date.desc())
         .select((
             absence::all_columns,
             absence_return::all_columns.nullable(),
