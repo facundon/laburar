@@ -98,6 +98,7 @@
 			assignment.assignmentId,
 			formatDate(assignment.startDate),
 			formatDate(assignment.endDate),
+			assignment.employeeId,
 		)
 	}
 

@@ -22,12 +22,14 @@ pub fn suggest_employees_for_assignation(
     assignment_id: i32,
     assignation_start_date: NaiveDate,
     assignation_end_date: NaiveDate,
+    current_employee_id: i32,
 ) -> Result<Vec<EmployeeWithScore>, Error> {
     let employees = list_competent_employees_for_assignment(
         conn,
         assignment_id,
         assignation_start_date,
         assignation_end_date,
+        current_employee_id,
     )
     .unwrap();
     if employees.len() == 0 {

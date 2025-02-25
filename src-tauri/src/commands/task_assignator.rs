@@ -10,6 +10,7 @@ pub fn suggest_employees_for_assignation_command(
     assignment_id: i32,
     assignation_start_date: String,
     assignation_end_date: String,
+    current_employee_id: i32,
 ) -> Result<Vec<EmployeeWithScore>, Error> {
     let mut conn = establish_connection();
     suggest_employees_for_assignation(
@@ -17,6 +18,7 @@ pub fn suggest_employees_for_assignation_command(
         assignment_id,
         parse_date(&assignation_start_date).unwrap(),
         parse_date(&assignation_end_date).unwrap(),
+        current_employee_id,
     )
 }
 

@@ -31,7 +31,7 @@ export async function listAssignmentsWithoutEmployees() {
 	}
 }
 
-export async function suggestEmployeesForAssignment(assignmentId: number, startDate: string, endDate: string) {
+export async function suggestEmployeesForAssignment(assignmentId: number, startDate: string, endDate: string, currentEmployeeId: number) {
 	try {
 		return invoke(
 			'suggest_employees_for_assignation_command',
@@ -39,6 +39,7 @@ export async function suggestEmployeesForAssignment(assignmentId: number, startD
 				assignment_id: assignmentId,
 				assignation_start_date: startDate,
 				assignation_end_date: endDate,
+				current_employee_id: currentEmployeeId,
 			},
 			(data: SuggestedEmployeeDTO[]) => data.slice(0, 3).map(SuggestedEmployee.fromDTO),
 		)

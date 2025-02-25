@@ -214,6 +214,7 @@ pub fn list_competent_employees_for_assignment(
     assignment_id: i32,
     assignation_start_date: NaiveDate,
     assignation_end_date: NaiveDate,
+    current_employee_id: i32,
 ) -> Result<Vec<EmployeeForAssignment>, Error> {
     let mut results: Vec<EmployeeForAssignment> = employee::table
         .left_join(
@@ -222,7 +223,11 @@ pub fn list_competent_employees_for_assignment(
                 .inner_join(assignment::table),
         )
         .left_join(holiday::table.on(employee::id.eq(holiday::employee_id)))
-        .filter(employee_assignment::assignment_id.eq(assignment_id))
+        .filter(
+            employee_assignment::assignment_id
+                .eq(assignment_id)
+                .and(employee::id.ne(current_employee_id)),
+        )
         .filter(
             holiday::start_date
                 .is_null()
