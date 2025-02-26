@@ -73,9 +73,9 @@ jobs:
           tagName: v__VERSION__
           releaseName: 'LaburAR v__VERSION__'
           releaseBody: |
-            Ahora se considera los reemplazos actuales a la hora de crear nuevos reemplazos
-            Se agrego visualizacion de reemplazos actuales en cuadro de seleccion de nuevo reemplazo
-            Se agrego filtro de reemplazos futuros o pasados
+            Se agrego campo de busqueda en asignar tareas a personal
+            Los reemplazos ahora estan ordenados por quien sale
+            Se sugieren personas con la tarea a reemplazar aunque sea su tarea primaria
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
