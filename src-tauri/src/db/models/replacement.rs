@@ -155,6 +155,8 @@ pub fn list_replacements(
             area::name,
             task::name,
         ))
+        .order_by(replacement::replacement_start_date.asc())
+        .then_order_by(replacement::replacement_end_date.asc())
         .into_boxed();
 
     if let Some(employee_id) = employee_id {
