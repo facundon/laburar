@@ -181,8 +181,10 @@ pub fn list_absences(conn: &mut SqliteConnection) -> Result<Vec<AbsenceWithEmplo
         FROM absence
         INNER JOIN employee ON absence.employee_id = employee.id
         LEFT JOIN absence_return ON absence.id = absence_return.absence_id
+        GROUP BY absence.id, absence.employee_id, absence.is_justified, absence.will_return, 
+                 absence.hours, absence.description, absence.absence_type, absence.absence_date, 
+                 absence.created_at, employee.first_name, employee.last_name
         ORDER BY absence.absence_date DESC
-        GROUP BY absence.id, employee.first_name, employee.last_name
     "#;
 
     diesel::sql_query(query)
