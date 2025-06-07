@@ -10,13 +10,13 @@
 	import Rating from '$components/Rating.svelte'
 	import EditEmployeeAssignmentForm from '$pages/employees/[id]/EditEmployeeAssignmentForm.svelte'
 	import type { EmployeeAssignment } from '$models/employeeAssignment.svelte.js'
-	import { toYesNo } from '$utils'
+	import { formatDateToFullDay, toYesNo } from '$utils'
 	import { goto, invalidate, invalidateAll } from '$app/navigation'
 	import { AssignmentColorMap } from '$models/assignment.svelte'
 
 	const { data } = $props()
 	let employee = $state(data.employee)
-
+	let holidays = $state(data.holidays)
 	let absencesWithActions = $derived(
 		data.absences?.map(absence => ({
 			...absence,
@@ -27,6 +27,17 @@
 			willReturn: absence.willReturn,
 			isReturned: absence.isReturned,
 			view: ROUTES.absence.view(absence.id),
+		})) || [],
+	)
+
+	let holidaysWithActions = $derived(
+		holidays?.map(holiday => ({
+			...holiday,
+			startDate: holiday.startDate,
+			endDate: holiday.endDate,
+			daysOff: holiday.daysOff,
+			notes: holiday.notes,
+			view: ROUTES.holiday.view(holiday.id),
 		})) || [],
 	)
 
@@ -104,18 +115,32 @@
 		{/if}
 	{/snippet}
 	<MainContainer title={employee.name} {Actions}>
-		<p><strong>Teléfono:</strong> {employee.phone}</p>
-		<p><strong>Dirección:</strong> {employee.address}</p>
-		{#if employee.startDate}
-			<p>
-				<strong>Fecha de inicio:</strong>
-				{employee.startDate.toLocaleDateString()}
-			</p>
-			<p>
-				<strong>Antigüedad:</strong>
-				{getDifferenceInYears(employee.startDate)} años
-			</p>
-		{/if}
+		<div class="employee-info">
+			<div class="column">
+				<p><strong>Teléfono:</strong> {employee.phone}</p>
+				<p><strong>Dirección:</strong> {employee.address}</p>
+				{#if employee.startDate}
+					<p>
+						<strong>Fecha de inicio:</strong>
+						{employee.startDate.toLocaleDateString()}
+					</p>
+					<p>
+						<strong>Antigüedad:</strong>
+						{getDifferenceInYears(employee.startDate)} años
+					</p>
+				{/if}
+			</div>
+			<div class="column">
+				<p>
+					<strong>Días de vacaciones por año:</strong>
+					{employee.holidaysPerYear}
+				</p>
+				<p>
+					<strong>Días acumulados:</strong>
+					{employee.accumulatedHolidays}
+				</p>
+			</div>
+		</div>
 		<div class="actions">
 			<Button outlined href={ROUTES.employee.edit(employee.id)} Icon={Pencil}>Editar</Button>
 			<Button outlined variant="error" onclick={handleOpenDeleteEmployee} Icon={Delete}>Eliminar</Button>
@@ -221,7 +246,28 @@
 			/>
 		</MainContainer>
 	{/if}
-
+	{#if holidaysWithActions.length}
+		<MainContainer title="Vacaciones Pasadas" style="margin-top: 1rem;">
+			<Table
+				rows={holidaysWithActions}
+				columns={[
+					{ field: 'startDate', headerName: 'Inicio', formatValue: value => formatDateToFullDay(value, true) },
+					{ field: 'endDate', headerName: 'Fin', formatValue: value => formatDateToFullDay(value, true) },
+					{ field: 'daysOff', headerName: 'Días' },
+					{ field: 'notes', headerName: 'Notas' },
+					{
+						field: 'view',
+						width: 20,
+						headerName: '',
+						renderCell: href => ({
+							component: Eye,
+							props: { onclick: () => goto(href), color: 'var(--secondary-dark)', style: 'cursor: pointer;' },
+						}),
+					},
+				]}
+			/>
+		</MainContainer>
+	{/if}
 	<Modal
 		show={showDeleteAssignmentModal}
 		isDestructive
@@ -238,6 +284,18 @@
 	p {
 		margin-bottom: 0.5rem;
 		color: #fff;
+	}
+
+	.employee-info {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+	}
+
+	.column {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
 	}
 
 	.actions {

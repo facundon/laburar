@@ -41,7 +41,7 @@ use commands::employee_assignment::{
 };
 use commands::holiday::{
     create_holiday_command, delete_holiday_command, get_holiday_command, list_holidays_command,
-    update_holiday_command,
+    list_holidays_for_employee_command, update_holiday_command,
 };
 use commands::replacement::{
     create_replacement_command, delete_finished_replacements_command, delete_replacement_command,
@@ -64,6 +64,7 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            list_holidays_for_employee_command,
             list_tasks_without_area_command,
             list_areas_without_tasks_command,
             suggest_employees_for_assignation_command,

@@ -23,6 +23,8 @@ pub struct Employee {
     pub address: String,
     pub start_date: Option<NaiveDate>,
     pub created_at: Option<NaiveDateTime>,
+    pub holiday_per_year: i32,
+    pub accumulated_holidays: i32,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -40,6 +42,8 @@ pub struct NewEmployee<'a> {
     pub address: &'a str,
     pub phone: Option<&'a str>,
     pub start_date: Option<&'a NaiveDate>,
+    pub holiday_per_year: i32,
+    pub accumulated_holidays: i32,
 }
 
 pub fn create_employee(
@@ -56,6 +60,8 @@ pub fn create_employee(
         last_name,
         phone,
         start_date,
+        holiday_per_year: 14,
+        accumulated_holidays: 0,
     };
 
     diesel::insert_into(employee::table)
@@ -174,6 +180,8 @@ pub fn update_employee(
     last_name: &str,
     phone: Option<&str>,
     start_date: Option<&NaiveDate>,
+    holiday_per_year: i32,
+    accumulated_holidays: i32,
 ) -> Result<Employee, Error> {
     diesel::update(employee::table.find(id))
         .set((
@@ -182,6 +190,8 @@ pub fn update_employee(
             employee::last_name.eq(last_name),
             employee::phone.eq(phone),
             employee::start_date.eq(start_date),
+            employee::holiday_per_year.eq(holiday_per_year),
+            employee::accumulated_holidays.eq(accumulated_holidays),
         ))
         .returning(Employee::as_returning())
         .get_result(conn)

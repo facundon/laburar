@@ -35,6 +35,14 @@
 			<DateInput id="startDate" bind:value={employee.startDate} max={formatDate(new Date())} />
 		</FormGroup>
 	</div>
+	<div class="group">
+		<FormGroup label="Días de vacaciones por año" id="holidayPerYear">
+			<input id="holidayPerYear" bind:value={employee.holidaysPerYear} />
+		</FormGroup>
+		<FormGroup label="Días acumulados" id="accumulatedHolidays">
+			<input id="accumulatedHolidays" bind:value={employee.accumulatedHolidays} />
+		</FormGroup>
+	</div>
 	{@render children()}
 </form>
 

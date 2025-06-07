@@ -135,3 +135,14 @@ pub fn delete_holiday(conn: &mut SqliteConnection, id: i32) -> Result<(), Error>
         .map_err(Error::Database)?;
     Ok(())
 }
+
+pub fn list_holidays_for_employee(
+    conn: &mut SqliteConnection,
+    employee_id: i32,
+) -> Result<Vec<Holiday>, Error> {
+    holiday::table
+        .filter(holiday::employee_id.eq(employee_id))
+        .order_by(holiday::start_date.desc())
+        .load::<Holiday>(conn)
+        .map_err(Error::Database)
+}

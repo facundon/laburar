@@ -63,6 +63,7 @@ type Command =
 	| 'update_replacement_command'
 	| 'list_employees_replacing_assignment_command'
 	| 'delete_finished_replacements_command'
+	| 'list_holidays_for_employee_command'
 
 export const invoke = async <T>(command: Command, params?: InvokeArgs, parser?: (data: any) => T): Promise<T> => {
 	const response = await tauriInvoke<T>(command, params)

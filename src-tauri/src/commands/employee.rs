@@ -64,9 +64,10 @@ pub fn update_employee_command(
     last_name: &str,
     phone: Option<&str>,
     start_date: Option<&str>,
+    holiday_per_year: i32,
+    accumulated_holidays: i32,
 ) -> Result<Employee, Error> {
     let mut conn = establish_connection();
-
     let parsed_start_date = parse_date_option(start_date)?;
 
     update_employee(
@@ -77,6 +78,8 @@ pub fn update_employee_command(
         last_name.trim(),
         phone,
         parsed_start_date.as_ref(),
+        holiday_per_year,
+        accumulated_holidays,
     )
 }
 

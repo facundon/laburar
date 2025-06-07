@@ -14,6 +14,8 @@ export type EmployeeDTO = {
 	start_date?: string
 	created_at: string
 	assignments: EmployeeAssignmentDTO[]
+	holiday_per_year: number
+	accumulated_holidays: number
 }
 
 export class Employee {
@@ -25,6 +27,8 @@ export class Employee {
 	phone?: string = $state('')
 	startDate?: Date = $state(new SvelteDate())
 	assignments: EmployeeAssignment[] = $state([])
+	holidaysPerYear: number = $state(14)
+	accumulatedHolidays: number = $state(0)
 
 	constructor(params?: Partial<Omit<Employee, 'name' | 'toCreateDTO' | 'toUpdateDTO'>>) {
 		if (params?.id !== undefined) this.id = params.id
@@ -35,6 +39,8 @@ export class Employee {
 		if (params?.createdAt !== undefined) this.createdAt = params.createdAt
 		if (params?.startDate !== undefined) this.startDate = params.startDate
 		if (params?.assignments !== undefined) this.assignments = params.assignments
+		if (params?.holidaysPerYear !== undefined) this.holidaysPerYear = params.holidaysPerYear
+		if (params?.accumulatedHolidays !== undefined) this.accumulatedHolidays = params.accumulatedHolidays
 	}
 
 	get name() {
@@ -51,6 +57,8 @@ export class Employee {
 			startDate: dto.start_date ? parseDate(dto.start_date, true) : undefined,
 			createdAt: parseDate(dto.created_at),
 			assignments: dto.assignments?.map(EmployeeAssignment.fromDTO),
+			holidaysPerYear: dto.holiday_per_year,
+			accumulatedHolidays: dto.accumulated_holidays,
 		})
 	}
 
@@ -61,6 +69,8 @@ export class Employee {
 			address: this.address,
 			phone: this.phone,
 			start_date: this.startDate ? formatDate(this.startDate) : undefined,
+			holiday_per_year: Number(this.holidaysPerYear),
+			accumulated_holidays: Number(this.accumulatedHolidays),
 		}
 	}
 

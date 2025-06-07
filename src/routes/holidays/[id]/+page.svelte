@@ -40,8 +40,8 @@
 				<dd>{formatDate(holiday.startDate)}</dd>
 				<dt>Fecha de Fin</dt>
 				<dd>{formatDate(holiday.endDate)}</dd>
-				<!-- <dt>Dias Fuera</dt>
-				<dd>{holiday.daysOff}</dd> -->
+				<dt>Dias de Vacaciones</dt>
+				<dd>{holiday.daysOff} días</dd>
 				<dt>Notas</dt>
 				<dd>{holiday.notes || '-'}</dd>
 			</dl>

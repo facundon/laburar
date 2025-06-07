@@ -63,6 +63,8 @@ diesel::table! {
         address -> Text,
         start_date -> Nullable<Date>,
         created_at -> Nullable<Timestamp>,
+        holiday_per_year -> Integer,
+        accumulated_holidays -> Integer,
     }
 }
 
