@@ -7,7 +7,7 @@
 	import MainContainer from '$components/MainContainer.svelte'
 	import Table from '$components/Table.svelte'
 	import { Assignment, AssignmentDifficulties } from '$models/assignment.svelte.js'
-	import { goto, invalidateAll } from '$app/navigation'
+	import { invalidateAll } from '$app/navigation'
 	import EditAssignmentForm from '$pages/areas/[id]/EditAssignmentForm.svelte'
 
 	const { data } = $props()

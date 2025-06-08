@@ -14,7 +14,6 @@ pub fn create_holiday_command(
     employee_id: i32,
     start_date: &str,
     end_date: &str,
-    days_off: i32,
     notes: Option<&str>,
 ) -> Result<Holiday, Error> {
     let mut conn = establish_connection();
@@ -24,7 +23,6 @@ pub fn create_holiday_command(
         employee_id,
         parse_date(start_date)?,
         parse_date(end_date)?,
-        days_off,
         notes,
     )
 }
@@ -47,7 +45,6 @@ pub fn update_holiday_command(
     employee_id: i32,
     start_date: &str,
     end_date: &str,
-    days_off: i32,
     notes: Option<&str>,
 ) -> Result<Holiday, Error> {
     let mut conn = establish_connection();
@@ -59,7 +56,6 @@ pub fn update_holiday_command(
             employee_id,
             parse_date(start_date)?,
             parse_date(end_date)?,
-            days_off,
             notes,
         )
     })

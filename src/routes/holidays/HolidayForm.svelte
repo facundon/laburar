@@ -29,9 +29,6 @@
 		<FormGroup id="endDate" label="Fecha de Fin">
 			<DateInput id="endDate" bind:value={holiday.endDate} required min={formatDate(holiday.startDate)} />
 		</FormGroup>
-		<!-- <FormGroup id="daysOff" label="Dias Fuera">
-			<input type="number" id="daysOff" bind:value={holiday.daysOff} />
-		</FormGroup> -->
 	</div>
 	<div class="group">
 		<FormGroup id="notes" label="Notas">
