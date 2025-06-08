@@ -178,10 +178,19 @@ pub fn update_holiday(
 }
 
 pub fn delete_holiday(conn: &mut SqliteConnection, id: i32) -> Result<(), Error> {
-    diesel::delete(holiday::table.find(id))
-        .execute(conn)
-        .map_err(Error::Database)?;
-    Ok(())
+    conn.transaction(|conn| {
+        let holiday = holiday::table
+            .find(id)
+            .select((holiday::days_off, holiday::employee_id))
+            .first::<(i32, i32)>(conn);
+        let (days_off, employee_id) = holiday.unwrap();
+        diesel::delete(holiday::table.find(id)).execute(conn)?;
+        diesel::update(employee::table.find(employee_id))
+            .set(employee::accumulated_holidays.eq(employee::accumulated_holidays.add(days_off)))
+            .execute(conn)?;
+        Ok(())
+    })
+    .map_err(Error::Database)
 }
 
 pub fn list_holidays_for_employee(
