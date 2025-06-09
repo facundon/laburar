@@ -4,7 +4,7 @@
 	import { differenceInYears } from 'date-fns'
 	import Button from '$components/Button.svelte'
 	import Modal from '$components/Modal.svelte'
-	import { ClipboardPlus, Delete, Edit, Eye, Flame, Pencil } from 'lucide-svelte'
+	import { ClipboardPlus, Delete, Edit, Eye, Flame, Pencil, CalendarPlus } from 'lucide-svelte'
 	import MainContainer from '$components/MainContainer.svelte'
 	import Table from '$components/Table.svelte'
 	import Rating from '$components/Rating.svelte'
@@ -92,6 +92,22 @@
 		})) || [],
 	)
 
+	let showAssignHolidaysConfirmation = $state(false)
+	const openAssignHolidaysConfirmation = () => (showAssignHolidaysConfirmation = true)
+	const closeAssignHolidaysConfirmation = () => (showAssignHolidaysConfirmation = false)
+	async function assignHolidays() {
+		if (!employee) return
+		try {
+			employee.accumulatedHolidays += employee.holidaysPerYear
+			await invoke('update_employee_command', employee.toUpdateDTO())
+			await invalidateAll()
+			closeAssignHolidaysConfirmation()
+		} catch (error) {
+			employee.accumulatedHolidays -= employee.holidaysPerYear
+			console.error('Failed to update employee:', error)
+		}
+	}
+
 	let employeePrimaryAssignments = $derived(employeeAssignmentsWithActions.filter(assignment => assignment.isPrimary))
 	let employeeSecondaryAssignments = $derived(employeeAssignmentsWithActions.filter(assignment => !assignment.isPrimary))
 	// svelte-ignore state_referenced_locally
@@ -111,7 +127,10 @@
 {#if employee}
 	{#snippet Actions()}
 		{#if employee}
-			<Button variant="secondary" href={ROUTES.employee.assignTasks(employee.id)} Icon={ClipboardPlus}>Asignar Tareas</Button>
+			<div class="flex">
+				<Button variant="secondary" onclick={openAssignHolidaysConfirmation} Icon={CalendarPlus}>Asignar Vacaciones</Button>
+				<Button variant="secondary" href={ROUTES.employee.assignTasks(employee.id)} Icon={ClipboardPlus}>Asignar Tareas</Button>
+			</div>
 		{/if}
 	{/snippet}
 	<MainContainer title={employee.name} {Actions}>
@@ -136,7 +155,7 @@
 					{employee.holidaysPerYear}
 				</p>
 				<p>
-					<strong>Días acumulados:</strong>
+					<strong>Días de vacaciones acumulados:</strong>
 					{employee.accumulatedHolidays}
 				</p>
 			</div>
@@ -275,6 +294,13 @@
 		onconfirm={deleteAssignment}
 		onclose={closeDeleteAssignmentModal}
 	/>
+	<Modal
+		show={showAssignHolidaysConfirmation}
+		message={`¿Estás seguro de que deseas asignar <strong>${employee.holidaysPerYear} días</strong> de vacaciones a ${employee.name}?`}
+		onconfirm={assignHolidays}
+		onclose={closeAssignHolidaysConfirmation}
+		title="Asignar Vacaciones"
+	/>
 	{#if assignmentToEdit !== null}
 		<EditEmployeeAssignmentForm onclose={closeEditAssignmentModal} bind:assignment={assignmentToEdit} {employee} />
 	{/if}
@@ -284,6 +310,12 @@
 	p {
 		margin-bottom: 0.5rem;
 		color: #fff;
+	}
+
+	.flex {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
 	}
 
 	.employee-info {
