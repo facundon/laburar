@@ -73,7 +73,8 @@ jobs:
           tagName: v__VERSION__
           releaseName: 'LaburAR v__VERSION__'
           releaseBody: |
-            Se arreglo la pantalla de Faltas
+            Se agrego soporte para asignar dìas de vacaciones a empleados
+            Se agrego soporte para descontar días de vacaciones a empleados al crear una entrada de vacaciones
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
