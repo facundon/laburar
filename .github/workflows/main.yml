@@ -73,8 +73,8 @@ jobs:
           tagName: v__VERSION__
           releaseName: 'LaburAR v__VERSION__'
           releaseBody: |
-            Se agrego soporte para asignar dìas de vacaciones a empleados
-            Se agrego soporte para descontar días de vacaciones a empleados al crear una entrada de vacaciones
+            Se arreglo dropdown de año de vacaciones
+            Se agrego accordion para asignar tareas a empleados
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}

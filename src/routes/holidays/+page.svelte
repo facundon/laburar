@@ -64,6 +64,7 @@
 	<div class="picker">
 		<h3>Año</h3>
 		<Select bind:value={year} onchange={changeYear} --width="100%">
+			<option value={new Date().getFullYear() + 1}>{new Date().getFullYear() + 1}</option>
 			{#each Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i) as yearOpt}
 				<option value={yearOpt}>{yearOpt}</option>
 			{/each}

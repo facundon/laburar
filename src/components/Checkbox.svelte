@@ -50,5 +50,6 @@
 	label {
 		user-select: none;
 		cursor: pointer;
+		color: var(--gray-dark);
 	}
 </style>

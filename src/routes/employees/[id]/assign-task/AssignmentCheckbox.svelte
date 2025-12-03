@@ -4,11 +4,11 @@
 
 	interface Props {
 		assignment: Assignment
+		checked?: boolean
 		onchange(): void
 	}
 
-	let { assignment, onchange }: Props = $props()
-	let isChecked = $state(false)
+	let { assignment, checked = $bindable(false), onchange }: Props = $props()
 </script>
 
-<Checkbox bind:checked={isChecked} label={`${assignment.taskName} - ${assignment.areaName}`} {onchange} />
+<Checkbox bind:checked label={assignment.taskName || ''} {onchange} />
